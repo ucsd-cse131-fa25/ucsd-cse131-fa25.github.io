@@ -185,368 +185,269 @@ Negate(Add1(Number(3)))
 -4
 ```
 
-### Implementing a Compiler for Anaconda
+## Implementing a Compiler for Adder
 
-You've been given a starter codebase that has several pieces of
-infrastructure:
+We're going to start by _just_ compiling numbers, so we can see how all the
+infrastructure works. We *won't* give starter code for this so that you see how
+to build this up from scratch.
 
-* A stub for a parser for Anaconda which takes a s-expression that represents
-  the code, and converts it to an abstract syntax tree (`parser.ml`). You need to
-  implement the parser to actually perform the conversion.
-* A main program (`main.ml`) that uses the parser and compiler to produce
-  assembly code from an input Anaconda text file.  **You don't need to edit this.**
-* A `Makefile` that builds `main.ml`, builds a tester for Anaconda
-  (`test.ml`), and manipulates assembly programs created by the Anaconda
-  compiler.  You don't need to edit the `Makefile` or `test.ml`, but you
-  will edit `myTests.ml`.
-  Specifically, you will add your own tests by filling in
-  `myTestList` following the instructions in the beginning of the file.
+By _just_ compiling numbers, we mean that we'll write a compiler for a language
+where the “program” file just contains a single number, rather than
+full-fledged programs with function definitions, loops, and so on. (We'll get
+there!)
 
-  You need to add _at least 10 tests_ to `myTests.ml`. Focus on making these
-  interesting and thorough, as you will get credit for showing thoughtful
-  testing.
-* An OCaml program (`runner.ml`) that works in concert with the `Makefile` to
-  allow you to compile and run an Anaconda program from within OCaml, which
-  is quite useful for testing. You don't need to edit `runner.ml`.
+### Creating a Project
 
-All of your edits—which will be to write the compiler for Anaconda, and test
-it—will happen in `parser.ml`, `compile.ml`, `asm.ml` and `myTests.ml`. You
-shouldn't edit `expr.ml`, `test.ml`, `runner.ml`, or `main.ml`, though you
-should read and understand `expr.ml`.
-
-### Writing the Parser
-
-The parser will be given a S-expression representing the whole program, and
-must build a AST of the `expr` data type (refer to `expr.ml`) from this S-expression.
-
-An S-expression in OCaml (from the Core library) is of the following type:
-```
-type sexp =
-| List of sexp list
-| Atom of string
-```
-For more info about S-expressions in Core, see [here](https://dev.realworldocaml.org/data-serialization.html)
-
-Thus, an example S-expression that could be parsed into a program would be as
-follows
-```
-List([Atom("let"); List([List([Atom("x"); Atom("5")])]); Atom("x")])
-```
-which corresponds to
-```
-(let ((x 5)) x)
-```
-in anaconda or
-```
-let x = 5 in x
-```
-in OCaml.
-
-This should then parse to the AST
-```
-ELet([("x",ENumber(5))],EId("x"))
-```
-which can then be compiled.
-
-Since most S-expressions are lists, you will need to check the first element
-of the list to see if the operation to perform is a `let`, `add1`, `*`, and so
-on. If a S-expression is of an invalid form, (i.e. a `let` with no body, a `+`
-with three arguments, etc.) report an error using failwith **that contains the string `"Invalid"`**.
-
-You can assume that an id is a valid string of form `[a-zA-z][a-zA-Z0-9]*`.
-You will, however, have to check that the string does not match any of
-the language's reserved words, such as `let`, `add1`, and `sub1`.
-
-The parsing should be implemented in
-```
-parse: sexp -> expr
-```
-There is also an added function parse_binding,
-```
-parse_binding: sexp -> (string, expr)
-```
-which may be helpful for handling `let` expressions.
-
-### Writing the Compiler
-
-The primary task of writing the Anaconda compiler is simple to state: take an
-instance of the `expr` datatype and turn it into a list of assembly
-instructions.  The provided compiler skeleton is set up to do just this,
-broken up over a few functions.
-
-The first is
-```
-compile : expr -> instruction list
-```
-
-which takes an `expr` value (abstract syntax) and turns it into a list of
-assembly instructions, represented by the `instruction` type.  Use only the
-provided instruction types for this assignment; we will be gradually expanding
-this as the quarter progresses.  This function has an associated helper that
-takes some extra arguments to track the variable environment and stack
-offset.  These will be discussed in more detail in lecture. `compile` also
-calls some other helper functions that help us seperate out the code,
-it is up to you to use these or not.
-
-**Note**: For variable bindings, we use a `(string * int) list`.  
-  This is a simple data structure that's often called an association list.  
-  There is a provided `find` function that looks up a value (an `int`) by key
-  (a `string`).  Adding to an association list is trivial – simply add onto 
-  the front with `::`.  You are responsible for understanding how ordering
-  in the case of duplicate keys may interact with scope.
-
-The other component you need to implement is:
+First, make a new project with
 
 ```
-i_to_asm : instruction -> string
+$ cargo new adder
 ```
 
-which is found in `asm.ml`. It renders individual instances of the
-instruction datatype into a string representation of the instruction (this is
-done for you for `mov` and `ret`). This second step is straightforward, but
-forces you to understand the syntax of the assembly code you are generating.
-Most of the compiler concepts happen in the first step, that of generating
-assembly instructions from abstract syntax. Feel free to ask or refer to
-on-line resources if you want more information about a particular assembly
-instruction! You should also fill out the rest of `arg_to_asm : arg ->
-string` to support the `RegOffset` datatype, which will enable memory
-accesses (see stackloc in `compile.ml` and the assembly reference for help).
+This creates a new directory, called `adder`, set up to be a Rust project.
 
-### Assembly instructions
-The assembly instructions that you will have to become familiar with for this
-assignment are:
+The main entry point is in `src/main.rs`, which is where we'll develop the
+compiler. There's also a file called `Cargo.toml` that we'll use in a little
+bit, and a few other directories related to building that we won't be too
+concerned with in this assignment.
 
-* `IMov of arg * arg` — Copies the right operand (source) into the left operand
-  (destination). The source can be an immediate argument, a register or a
-  memory location, whereas the destination can be a register or a memory
-  location.
+### The Runner
 
-  Examples:
-  ```
-    mov rax, rbx
-    mov [rax], 4
-  ```
+We'll start by just focusing on numbers.
 
-* `IAdd of arg * arg` — Add the two operands, storing the result in its first
-  operand.
+It's useful to set up the goal of our compiler, which we'll come back to
+repeatedly in this course:
 
-  Example: `add rax, 10`
+> “Compiling” an expression means generating assembly instructions that
+> evaluate it and leave the answer in the `rax` register.
 
-* `ISub of arg * arg` — Store in the value of its first operand the result of
-  subtracting the value of its second operand from the value of its first
-  operand.
+Given this, before writing the compiler, it's useful to spend some time
+thinking about how we'll run these assembly programs we're going to generate.
+That is, what commands do we run at the command line in order to get from our
+soon-to-be-generated assembly to a running program?
 
-  Example: `sub rax, 216`
-
-* `IMul of arg * arg` — Multiply the left argument by the right argument, and
-  store in the left argument (typically the left argument is `rax` for us)
-
-  Example: `imul rax, 4`
-
-### Running main
-
-The `main` program built with `make main` takes a single file as its
-command-line argument, and outputs the compiled assembly string on standard
-out. Note the `.ana` extension.
+We're going to use a little Rust program to kick things off. It will look like
+this; you can put this into a file called `runtime/start.rs`:
 
 ```
-$ make main
-$ ./main input/forty_two.ana
+#[link(name = "our_code")]
+extern {
+    fn our_code_starts_here() -> i64;
+}
+
+fn main() {
+  let i : i64 = unsafe {
+    our_code_starts_here()
+  };
+  println!("{i}");
+}
+```
+
+This file says:
+
+- We're expecting there to be a precompiled file called `libour_code` that we
+  can load and link against (we'll make it in a few steps)
+- That file should define a global function called `our_code_starts_here`. It
+  takes no arguments and returns a 64-bit integer.
+- For the `main` of this Rust program, we will call the `our_code_starts_here`
+  function in an `unsafe` block. It has to be in an `unsafe` block because Rust
+  doesn't and cannot check that `our_code_starts_here` actually takes no
+  arguments and returns an integer; it's trusting us, the programmer, to ensure
+  that, which is `unsafe` from its point of view. The `unsafe` block lets us do
+  some kinds of operations that would otherwise by compile errors in Rust.
+- Then, print the result.
+
+Let's next see how to build a `libour_code` file out of some x86-64 assembly
+that will work with this file. Here's a simple assembly program that has a
+global label for `our_code_starts_here` that has a “function body” that
+returns the value `31`:
+
+```
 section .text
-global our_code_starts_here
-our_code_starts_here:
-  mov rax, 42
+global _our_code_starts_here
+_our_code_starts_here:
+  mov rax, 31
   ret
 ```
 
-To actually evaluate your assembly code, first we must create a `.s` assembly file, and
-then link it with `main.c` to create an executable.
-```
-$ make output/forty_two.s (create the assembly file)
-$ make output/forty_two.run (create the executable)
-```
-Finally you can run the file by executing to see the evaluated output:
-```
-$ ./output/forty_two.run
-```
+Put this into a file called `test/31.s` if you like, to test things out (you
+should now have a `runtime/` and a `test/` directory that you created).
 
-### Testing the Compiler
-
-The test file has the helper function `t` that will be useful to you:
+We can create a standalone binary program that combines these with these
+commands (substitute `macho64` for `elf64` on OSX):
 
 ```
-t : string -> string -> string -> OUnit.test
-```
-The first string given to `t` (test) is a test name, followed by an Anaconda
-program (in concrete syntax) to compile and evaluate, followed by a string for
-the expected output of the program (this will just be an integer in quotes).
-This helper compiles, links, and runs the given program, and if the compiler
-ends in error, it will report the error message as a string.  This includes
-problems building at the assembler/linker level, as well as any explicit
-`failwith` statements in the compiler itself.
-
-If your tests do not have any errors, a `.s` file and `.run` executable is generated
-in the `output/` directory, containing the compiled assembly code and executable
-for that case.
-
-You can test all the provided tests and the tests you have provided in `myTests.ml`
-by running
-```
-$ make test
-$ ./test
-```
-This should report all tests that fail to compile or diverge from the specified
-result.
-
-
-There is also a function `t_err` that will help with testing for errors:
-```
-t_err : string -> string -> string -> OUnit.test
-```
-This will let you check that error messages are correctly printed by your
-compiler.
-
-**Note**: You should name your tests, but keep in mind that test
-names cannot have spaces; this is due to the way the `Makefile`
-relies on test names being used for filenames.
-
-**Debug/Protip**: Check your assembly files as a means of debugging your code.
-*If you can work through
-the assembly and identify incorrect assembly instructions, you can trace the
-problem back to your compiler! You can use `make output/file.s` to build the
-assembly for a file in `input/file.ana`. You can use `make output/file.run`
-to build the binary for a file in `input/file.ana`. You can just run the
-first step (to build the assembly), then manually edit your `.s` to see what
-some assembly code may do if you want to experiment.
-
-## Help, Strategies, and Extensions
-
-**Working Incrementally**
-
-If you are struggling to get started, here are a few ideas:
-
-- Try to tackle features one at a time. For example, you might completely
-ignore let expressions at first, and just work on addition and numbers to
-start. Then you can work into subtraction, multiplication, and so on.
-- Some features can be broken down further. For example, the let expressions
-in this assignment differ from the ones in class by having multiple variables
-allowed per let expression. However, you can first implement let for just a
-single variable (which will look quite a bit like what we did in class!) and
-then extend it for multiple bindings.
-- Use git! Whenver you're in a working state with some working tests, make a
-commit and leave a message for yourself. That way you can get back to a good
-working state later if you end up stuck.
-
-**Asking For Help**
-
-This assignment is _closed to collaboration_, so TAs won't answer questions
-about your code or algorithms, and you should treat it like a take-home test.
-In office hours, we _can_ answer any questions you have about the code or
-concepts from class (and for this assignment, much of the class code is quite
-helpful).
-
-You can also always ask questions _privately_ on the course message board. We
-may not answer questions in as much detail as we would for open collaboration
-assignments. Rather, we will read all the questions and aggregate frequently
-asked questions and advice based on the questions we get.
-
-**Extensions**
-
-These are not required, nor will they give you any extra credit, but they are
-interesting to think about!
-
-- There are a lot of extra stores to memory where a value is immediately
-re-fetched from memory. How could you change the compiler to avoid these?
-- In Scheme and Racket, the `+` operator takes any number of arguments, so
-`(+ 1 2 3)` evaluates to 6. Extend your implementation of operators to allow
-for these arbitrary-arity cases.
-
-**FAQ F2019**
-
-**How to write tests for parse?**
-`t_parse` and `t_parse_error` functions are provided in `test.ml`, which you can use to write your own tests for parser.
-
-An example of a parse test is
-
-```
-  let myTestList =
-    [ (* Fill in your tests here: *)
-      t_parse "example" "1" (ENumber(1));
-    ]
-  ;;
+$ nasm -f elf64 test/31.s -o runtime/our_code.o
+$ ar rcs runtime/libour_code.a runtime/our_code.o
+$ ls runtime
+libour_code.a          our_code.o             start.rs
+$ rustc -L runtime/ runtime/start.rs -o test/31.run
+$ ./test/31.run
+31
 ```
 
-To make this test pass, you would add code to `parser.ml` to handle the `Atom` case, similar to how our parser in class worked.
+The first command _assembles_ the assembly code to an object file. The basic
+work there is generating the machine instructions for each assembly
+instruction, and enough information about labels like `our_code_starts_here` to
+do later linking. The `ar` command takes this object file and puts it in a
+standard format for dynamic library linking used by `#[link` in Rust. Then
+`rustc` combines that `.a` file and `start.rs` into a single executable binary
+that we named `31.run`.
 
-**What should `(let ((x 5) (z x)) z)` produce?**
+We haven't written a compiler yet, but we _do_ know how to go from files
+containing assembly code to runnable binaries with the help of `nasm` and
+`rustc`. Our next task is going to be writing a program that generates assembly
+files like these.
 
-From the PA writeup: “Let bindings should evaluate all the binding expressions to values one by one, and after each, store a mapping from the given name to the corresponding value in both (a) the rest of the bindings, and (b) the body of the let expression. Identifiers evaluate to whatever their current stored value is.”
+### Generating Assembly
 
-**Are the let bindings from class valid anaconda programs, or do anaconda programs always have the extra parentheses around the bindings?**
+Let's revisit our definition of compiling:
 
-In Anaconda, there's always the extra set of parens around the list.
+> “Compiling” an expression means generating assembly instructions that
+> evaluate it and leave the answer in the `rax` register.
 
-**I get an error that says "Error: Signalled -10 when running output/file"**
+Since, for now, our programs are going to be single expressions (in fact just
+single numbers), this means that for a program like “5”, we want to generate
+assembly instructions that put the constant `5` into `rax`.
 
-That's typically a segmentation fault. See the discussion podcast from 10-04 for some suggestions on debugging.
-
-[https://podcast.ucsd.edu/watch/fa19/cse131_a00/21/screen](https://podcast.ucsd.edu/watch/fa19/cse131_a00/21/screen)
-
-**I get an error like `"ocamlfind: Package sexplib not found"` when I run `make` on my laptop**
-
-Try running `opam install sexplib` to make sure you have the package installed.
-
-**Can we write additional helper functions?**
-
-Yes.
-
-
-**Do we care about the text return from failwith?**
-
-Absolutely. Any time you write software you should strive to write thoughtful error messages. They will help you while debugging, you when you make a mistake coming back to your code later, and anyone else who uses your code.
-
-As for the autograder, we expect you to catch parsing and compilation errors. For parsing errors you should `failwith` an error message containing the word `Invalid`. For compilation errors, you should catch duplicate binding and unbound variable identifier errors and `failwith` `Duplicate binding` and `Unbound variable identifier {identifier}` respectively. We've also added these instructions to the PA writeup.
-
-**How should we check that identifiers are valid according to the description in the writeup?**
-
-From the PA writeup: “You can **assume** that an id is a valid string of form `[a-zA-z][a-zA-Z0-9]*`. You will, however, ...”
-
-**Assume** means that we're not expecting you to check this for the purposes of the assignment (though you're welcome to if you like).
-
-**What should the program "()" compile to?**
-
-Is `()` an anaconda program (does it match the grammar)? What should the compiler do with a program that doesn't match the grammar?
-
-**What does "and" mean in Ocaml?**
-
-A construction like
+Let's write a Rust function that does that, with a simple `main` function that
+shows it working on a single hardcoded input; this goes in `src/main.rs` and is
+the start of our compiler:
 
 ```
-let rec f ... = ...
-and g ... = ....
+/**
+  Compile a source program into a string of x86-64 assembly
+*/
+fn compile(program : String) -> String {
+  let num = program.trim().parse::<i32>().unwrap();
+  return format!("mov rax, {}", num);
+}
+
+fn main() {
+  let program = "37";
+  let compiled = compile(String::from(program));
+  println!("{}", compiled);
+}
 ```
 
-allows `f` and `g` to be mutually recursive (if they were separate `let rec`s, `g` could refer to `f` but not vice versa.)
-
-**What does the writeup mean when it says that duplicate bindings should be an error? Does that mean each variable can only be defined once?**
-
-Consider this Ocaml example, which is directly analogous to the design described for anaconda:
+You can compile and run this with `cargo run`:
 
 ```
-# let x = 10 in let x = x + 1 in x;;
-- : int = 11
-# let x = 10 and x = x + 1 in x;;
-Error: Variable x is bound several times in this matching
+$ cargo run
+   Compiling adder v0.1.0 (/Users/joe/src/adder)
+mov rax, 37
 ```
 
-**I wrote out some expected output like `(ELet([("x", ENumber(10)), ("y", ENumber(7))], EPrim2(Times, EPrim2(Minus, EId("x"), EId("y")), ENumber(2))))` and Ocaml is giving me a type error that is hard to make sense of.**
+Really all I did here was look up the documentation in Rust about converting a
+string to an integer and template the number into a `mov` command. The input
+`37` is hardcoded, and to use the output like we did above, we'd need to
+copy-paste the `mov` command into a larger assembly file with
+`our_code_starts_here`, and so on.
 
-Remember that `;` (semicolon) separates list items and `,` (comma) separates tuple elements.
+Here's a more sophisticated `main` that takes two command-line arguments: a
+source file to read and a target file to write the resulting assembly to. It
+also puts the generated command into the template we designed for our generated
+assembly:
 
-**What's the best way to test? What is test case <some-test-name-from-autograder> testing?**
+```rust
+fn _main() -> std::io::Result<()> {
+  let args: Vec<String> = env::args().collect();
 
-A few suggestions:
+  let in_name = &args[1];
+  let out_name = &args[2];
 
-- First, make sure to test all the different expressions as a baseline
-- Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
-- Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
+  let mut in_file = File::open(in_name)?;
+  let mut in_contents = String::new();
+  in_file.read_to_string(&mut in_contents)?;
+
+  let result = compile(in_contents);
+
+  let asm_program = format!("
+section .text
+global _our_code_starts_here
+_our_code_starts_here:
+  {}
+  ret
+", result);
+
+  let mut out_file = File::create(out_name)?;
+  out_file.write_all(asm_program.as_bytes())?;
+
+  Ok(())
+
+}
+```
+
+Since this now expects _files_ rather than hardcoded input, let's make a test
+file in `test/37.snek` that just contains `37` as contents. Then we'll read the
+“program” (still just a number) from `37.snek` and store the resulting
+assembly in `37.s`. (`snek` is a meme-y spelling of snake, which is a theme of
+the languages in this course.)
+
+Then we can run our compiler with these command line arguments:
+
+```
+$ cat test/37.snek
+37
+$ cargo run -- test/37.snek test/37.s
+$ cat test.367.s
+
+section .text
+global _our_code_starts_here
+_our_code_starts_here:
+  mov rax, 37
+  ret
+```
+
+Then we can use the same sequence of commands from before to run the program:
+
+```
+$ nasm -f elf64 test/37.s -o runtime/our_code.o
+$ ar rcs runtime/libour_code.a runtime/our_code.o
+$ rustc -L runtime/ runtime/start.rs -o test/37.run
+$ ./test/37.run
+37
+```
+
+We're close to saying we've credibly built a “compiler”, in that we've taken
+some source program and gone all the way to a generated binary.
+
+The next steps will be to clean up the clumsiness of running 3 post-processing
+commands (`nasm`, `ar`, and `rustc`), and then adding some nontrivial
+functionality.
+
+#### Cleaning up with a Makefile
+
+There are a lot of thing we could do to try and assemble and run the program,
+and we'll discuss some later in the course. For now, we'll simply tidy up our
+workflow by creating a Makefile that runs through the compile-assemble-link
+steps for us. Put these rules into a file called `Makefile` in the root of the
+repository:
+
+```
+test/%.s: test/%.snek src/main.rs
+	cargo run -- $< test/$*.s
+
+test/%.run: test/%.s runtime/start.rs
+	nasm -f macho64 test/$*.s -o runtime/our_code.o
+	ar rcs runtime/libour_code.a runtime/our_code.o
+	rustc -L runtime/ runtime/start.rs -o test/$*.run
+```
+
+And then you can run just `make test/<file>.run` to do the build steps:
+
+```
+$ make test/37.run
+cargo run -- test/37.snek test/37.s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.07s
+     Running `target/x86_64-apple-darwin/debug/adder test/37.snek test/37.s`
+nasm -f macho64 test/37.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc -L runtime/ runtime/start.rs -o test/37.run
+```
+
+The `cargo run` command will re-run if the `.snek` file or the compiler
+(`src/main.rs`) change, and the assemble-and-link commands will re-run if the
+assembly (`.s` file) or the runtime (`runtime/start.rs`) change.
+
+#### Adding Nontrivial Language Features
