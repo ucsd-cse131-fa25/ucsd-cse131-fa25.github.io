@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Week 1 - A simple compiler in Rust"
-doodle: "../doodle.png"
+doodle: "./adder.jpg"
 ---
 
 # Adder
@@ -41,7 +41,7 @@ The first few sections of the [Rust
 Book](https://doc.rust-lang.org/book/ch01-00-getting-started.html) walk you
 through installing Rust, as well. We'll assume you've gone through the
 “Programming a Guessing Game” chapter of that book before you go on, so
-writing and running a Rust program isn't too weird.
+writing and running a Rust program isn't too weird to you.
 
 ## The Adder Language
 
