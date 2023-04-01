@@ -416,7 +416,7 @@ The next steps will be to clean up the clumsiness of running 3 post-processing
 commands (`nasm`, `ar`, and `rustc`), and then adding some nontrivial
 functionality.
 
-#### Cleaning up with a Makefile
+### Cleaning up with a Makefile
 
 There are a lot of thing we could do to try and assemble and run the program,
 and we'll discuss some later in the course. For now, we'll simply tidy up our
@@ -450,4 +450,234 @@ The `cargo run` command will re-run if the `.snek` file or the compiler
 (`src/main.rs`) change, and the assemble-and-link commands will re-run if the
 assembly (`.s` file) or the runtime (`runtime/start.rs`) change.
 
-#### Adding Nontrivial Language Features
+### Adding Nontrivial Language Features
+
+The overall syntax for the Adder language admits many more features than just
+numbers. With the definition of Adder above, we can have programs like `(add1
+(sub1 6))`, for example. There can be any numbers of layers of nesting of the
+parentheses, which means we need to think about **parsing** a little bit more.
+
+We're going to design our syntax carefully to avoid thinking too much about
+parsing, though. The parenthesized style of Adder is a subset of what's called
+**s-expressions**. The Scheme and Lisp family of languages are some of the more
+famous examples of languages built in s-expressions, but recent ones like
+WebAssembly also use this syntax, and it's a common choice for language
+development to simplify decision around syntax, which can become quite tricky
+and won't be our focus in this course.
+
+A grammar for s-expressions looks something like:
+
+```
+s-exp := number
+       | symbol
+       | string
+       | ( <s-exp>* )
+```
+
+That is, an s-expression is either a number, symbol (think of symbol like an
+identifier name), string, or a parenthesized sequence of s-expressions. Here
+are some s-expressions:
+
+```
+(1 2 3)
+(a (b c d) e "f" "g")
+
+(hash-table ("a" 100) ("b" 1000) ("c" 37"))
+
+(define (factorial n)
+  (if (== n 1)
+      1
+      (factorial (* n (- n 1)))))
+
+(class Point
+  (int x)
+  (int y))
+
+(add1 (sub1 37))
+```
+
+One attractive feature of s-expressions is that most programming languages have
+libraries for parsing them. There are several crates available for parsing
+s-expressions in Rust. You're free to pick another one if you like it, but I'm
+going to use [sexp](https://crates.io/crates/sexp) because its type definitions
+work pretty well with pattern-matching and I find that helpful.
+([lexpr](https://docs.rs/lexpr/latest/lexpr/) also looks interesting, but the
+`Value` type is really clumsy with pattern matching so it's not great for this
+tutorial.)
+
+We can add ths package to our project by adding it to `Cargo.toml`, which was
+created when you used `cargo new`. Make it so your `Cargo.toml` looks like this:
+
+```
+[package]
+name = "adder"
+version = "0.1.0"
+
+[dependencies]
+sexp = "1.1.4"
+```
+
+Then you can run `cargo build` and you should see stuff related to the `sexp`
+crate be downloaded.
+
+We can then use it in our program like this:
+
+```
+use sexp::*;
+use sexp::Atom::*;
+```
+
+Then, a function call like this can turn a string into a `Sexp`:
+
+```
+  let sexp = parse("(add1 (sub1 (add1 73)))").unwrap()
+```
+
+(As a reminder, the `.unwrap()` is our way of telling Rust that we are trusting
+this parsing to succeed, and we'll `panic!` and stop the program if the parse
+doesn't succeed. We will talk about giving better error messages in these cases
+later.)
+
+Our goal, though, is to use a datatype that we design for our expressions, which we introduced as:
+
+```
+enum Expr {
+  Num(i32),
+  Add1(Box<Expr>),
+  Sub1(Box<Expr>)
+}
+```
+
+So we should next write a function that takes `Sexp`s and turns them into
+`Expr`s (or gives an error if we give an s-exprssion that doesn't match the
+grammar of Adder). Here's a function that will do the trick:
+
+```
+fn parse_expr(s : &Sexp) -> Expr {
+  match s {
+    Sexp::Atom(I(n)) => Expr::Num(i32::try_from(*n).unwrap()),
+    Sexp::List(vec) =>
+    match &vec[..] {
+      [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
+      [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
+      _ => panic!("parse error")
+    },
+    _ => panic!("parse error")
+  }
+}
+```
+
+(A Rust note – the `parse_expr` function takes a reference to `Sexp` (the type
+`&Sexp`) which means `parse_expr` will have read-only, borrowed access to some
+`Sexp` that was allocated and stored somewhere else.)
+
+This uses Rust **pattern matching** to match the specific cases we care about
+for Adder – plain numbers and lists of s-expressions. In the case of lists, we
+match on two the two specific cases that look like `add1` or `sub1` followed by
+some other s-expression. In those cases, we recursively parse, and use
+`Box::new` to match the signature we set up in `enum Expr`.
+
+So we've got a way to go from more structure text—s-expressions—stored in
+files and produce our `Expr` structure. Now we just need to go from the `Expr`
+ASTs to generated assembly. Here's one way to do that:
+
+```
+fn compile_expr(e : &Expr) -> String {
+  match e {
+    Expr::Num(n) => format!("mov rax, {}", *n),
+    Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
+    Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1"
+  }
+}
+```
+
+And putting it all together in `main`:
+
+```
+fn main() -> std::io::Result<()> {
+  let args: Vec<String> = env::args().collect();
+
+  let in_name = &args[1];
+  let out_name = &args[2];
+
+  let mut in_file = File::open(in_name)?;
+  let mut in_contents = String::new();
+  in_file.read_to_string(&mut in_contents)?;
+
+  let expr = parse_expr(&parse(&in_contents).unwrap());
+  let result = compile_expr(&expr);
+  let asm_program = format!("
+section .text
+global _our_code_starts_here
+_our_code_starts_here:
+  {}
+  ret
+", result);
+
+  let mut out_file = File::create(out_name)?;
+  out_file.write_all(asm_program.as_bytes())?;
+
+  OK(())
+}
+```
+Then we can write tests like this `add.snek`:
+
+```
+$ cat test/add.snek
+(sub1 (sub1 (add1 73)))
+```
+
+And run our whole compiler end-to-end:
+
+```
+$ make test/add.run
+cargo run -- test/add.snek test/add.s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/x86_64-apple-darwin/debug/adder test/add.snek test/add.s`
+nasm -f macho64 test/add.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc -L runtime/ runtime/start.rs -o test/add.run
+$ cat test/add.s
+
+section .text
+global _our_code_starts_here
+_our_code_starts_here:
+  mov rax, 73
+add rax, 1
+sub rax, 1
+sub rax, 1
+  ret
+$ ./test/add.run
+72
+```
+
+This is, of course, a very simple language. This tutorial serves mainly to make
+us use all the pieces of infrastructure that we'll build on throughout the quarter:
+
+- An assembler (`nasm`) and a Rust main program (`runtime/start.rs`) to build
+  binaries
+- A definition of abstract syntax (`enum Expr`)
+- A parser for text (`parse` from the `sexp` crate) and a parser for our
+  abstract syntax (`parse_expr`)
+- A code generator (`compile_expr`) that generates assembly from `Expr`s
+
+Most of our future assignments will be built from just these pieces, plus extra
+infrastructure added as we need it.
+
+## Your TODOs
+
+1. Do the whole tutorial above, creating the project repository as you go. Write
+several tests to convince yourself that things are working as expected.
+2. Then, add support for `negate` as described in the beginning, and write several
+tests for `negate` as well.
+3. In your terminal, demonstrate your compiler working on at least 5 different
+examples by using `cat` on a source `snek` file, then showing `make` running,
+using `cat` on the resulting `.s` file, and then running the resulting binary.
+Copy this interactino into a file called `transcript.txt`
+
+Hand in your entire repository to the `assignment-1-tutorial` assignment on
+Gradescope. There is no automated grading for this assignment; we want you to
+practice gaining your own confidence that your solution works (and
+demonstrating that to us).
+
+
