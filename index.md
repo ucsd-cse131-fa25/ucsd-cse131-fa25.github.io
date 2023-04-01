@@ -68,7 +68,11 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Sunday evenings.
 
 - Week 1 - Rust and Source to Assembly Conversion
-  - Reading: [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
+  - [Assignment (due Tuesday, April 11, 10pm)](/week1/)
+  - Reading and resources:
+    - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
+    - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
+    - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
 
 <iframe width="125%" height="500px" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhE-LXEqDjFYCTHjXfm3RmaJSY3zhlxihkzo1KCfGof-vm9CtnG3jxS2HumYUIVszN_LDrvq5bAFxT/pubhtml?gid=1954416302&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
 
