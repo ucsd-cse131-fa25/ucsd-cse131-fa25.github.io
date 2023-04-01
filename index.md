@@ -55,26 +55,21 @@ course, as well as the syllabus.
 <a id="schedule"></a>
 ## Schedule
 
-The schedule below outlines topics, due dates, and links to assignments. In a
-typical week, by *Sunday evening* all due dates, readings, and notable
-events in the course until the following week will be posted here. So if you
-check the schedule at the beginning of the week, you'll know when all reading
-quizzes, programming assignments, etc. will be due. We will often have the
-schedule confirmed more than a week out, but we'll always be at least a week
-ahead. The schedule of lecture topics might change slightly, but I post a
-general plan so you can know roughly where we are headed.
+The schedule below outlines topics, due dates, and links to assignments. The
+schedule of lecture topics might change slightly, but I post a general plan so
+you can know roughly where we are headed.
 
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Sunday evenings.
 
-- Week 1 - Rust and Source to Assembly Conversion
-  - [Assignment (due Tuesday, April 11, 10pm)](/week1/)
-  - Reading and resources:
-    - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
-    - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
-    - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
+**Week 1 - Rust and Source to Assembly Conversion**
 
-<iframe width="125%" height="500px" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRhE-LXEqDjFYCTHjXfm3RmaJSY3zhlxihkzo1KCfGof-vm9CtnG3jxS2HumYUIVszN_LDrvq5bAFxT/pubhtml?gid=1954416302&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+- [Assignment (due Tuesday, April 11, 10pm)](/week1/){:target="_blank"}
+- Reading and resources:
+  - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book){:target="_blank"}
+  - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html){:target="_blank"}
+  - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf){:target="_blank"}
+
 
 <a id="staff"></a>
 ## Staff & Resources
@@ -86,83 +81,29 @@ ask you to put your name in the queue using the whiteboard. Read the
 description about [collaboration below](#policies) for some context about office
 hours.
 
-<iframe src="https://calendar.google.com/calendar/embed?src=eng.ucsd.edu_qie58tivkeduh90ap8kgje90ik%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 
 
 <a id="grading"></a>
-## Grading
+## Course Components and Grading
 
-Your grade will be calculated from:
+Your grade will be calculated from **engagement**, **assignments**, and **tests**.
 
-- 5% participation in class
-  - There are 20 lectures, you must attend 10 for full credit
-  - Each week both lectures will have clicker questions. You get
-    credit for each session where you answer at least half of the questions.
-  - For full credit, you need to attend (at least) 10 lectures. For each
-    lecture fewer than 10 you attend, you lose one of the participation
-    points, minimum 0 (so if you only attend 8 you get 3 participation
-    points, if you attend 2 lectures, you get 0 participation points)
-  - Clicker scores can be checked on Gradescope
-- 5% review quizzes
-  - Each week there will be an online review quiz due Monday evening, you get
-  full review quiz credit for getting at least half the questions right.
-  - For full credit, you need to get credit for 5 quizzes. For each quiz
-  fewer than 5 you complete, you lose one of the review quiz points, minimum 0.
-  - Quiz scores can be checked on Gradescope
-- 50% programming assignments (8 total)
-  This list may shift slightly, but it's a close estimate and any changes
-  will be reflected here.
-  - PA0 **open collab** (warmup): 2%
-  - PA1 **closed collab** (let and arithmetic): 3%
-  - PA2 **open collab** (tagged values): 5%
-  - PA3 **open collab** (types and loops): 5%
-  - PA4 **closed collab** (functions): 9%
-  - PA5 **open collab** (heap allocation): 7%
-  - PA6 **open collab** (heap allocation/optimization): 7%
-  - PA7-checkpoint **open collab** (memory management): 3%
-  - PA7-gc **closed collab** (memory management): 9%
-- 40% exams
-  - 16% for in-class exams
-  - 24% final exam
-    - You must pass the final exam to pass the course
-    - The final exam will have questions that allow you to regain credit lost
-    on in-class exams
+**Assignments** are given periodically, typically at one or two week intervals.
+FILL grade criteria
 
-After your weighted average is calculated, letter grades will be assigned
-based on the following grading scale:
+There are two **tests** in the course, one in week 5 and one in week 9, given
+in the Friday discussion sections. Tests get one of three scores: **High
+Pass**, **Pass**, and **No Pass**. FILL grade criteria
 
-<table class="table table-striped">
-<tbody>
-<tr align="center" padding="10">
-<td>A+</td>
-<td>A</td>
-<td>A-</td>
-<td>B+</td>
-<td>B</td>
-<td>B-</td>
-<td>C+</td>
-<td>C</td>
-<td>C-</td>
-<td>D, F</td>
-</tr>
-<tr align="center">
-<td>&nbsp; >97&nbsp; </td>
-<td>&nbsp; 93-96.99 &nbsp; </td>
-<td>&nbsp; 90-92.99&nbsp; </td>
-<td>&nbsp; 87-89.99&nbsp; </td>
-<td>&nbsp; 83-86.99&nbsp; </td>
-<td>&nbsp; 80-82.99&nbsp; </td>
-<td>&nbsp; 77-79.99&nbsp; </td>
-<td>&nbsp; 73-76.99&nbsp; </td>
-<td>&nbsp; 65-72.99&nbsp; </td>
-<td>&nbsp; Below 64.99&nbsp; </td>
-</tr>
-</tbody>
-</table>
-
-We may adjust the above scale to be more lenient (depending on the overall class performance), but we guarantee that we will
-not adjust the scale to make it harder to get a better grade.
-
+**Engagement** has two components – class participation and weekly (p)review
+quizzes. Most lectures will come with a 1-2 page handout, and you can submit
+the handout any time up until the start of the next lecture. Credit is given
+for reasonable effort in engaging with the notes from the day on the handout.
+Quizzes will release each week around Wednesday, and be due Sunday evening.
+These serve as a review of the past week and a preview of the coming week. You
+get credit for a quiz by getting most of the questions right. **Engagement** is
+used to add +/- modifiers at the end of the quarter, and won't make the
+difference between A/B/C etc.
 
 <a id="policies"></a>
 ## Policies
@@ -261,6 +202,8 @@ on academic integrity as well.
 
 Late work is generally not accepted, because often we'll release partial or
 full solutions immediately following the deadline for an assignment.
+Opportunities for making up missed credit are given in other ways, and will be
+described throughout the quarter.
 
 ### Regrades
 
@@ -281,6 +224,10 @@ the case where you miss an in-class test (scoring a 0), but can regain credit
 from that part of the final exam. This policy is designed to encourage you to
 treat the in-class tests as _learning opportunities_ so that you can study
 any mistakes you make and re-apply that knowledge on the final.
+
+In addition, if you score high enough on the tests during the quarter, you can
+skip the final exam with no penalty and just have the test grades applied as
+your exam score.
 
 You are not allowed any study aids on exams, aside from those pertaining to
 university-approved accommodations. References will be provided along with
@@ -343,3 +290,4 @@ If you experience any sort of harassment or discrimination, please contact the
 instructor as soon as possible.   If you prefer to speak with someone outside
 of the course, please contact the Office of Prevention of Harassment and
 Discrimination: https://ophd.ucsd.edu/.
+
