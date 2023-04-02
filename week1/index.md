@@ -78,9 +78,9 @@ practice.
 
 ```
 enum Expr {
-  Num(i32),
-  Add1(Box<Expr>),
-  Sub1(Box<Expr>)
+    Num(i32),
+    Add1(Box<Expr>),
+    Sub1(Box<Expr>)
 }
 ```
 
@@ -229,17 +229,17 @@ soon-to-be-generated assembly to a running program?
 We're going to use a little Rust program to kick things off. It will look like
 this; you can put this into a file called `runtime/start.rs`:
 
-```
+```rust
 #[link(name = "our_code")]
 extern {
     fn our_code_starts_here() -> i64;
 }
 
 fn main() {
-  let i : i64 = unsafe {
-    our_code_starts_here()
-  };
-  println!("{i}");
+    let i: i64 = unsafe {
+        our_code_starts_here()
+    };
+    println!("{i}");
 }
 ```
 
@@ -314,19 +314,17 @@ Let's write a Rust function that does that, with a simple `main` function that
 shows it working on a single hardcoded input; this goes in `src/main.rs` and is
 the start of our compiler:
 
-```
-/**
-  Compile a source program into a string of x86-64 assembly
-*/
-fn compile(program : String) -> String {
-  let num = program.trim().parse::<i32>().unwrap();
-  return format!("mov rax, {}", num);
+```rust
+//! Compile a source program into a string of x86-64 assembly
+fn compile(program: String) -> String {
+    let num = program.trim().parse::<i32>().unwrap();
+    return format!("mov rax, {}", num);
 }
 
 fn main() {
-  let program = "37";
-  let compiled = compile(String::from(program));
-  println!("{}", compiled);
+    let program = "37";
+    let compiled = compile(String::from(program));
+    println!("{}", compiled);
 }
 ```
 
@@ -350,19 +348,19 @@ also puts the generated command into the template we designed for our generated
 assembly:
 
 ```rust
-fn _main() -> std::io::Result<()> {
-  let args: Vec<String> = env::args().collect();
+fn main() -> std::io::Result<()> {
+    let args: Vec<String> = env::args().collect();
 
-  let in_name = &args[1];
-  let out_name = &args[2];
+    let in_name = &args[1];
+    let out_name = &args[2];
 
-  let mut in_file = File::open(in_name)?;
-  let mut in_contents = String::new();
-  in_file.read_to_string(&mut in_contents)?;
+    let mut in_file = File::open(in_name)?;
+    let mut in_contents = String::new();
+    in_file.read_to_string(&mut in_contents)?;
 
-  let result = compile(in_contents);
+    let result = compile(in_contents);
 
-  let asm_program = format!("
+    let asm_program = format!("
 section .text
 global _our_code_starts_here
 _our_code_starts_here:
@@ -370,11 +368,10 @@ _our_code_starts_here:
   ret
 ", result);
 
-  let mut out_file = File::create(out_name)?;
-  out_file.write_all(asm_program.as_bytes())?;
+    let mut out_file = File::create(out_name)?;
+    out_file.write_all(asm_program.as_bytes())?;
 
-  Ok(())
-
+    Ok(())
 }
 ```
 
@@ -540,11 +537,11 @@ later.)
 
 Our goal, though, is to use a datatype that we design for our expressions, which we introduced as:
 
-```
+```rust
 enum Expr {
-  Num(i32),
-  Add1(Box<Expr>),
-  Sub1(Box<Expr>)
+    Num(i32),
+    Add1(Box<Expr>),
+    Sub1(Box<Expr>)
 }
 ```
 
@@ -552,18 +549,18 @@ So we should next write a function that takes `Sexp`s and turns them into
 `Expr`s (or gives an error if we give an s-exprssion that doesn't match the
 grammar of Adder). Here's a function that will do the trick:
 
-```
-fn parse_expr(s : &Sexp) -> Expr {
-  match s {
-    Sexp::Atom(I(n)) => Expr::Num(i32::try_from(*n).unwrap()),
-    Sexp::List(vec) =>
-    match &vec[..] {
-      [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
-      [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
-      _ => panic!("parse error")
-    },
-    _ => panic!("parse error")
-  }
+```rust
+fn parse_expr(s: &Sexp) -> Expr {
+    match s {
+        Sexp::Atom(I(n)) => Expr::Num(i32::try_from(*n).unwrap()),
+        Sexp::List(vec) =>
+            match &vec[..] {
+                [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
+                [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
+                _ => panic!("parse error")
+            },
+        _ => panic!("parse error")
+    }
 }
 ```
 
@@ -581,32 +578,32 @@ So we've got a way to go from more structure text—s-expressions—stored in
 files and produce our `Expr` structure. Now we just need to go from the `Expr`
 ASTs to generated assembly. Here's one way to do that:
 
-```
-fn compile_expr(e : &Expr) -> String {
-  match e {
-    Expr::Num(n) => format!("mov rax, {}", *n),
-    Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
-    Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1"
-  }
+```rust
+fn compile_expr(e: &Expr) -> String {
+    match e {
+        Expr::Num(n) => format!("mov rax, {}", *n),
+        Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
+        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1"
+    }
 }
 ```
 
 And putting it all together in `main`:
 
-```
+```rust
 fn main() -> std::io::Result<()> {
-  let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
 
-  let in_name = &args[1];
-  let out_name = &args[2];
+    let in_name = &args[1];
+    let out_name = &args[2];
 
-  let mut in_file = File::open(in_name)?;
-  let mut in_contents = String::new();
-  in_file.read_to_string(&mut in_contents)?;
+    let mut in_file = File::open(in_name)?;
+    let mut in_contents = String::new();
+    in_file.read_to_string(&mut in_contents)?;
 
-  let expr = parse_expr(&parse(&in_contents).unwrap());
-  let result = compile_expr(&expr);
-  let asm_program = format!("
+    let expr = parse_expr(&parse(&in_contents).unwrap());
+    let result = compile_expr(&expr);
+    let asm_program = format!("
 section .text
 global _our_code_starts_here
 _our_code_starts_here:
@@ -614,10 +611,10 @@ _our_code_starts_here:
   ret
 ", result);
 
-  let mut out_file = File::create(out_name)?;
-  out_file.write_all(asm_program.as_bytes())?;
+    let mut out_file = File::create(out_name)?;
+    out_file.write_all(asm_program.as_bytes())?;
 
-  OK(())
+    OK(())
 }
 ```
 Then we can write tests like this `add.snek`:
