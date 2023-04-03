@@ -315,7 +315,7 @@ shows it working on a single hardcoded input; this goes in `src/main.rs` and is
 the start of our compiler:
 
 ```rust
-//! Compile a source program into a string of x86-64 assembly
+/// Compile a source program into a string of x86-64 assembly
 fn compile(program: String) -> String {
     let num = program.trim().parse::<i32>().unwrap();
     return format!("mov rax, {}", num);
