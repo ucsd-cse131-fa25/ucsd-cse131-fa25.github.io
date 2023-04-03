@@ -228,15 +228,20 @@ this; you can put this into a file called `runtime/start.rs`:
 
 ```rust
 #[link(name = "our_code")]
-extern {
+extern "C" {
+    // The \x01 here is an undocumented feature of LLVM (which Rust uses) that ensures
+    // it does not add an underscore in front of the name, which happens on OSX
+    // Courtesy of Max New
+    // (https://maxsnew.com/teaching/eecs-483-fa22/hw_adder_assignment.html)
+    #[link_name = "\x01our_code_starts_here"]
     fn our_code_starts_here() -> i64;
 }
 
 fn main() {
-    let i: i64 = unsafe {
-        our_code_starts_here()
-    };
-    println!("{i}");
+  let i : i64 = unsafe {
+    our_code_starts_here()
+  };
+  println!("{i}");
 }
 ```
 
@@ -261,8 +266,8 @@ returns the value `31`:
 
 ```x86asm
 section .text
-global _our_code_starts_here
-_our_code_starts_here:
+global our_code_starts_here
+our_code_starts_here:
   mov rax, 31
   ret
 ```
@@ -359,8 +364,8 @@ fn main() -> std::io::Result<()> {
 
     let asm_program = format!("
 section .text
-global _our_code_starts_here
-_our_code_starts_here:
+global our_code_starts_here
+our_code_starts_here:
   {}
   ret
 ", result);
@@ -387,8 +392,8 @@ $ cargo run -- test/37.snek test/37.s
 $ cat test.367.s
 
 section .text
-global _our_code_starts_here
-_our_code_starts_here:
+global our_code_starts_here
+our_code_starts_here:
   mov rax, 37
   ret
 ```
@@ -603,8 +608,8 @@ fn main() -> std::io::Result<()> {
     let result = compile_expr(&expr);
     let asm_program = format!("
 section .text
-global _our_code_starts_here
-_our_code_starts_here:
+global our_code_starts_here
+our_code_starts_here:
   {}
   ret
 ", result);
@@ -636,8 +641,8 @@ rustc -L runtime/ runtime/start.rs -o test/add.run
 $ cat test/add.s
 
 section .text
-global _our_code_starts_here
-_our_code_starts_here:
+global our_code_starts_here
+our_code_starts_here:
   mov rax, 73
 add rax, 1
 sub rax, 1
