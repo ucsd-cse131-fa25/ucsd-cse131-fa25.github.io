@@ -30,7 +30,7 @@ course, as well as the syllabus.
 - Lecture: [Catalyst 0125](https://map.concept3d.com/?id=1005#!m/576554), 12:00-12:50pm (noon) Mon/Wed/Fri
 - Discussion Section: [SOLIS 107](https://blink.ucsd.edu/sponsor/advancement/advancement-services/stewardship/named-buildings/solis-hall.html), 4:00-4:50pm Friday
 - Tests **(in Friday Discussion Section)**: May 5 (Week 5), June 2 (Week 9)
-- Final Exam (used for making up tet credit): Wed June 14, 11:30-2:30, Location TBD
+- Final Exam (used for making up test credit): Wed June 14, 11:30-2:30, Location TBD
 
 - Podcasts: Coming soon
 - Q&A Forum: Coming soon
