@@ -614,7 +614,7 @@ _our_code_starts_here:
     let mut out_file = File::create(out_name)?;
     out_file.write_all(asm_program.as_bytes())?;
 
-    OK(())
+    Ok(())
 }
 ```
 Then we can write tests like this `add.snek`:
