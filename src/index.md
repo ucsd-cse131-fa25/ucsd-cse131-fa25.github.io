@@ -30,7 +30,7 @@ course, as well as the syllabus.
 - Lecture: [Catalyst 0125](https://map.concept3d.com/?id=1005#!m/576554), 12:00-12:50pm (noon) Mon/Wed/Fri
 - Discussion Section: [SOLIS 107](https://blink.ucsd.edu/sponsor/advancement/advancement-services/stewardship/named-buildings/solis-hall.html), 4:00-4:50pm Friday
 - Tests **(in Friday Discussion Section)**: May 5 (Week 5), June 2 (Week 9)
-- Final Exam: Wed June 14, 11:30-2:30, Location TBD
+- Final Exam (used for making up tet credit): Wed June 14, 11:30-2:30, Location TBD
 
 - Podcasts: Coming soon
 - Q&A Forum: Coming soon
@@ -75,21 +75,40 @@ hours.
 Your grade will be calculated from **engagement**, **assignments**, and **tests**.
 
 **Assignments** are given periodically, typically at one or two week intervals.
-FILL grade criteria
+On each you'll get a score from 0-3 (Incomplete/No Pass, Low Pass, Pass, High Pass).
 
 There are two **tests** in the course, one in week 5 and one in week 9, given
-in the Friday discussion sections. Tests get one of three scores: **High
-Pass**, **Pass**, and **No Pass**. FILL grade criteria
+in the Friday discussion sections. Tests also get a score from 0-3. Finals week
+and the usual final exam block will give an opportunity to make up credit on
+these if you miss them or get low scores.
 
 **Engagement** has two components – class participation and weekly (p)review
 quizzes. Most lectures will come with a 1-2 page handout, and you can submit
 the handout any time up until the start of the next lecture. Credit is given
 for reasonable effort in engaging with the notes from the day on the handout.
 Quizzes will release each week around Wednesday, and be due Sunday evening.
-These serve as a review of the past week and a preview of the coming week. You
-get credit for a quiz by getting most of the questions right. **Engagement** is
-used to add +/- modifiers at the end of the quarter, and won't make the
-difference between A/B/C etc.
+These serve as a review of the past week and a preview of the coming week.
+
+The standards for grade levels are:
+
+- **A**:
+  - Exam point total 5 or higher (High Pass on one exam and Pass or better on the other) (including final make-up)
+  - High Pass on half the assignments, Pass on others, no missing assignments
+- **B**:
+  - Exam point total 4 or higher (one High Pass and one Low Pass, or two Passes) (including final make-up)
+  - Pass or above on all assignments, up to one missing assignment
+- **C**
+  - Exam point total 3 or higher (including final make-up)
+  - Pass or above on half the assignments, any score on the others
+
+You get credit for a quiz by getting most of the questions right.
+**Engagement** is used to add +/- modifiers at the end of the quarter, and
+won't make the difference between A/B/C etc.
+
+**Comprehensive Exam**: For graduate students using this course for a
+comprehensive exam requirement, you must get "A" achievement on the exams. Note
+that you can use the final exam make-up time to do this!
+
 
 ## Policies
 
