@@ -57,6 +57,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 - [Assignment (due Tuesday, April 11, 10pm)](./week1/index.md)
 - Reading and resources:
+  - [Monday Handout](https://drive.google.com/file/d/1AOZ-MRYc1DYdbBlz6xkMrETaeCfHujZI/view?usp=share_link)
   - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
   - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
   - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
