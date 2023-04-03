@@ -259,7 +259,7 @@ that will work with this file. Here's a simple assembly program that has a
 global label for `our_code_starts_here` that has a “function body” that
 returns the value `31`:
 
-```asm
+```x86asm
 section .text
 global _our_code_starts_here
 _our_code_starts_here:
@@ -550,12 +550,13 @@ grammar of Adder). Here's a function that will do the trick:
 fn parse_expr(s: &Sexp) -> Expr {
     match s {
         Sexp::Atom(I(n)) => Expr::Num(i32::try_from(*n).unwrap()),
-        Sexp::List(vec) =>
+        Sexp::List(vec) => {
             match &vec[..] {
                 [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
                 [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
                 _ => panic!("parse error")
             },
+        }
         _ => panic!("parse error")
     }
 }
@@ -580,7 +581,7 @@ fn compile_expr(e: &Expr) -> String {
     match e {
         Expr::Num(n) => format!("mov rax, {}", *n),
         Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
-        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1"
+        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1",
     }
 }
 ```
