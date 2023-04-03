@@ -1,10 +1,10 @@
 ---
 layout: page
-title: "PA1 – Simple Compiler with Binary Operations"
+title: "PA2 – Simple Compiler with Binary Operations"
 doodle: "../doodle.png"
 ---
 
-# PA1 Anaconda, Due Wednesday October 9, 2019 (Closed Collaboration)
+# Week 2: Boa, Due [TODO: fill] (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called
 Anaconda, that has let bindings and binary operators. The key difference
@@ -13,18 +13,17 @@ _multiple_ variables defined within a single let.
 
 ## Setup
 
-Get the assignment at [Github
-Classroom](https://classroom.github.com/a/maFoIzu3). This will make a
+Get the assignment at [TODO: fill Github classroom link]. This will make a
 private-to-you copy of the repository hosted within the course's
 organization. You can also access the public starter code [directly from this
-public URL](https://github.com/ucsd-cse131-f19/pa1-student) if you don't have
+public URL]() [TODO: fill] if you don't have
 or prefer not to use a Github account.
 
-## The Anaconda Language
+## The Boa Language
 
 In each of the next several assignments, we'll introduce a language that we'll
 implement.  We'll start small, and build up features incrementally.  We're
-starting with Anaconda, which has just a few features – defining variables, and
+starting with Boa, which has just a few features – defining variables, and
 primitive operations on numbers.
 
 There are a few pieces that go into defining a language for us to compile:
@@ -36,7 +35,7 @@ There are a few pieces that go into defining a language for us to compile:
 
 ### Concrete Syntax
 
-The concrete syntax of Anaconda is:
+The concrete syntax of Boa is:
 
 ```
 <expr> :=
@@ -57,7 +56,7 @@ Here, a `let` expression can have one *or more* bindings.
 
 ### Abstract Syntax
 
-The abstract syntax of Anaconda is an OCaml datatype, and corresponds nearly
+The abstract syntax of Boa is a Rust enum, and corresponds nearly
 one-to-one with the concrete syntax.
 
 ```
@@ -76,6 +75,13 @@ type expr =
   | Let of (string * expr) list * expr
   | Prim1 of prim1 * expr
   | Prim2 of prim2 * expr * expr
+```
+
+```
+enum Prim1 {
+    Add1,
+    Sub1
+}
 ```
 
 ### Semantics
