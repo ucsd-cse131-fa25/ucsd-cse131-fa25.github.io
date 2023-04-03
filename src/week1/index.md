@@ -56,7 +56,7 @@ There are a few pieces that go into defining a language for us to compile:
 
 ### Concrete Syntax
 
-The concrete syntax of Anaconda is:
+The concrete syntax of Adder is:
 
 ```text
 <expr> :=
@@ -68,7 +68,7 @@ The concrete syntax of Anaconda is:
 
 ### Abstract Syntax
 
-The abstract syntax of Anaconda is a Rust datatype, and corresponds nearly
+The abstract syntax of Adder is a Rust datatype, and corresponds nearly
 one-to-one with the concrete syntax. We'll show just the parts for `add1` and
 `sub1` in this tutorial, and leave it up to you to include `negate` to get
 practice.
