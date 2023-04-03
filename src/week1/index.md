@@ -1,8 +1,4 @@
----
-layout: page
-title: "Week 1 - A simple compiler in Rust"
-doodle: "./adder.jpg"
----
+![adder](./adder.jpg)
 
 # Adder
 
@@ -51,17 +47,18 @@ starting with Adder, which has just a few features –numbers and three
 operations.
 
 There are a few pieces that go into defining a language for us to compile:
-* A description of the concrete syntax – the text the programmer writes.
-* A description of the abstract syntax – how to express what the
+
+- A description of the concrete syntax – the text the programmer writes.
+- A description of the abstract syntax – how to express what the
   programmer wrote in a data structure our compiler uses.
-* A *description of the behavior* of the abstract
+- A _description of the behavior_ of the abstract
   syntax, so our compiler knows what the code it generates should do.
 
 ### Concrete Syntax
 
 The concrete syntax of Anaconda is:
 
-```
+```text
 <expr> :=
   | <number>
   | (add1 <expr>)
@@ -76,7 +73,7 @@ one-to-one with the concrete syntax. We'll show just the parts for `add1` and
 `sub1` in this tutorial, and leave it up to you to include `negate` to get
 practice.
 
-```
+```rust
 enum Expr {
     Num(i32),
     Add1(Box<Expr>),
@@ -95,8 +92,8 @@ tracks the contents of each field in each variant of the `enum`. Since an
 `Expr` could be an `Add1` that contains another `Add1` that contains another
 `Add1`... and so on, there's no way to calculate the size of an enum variant like
 
-```
-  Add1(Expr)
+```rust
+    Add1(Expr)
 ```
 
 (What error do you get if you try?)
@@ -141,7 +138,7 @@ Add1(Sub1(Number(5)))
 
 **Result**
 
-```
+```rust
 5
 ```
 
@@ -161,7 +158,7 @@ Number(4)
 
 **Result**
 
-```
+```rust
 4
 ```
 
@@ -181,14 +178,14 @@ Negate(Add1(Number(3)))
 
 **Result**
 
-```
+```rust
 -4
 ```
 
 ## Implementing a Compiler for Adder
 
 We're going to start by _just_ compiling numbers, so we can see how all the
-infrastructure works. We *won't* give starter code for this so that you see how
+infrastructure works. We _won't_ give starter code for this so that you see how
 to build this up from scratch.
 
 By _just_ compiling numbers, we mean that we'll write a compiler for a language
@@ -200,7 +197,7 @@ there!)
 
 First, make a new project with
 
-```
+```console
 $ cargo new adder
 ```
 
@@ -262,7 +259,7 @@ that will work with this file. Here's a simple assembly program that has a
 global label for `our_code_starts_here` that has a “function body” that
 returns the value `31`:
 
-```
+```x86asm
 section .text
 global _our_code_starts_here
 _our_code_starts_here:
@@ -276,7 +273,7 @@ should now have a `runtime/` and a `test/` directory that you created).
 We can create a standalone binary program that combines these with these
 commands (substitute `macho64` for `elf64` on OSX):
 
-```
+```console
 $ nasm -f elf64 test/31.s -o runtime/our_code.o
 $ ar rcs runtime/libour_code.a runtime/our_code.o
 $ ls runtime
@@ -330,7 +327,7 @@ fn main() {
 
 You can compile and run this with `cargo run`:
 
-```
+```console
 $ cargo run
    Compiling adder v0.1.0 (/Users/joe/src/adder)
 mov rax, 37
@@ -383,7 +380,7 @@ the languages in this course.)
 
 Then we can run our compiler with these command line arguments:
 
-```
+```console
 $ cat test/37.snek
 37
 $ cargo run -- test/37.snek test/37.s
@@ -398,7 +395,7 @@ _our_code_starts_here:
 
 Then we can use the same sequence of commands from before to run the program:
 
-```
+```console
 $ nasm -f elf64 test/37.s -o runtime/our_code.o
 $ ar rcs runtime/libour_code.a runtime/our_code.o
 $ rustc -L runtime/ runtime/start.rs -o test/37.run
@@ -421,19 +418,19 @@ workflow by creating a Makefile that runs through the compile-assemble-link
 steps for us. Put these rules into a file called `Makefile` in the root of the
 repository (use `elf64` on Linux):
 
-```
+```makefile
 test/%.s: test/%.snek src/main.rs
-	cargo run -- $< test/$*.s
+  cargo run -- $< test/$*.s
 
 test/%.run: test/%.s runtime/start.rs
-	nasm -f macho64 test/$*.s -o runtime/our_code.o
-	ar rcs runtime/libour_code.a runtime/our_code.o
-	rustc -L runtime/ runtime/start.rs -o test/$*.run
+  nasm -f macho64 test/$*.s -o runtime/our_code.o
+  ar rcs runtime/libour_code.a runtime/our_code.o
+  rustc -L runtime/ runtime/start.rs -o test/$*.run
 ```
 
 And then you can run just `make test/<file>.run` to do the build steps:
 
-```
+```console
 $ make test/37.run
 cargo run -- test/37.snek test/37.s
     Finished dev [unoptimized + debuginfo] target(s) in 0.07s
@@ -464,7 +461,7 @@ and won't be our focus in this course.
 
 A grammar for s-expressions looks something like:
 
-```
+```text
 s-exp := number
        | symbol
        | string
@@ -475,7 +472,7 @@ That is, an s-expression is either a number, symbol (think of symbol like an
 identifier name), string, or a parenthesized sequence of s-expressions. Here
 are some s-expressions:
 
-```
+```scheme
 (1 2 3)
 (a (b c d) e "f" "g")
 
@@ -505,7 +502,7 @@ tutorial.)
 We can add ths package to our project by adding it to `Cargo.toml`, which was
 created when you used `cargo new`. Make it so your `Cargo.toml` looks like this:
 
-```
+```toml
 [package]
 name = "adder"
 version = "0.1.0"
@@ -519,15 +516,15 @@ crate be downloaded.
 
 We can then use it in our program like this:
 
-```
+```rust
 use sexp::*;
 use sexp::Atom::*;
 ```
 
 Then, a function call like this can turn a string into a `Sexp`:
 
-```
-  let sexp = parse("(add1 (sub1 (add1 73)))").unwrap()
+```rust
+    let sexp = parse("(add1 (sub1 (add1 73)))").unwrap()
 ```
 
 (As a reminder, the `.unwrap()` is our way of telling Rust that we are trusting
@@ -546,19 +543,20 @@ enum Expr {
 ```
 
 So we should next write a function that takes `Sexp`s and turns them into
-`Expr`s (or gives an error if we give an s-exprssion that doesn't match the
+`Expr`s (or gives an error if we give an s-expression that doesn't match the
 grammar of Adder). Here's a function that will do the trick:
 
 ```rust
 fn parse_expr(s: &Sexp) -> Expr {
     match s {
         Sexp::Atom(I(n)) => Expr::Num(i32::try_from(*n).unwrap()),
-        Sexp::List(vec) =>
+        Sexp::List(vec) => {
             match &vec[..] {
                 [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
                 [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
                 _ => panic!("parse error")
             },
+        }
         _ => panic!("parse error")
     }
 }
@@ -583,7 +581,7 @@ fn compile_expr(e: &Expr) -> String {
     match e {
         Expr::Num(n) => format!("mov rax, {}", *n),
         Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
-        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1"
+        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1",
     }
 }
 ```
@@ -617,16 +615,17 @@ _our_code_starts_here:
     Ok(())
 }
 ```
+
 Then we can write tests like this `add.snek`:
 
-```
+```console
 $ cat test/add.snek
 (sub1 (sub1 (add1 73)))
 ```
 
 And run our whole compiler end-to-end:
 
-```
+```console
 $ make test/add.run
 cargo run -- test/add.snek test/add.s
     Finished dev [unoptimized + debuginfo] target(s) in 0.02s
@@ -676,5 +675,3 @@ Hand in your entire repository to the `assignment-1-tutorial` assignment on
 Gradescope. There is no automated grading for this assignment; we want you to
 practice gaining your own confidence that your solution works (and
 demonstrating that to us).
-
-

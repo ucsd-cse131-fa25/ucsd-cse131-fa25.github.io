@@ -1,21 +1,15 @@
----
-layout: page
-title: "Compiler Construction – CSE 131 F19"
-doodle: "/doodle.jpg"
----
+![doodle](./doodle.jpg)
 
 # Compiler Construction (Spring 2023 Edition)
 
-- <a href="https://jpolitz.github.io">Joe Gibbs Politz</a> (Instructor)
+- [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
 - FILL staff
 
-<p>
-<a href="#basics">Basics</a> -
-<a href="#schedule">Schedule</a> -
-<a href="#staff">Staff &amp; Resources</a> -
-<a href="#grading">Grading</a> -
-<a href="#policies">Policies</a>
-</p>
+[Basics](#basics) -
+[Schedule](#schedule) -
+[Staff &amp; Resources](#staff--resources) -
+[Grading](#course-components-and-grading) -
+[Policies](#policies)
 
 In this course, we'll explore the implementation of **compilers**: programs that
 transform source programs into other useful, executable forms. This will
@@ -31,7 +25,6 @@ through design challenges based on what you learn from implementation.
 This web page serves as the main source of announcements and resources for the
 course, as well as the syllabus.
 
-<a id="basics"></a>
 ## Basics
 
 - Lecture: [Catalyst 0125](https://map.concept3d.com/?id=1005#!m/576554), 12:00-12:50pm (noon) Mon/Wed/Fri
@@ -41,7 +34,7 @@ course, as well as the syllabus.
 
 - Podcasts: Coming soon
 - Q&A Forum: Coming soon
-- Gradescope: <a href="https://www.gradescope.com">https://www.gradescope.com</a> will be used for submissions (instructions will accompany the first programming assignment)
+- Gradescope: <https://www.gradescope.com> will be used for submissions (instructions will accompany the first programming assignment)
 - Textbook/readings: There's no official textbook, but we will link to
   different online resources for you to read to supplement lecture. Versions
   of this course have been taught at several universities, so sometimes I'll
@@ -51,8 +44,6 @@ course, as well as the syllabus.
   - [UMich EECS483](https://maxsnew.com/teaching/eecs-483-fa22/)
   - [Northeastern CS4410](https://courses.ccs.neu.edu/cs4410/)
 
-
-<a id="schedule"></a>
 ## Schedule
 
 The schedule below outlines topics, due dates, and links to assignments. The
@@ -62,16 +53,14 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Sunday evenings.
 
-**Week 1 - Rust and Source to Assembly Conversion**
+### Week 1 - Rust and Source to Assembly Conversion
 
-- [Assignment (due Tuesday, April 11, 10pm)](/week1/){:target="_blank"}
+- [Assignment (due Tuesday, April 11, 10pm)](./week1/index.md)
 - Reading and resources:
-  - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book){:target="_blank"}
-  - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html){:target="_blank"}
-  - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf){:target="_blank"}
+  - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
+  - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
+  - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
 
-
-<a id="staff"></a>
 ## Staff & Resources
 
 Office hours are concentrated on Friday, Monday, and Tuesday, since most
@@ -81,9 +70,6 @@ ask you to put your name in the queue using the whiteboard. Read the
 description about [collaboration below](#policies) for some context about office
 hours.
 
-
-
-<a id="grading"></a>
 ## Course Components and Grading
 
 Your grade will be calculated from **engagement**, **assignments**, and **tests**.
@@ -105,7 +91,6 @@ get credit for a quiz by getting most of the questions right. **Engagement** is
 used to add +/- modifiers at the end of the quarter, and won't make the
 difference between A/B/C etc.
 
-<a id="policies"></a>
 ## Policies
 
 ### Programming
@@ -143,20 +128,20 @@ There are two types of assignments in this course:
   restrictions:
   - Any code that you didn't write must be cited in the README file that goes
     along with your submission
-      - **Example:** On an open collaboration assignment, you and another
-        student chat online about the solution, you figure out a particular
-        helper method together. Your README should say “The FOO function was
-        developed in collaboration with Firstname Lastname”
-      - **Example:** On an open collaboration assignment, a student posts the
-        compilation strategy they used to handle a type of expression you were
-        struggling with. Your README should say “I used the code from
-        the forum post at [link]”
+    - **Example:** On an open collaboration assignment, you and another
+      student chat online about the solution, you figure out a particular
+      helper method together. Your README should say “The FOO function was
+      developed in collaboration with Firstname Lastname”
+    - **Example:** On an open collaboration assignment, a student posts the
+      compilation strategy they used to handle a type of expression you were
+      struggling with. Your README should say “I used the code from
+      the forum post at [link]”
   - Anyone you work with in-person must be noted in your README
-      - **Example:** You and another student sit next to each other in the lab,
-        and point out mistakes and errors to one another as you work through
-        the assignment. As a result, your solutions are substantially similar.
-        Your README should say “I collaborated with Firstname Lastname to
-        develop my solution.”
+    - **Example:** You and another student sit next to each other in the lab,
+      and point out mistakes and errors to one another as you work through
+      the assignment. As a result, your solutions are substantially similar.
+      Your README should say “I collaborated with Firstname Lastname to
+      develop my solution.”
   - You cannot share an entire repository of code or paste an entire solution
     into a message board. Keep snippets to reasonable, descriptive chunks of
     code; think a dozen lines or so to get the point across.
@@ -183,13 +168,13 @@ There are two types of assignments in this course:
   However, TAs will not look at your code or comment on it. Lab/office hours
   these weeks are for conceptual questions or for questions about past
   assignments only, no code assistance. On these assignments:
-    - You cannot look at or use anyone else's code
-    - You cannot discuss the assignment with other students
-    - You cannot post publicly about the assignment on the course message
-      board (or on social media or other forums). Of course, you can still
-      post questions about material from lecture or past assignments!
-    - All of the examples in the open collaboration section above would be
-      academic integrity violations on a closed collaboration assignment
+  - You cannot look at or use anyone else's code
+  - You cannot discuss the assignment with other students
+  - You cannot post publicly about the assignment on the course message
+    board (or on social media or other forums). Of course, you can still
+    post questions about material from lecture or past assignments!
+  - All of the examples in the open collaboration section above would be
+    academic integrity violations on a closed collaboration assignment
 
 Programming assignments will explicitly list whether they are open or closed
 collaboration.
@@ -211,7 +196,6 @@ Mistakes occur in grading. Once grades are posted for an assignment, we will
 allow a short period for you to request a fix (announced along with grade
 release). If you don't make a request in the given period, the grade you were
 initially given is final.
-
 
 ### Exams
 
@@ -240,7 +224,7 @@ Some past exams are available at the link below for reference on format
 (content changes from offering to offering so this may not be
 representative):
 
-https://drive.google.com/drive/folders/1yPxZ-nqRpC9Gz63JIavhQgfnyhA0uGIs?usp=sharing
+<https://drive.google.com/drive/folders/1yPxZ-nqRpC9Gz63JIavhQgfnyhA0uGIs?usp=sharing>
 
 ### Laptop/Device Policy in Lecture
 
@@ -281,13 +265,12 @@ and we welcome your perspectives and input.
 
 We also expect that you, as a student in this course, will honor and respect
 your classmates, abiding by the UCSD Principles of Community
-(https://ucsd.edu/about/principles.html).  Please understand that others’
+(<https://ucsd.edu/about/principles.html>).  Please understand that others’
 backgrounds, perspectives and experiences may be different than your own, and
 help us to build an environment where everyone is respected and feels
 comfortable.
 
 If you experience any sort of harassment or discrimination, please contact the
-instructor as soon as possible.   If you prefer to speak with someone outside
+instructor as soon as possible. If you prefer to speak with someone outside
 of the course, please contact the Office of Prevention of Harassment and
-Discrimination: https://ophd.ucsd.edu/.
-
+Discrimination: <https://ophd.ucsd.edu/>.
