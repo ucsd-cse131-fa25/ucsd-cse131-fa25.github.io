@@ -416,7 +416,7 @@ There are a lot of thing we could do to try and assemble and run the program,
 and we'll discuss some later in the course. For now, we'll simply tidy up our
 workflow by creating a Makefile that runs through the compile-assemble-link
 steps for us. Put these rules into a file called `Makefile` in the root of the
-repository:
+repository (use `elf64` on Linux):
 
 ```makefile
 test/%.s: test/%.snek src/main.rs
