@@ -389,7 +389,7 @@ Then we can run our compiler with these command line arguments:
 $ cat test/37.snek
 37
 $ cargo run -- test/37.snek test/37.s
-$ cat test.367.s
+$ cat test/37.s
 
 section .text
 global our_code_starts_here
