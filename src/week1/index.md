@@ -350,6 +350,10 @@ also puts the generated command into the template we designed for our generated
 assembly:
 
 ```rust
+use std::env;
+use std::fs::File;
+use std::io::prelude::*;
+
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
 
@@ -425,13 +429,19 @@ repository (use `elf64` on Linux):
 
 ```makefile
 test/%.s: test/%.snek src/main.rs
-  cargo run -- $< test/$*.s
+	cargo run -- $< test/$*.s
 
 test/%.run: test/%.s runtime/start.rs
-  nasm -f macho64 test/$*.s -o runtime/our_code.o
-  ar rcs runtime/libour_code.a runtime/our_code.o
-  rustc -L runtime/ runtime/start.rs -o test/$*.run
+	nasm -f macho64 test/$*.s -o runtime/our_code.o
+	ar rcs runtime/libour_code.a runtime/our_code.o
+	rustc -L runtime/ runtime/start.rs -o test/$*.run
 ```
+
+(Note that `make` requires tabs not spaces, but we can only use spaces on the
+website, so please replace the four spaces indentation with tab characters when
+you copy it -- [or copy it from Github][makefile-git].)
+
+[makefile-git]: https://github.com/ucsd-compilers-s23/adder/blob/main/Makefile
 
 And then you can run just `make test/<file>.run` to do the build steps:
 
@@ -543,7 +553,7 @@ Our goal, though, is to use a datatype that we design for our expressions, which
 enum Expr {
     Num(i32),
     Add1(Box<Expr>),
-    Sub1(Box<Expr>)
+    Sub1(Box<Expr>),
 }
 ```
 
@@ -559,10 +569,10 @@ fn parse_expr(s: &Sexp) -> Expr {
             match &vec[..] {
                 [Sexp::Atom(S(op)), e] if op == "add1" => Expr::Add1(Box::new(parse_expr(e))),
                 [Sexp::Atom(S(op)), e] if op == "sub1" => Expr::Sub1(Box::new(parse_expr(e))),
-                _ => panic!("parse error")
-            },
-        }
-        _ => panic!("parse error")
+                _ => panic!("parse error"),
+            }
+        },
+        _ => panic!("parse error"),
     }
 }
 ```
@@ -585,8 +595,8 @@ ASTs to generated assembly. Here's one way to do that:
 fn compile_expr(e: &Expr) -> String {
     match e {
         Expr::Num(n) => format!("mov rax, {}", *n),
-        Expr::Add1(subexpr) => compile_expr(subexpr) + "add rax, 1",
-        Expr::Sub1(subexpr) => compile_expr(subexpr) + "sub rax, 1",
+        Expr::Add1(subexpr) => compile_expr(subexpr) + "\nadd rax, 1",
+        Expr::Sub1(subexpr) => compile_expr(subexpr) + "\nsub rax, 1",
     }
 }
 ```
