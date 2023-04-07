@@ -56,9 +56,11 @@ Here, a `let` expression can have one *or more* bindings.
 
 ### Abstract Syntax
 
-The abstract syntax of Boa is a Rust enum, and corresponds nearly
-one-to-one with the concrete syntax.
+The abstract syntax of Boa is a Rust enum. Note that this
+representation is differen from what we used in
+[Adder](https://ucsd-compilers-s23.github.io/week1/index.html).
 
+<!--- previous ocaml types
 ```
 type prim1 =
   | Add1
@@ -76,23 +78,38 @@ type expr =
   | Prim1 of prim1 * expr
   | Prim2 of prim2 * expr * expr
 ```
+ --->
 
 ```
-enum Prim1 {
+enum Op1 {
     Add1,
     Sub1
+}
+
+enum Op2 {
+    Plus,
+    Minus,
+    Times
+}
+
+enum Expr {
+    Number(i32),
+    Id(String),
+    Let(Vec<(String, Box<Expr>)>, Box<Expr>),
+    Prim1(Op1, Box<Expr>),
+    Prim2(Op2, Box<Expr>, Box<Expr>)
 }
 ```
 
 ### Semantics
 
-A ``semantics'' describes the languages' behavior without giving all of the
+A "semantics" describes the languages' behavior without giving all of the
 assembly code for each instruction.
 
-An Anaconda program always evaluates to a single integer.
+A Boa program always evaluates to a single integer.
 
 - Numbers evaluate to
-themselves (so a program just consisting of `Number(5)` should evaluate to the
+themselves (so a program just consisting of `Num(5)` should evaluate to the
 integer `5`).
 - Primitive expressions perform addition or subtraction by one on
 their argument.
@@ -111,7 +128,7 @@ The _compiler_ should stop and report an error if:
 * There is a binding list containing two or more bindings with the same name. **The error should contain the string `"Duplicate binding"`**
 * An identifier is unbound (there is no surrounding let binding for it) **The error should contain the string `"Unbound variable identifier {identifier}"` (where the actual name of the variable is substituted for `{identifier}`)**
 
-Here are some examples of Anaconda programs:
+Here are some examples of Boa programs:
 
 #### Example 1
 
@@ -123,7 +140,7 @@ Here are some examples of Anaconda programs:
 
 **Abstract Syntax**
 
-```ocaml
+```rust
 Number(5)
 ```
 
@@ -143,8 +160,8 @@ Number(5)
 
 **Abstract Syntax**
 
-```ocaml
-Prim1(Sub1, Prim1(Add1, Prim1(Sub1, Number(5))))
+```rust
+Prim1(Sub1, Box::new(Prim1(Add1, Box::new(Prim1(Sub1, Box::new(Number(5)))))));
 ```
 
 **Result**
@@ -163,8 +180,8 @@ Prim1(Sub1, Prim1(Add1, Prim1(Sub1, Number(5))))
 
 **Abstract Syntax**
 
-```ocaml
-Let([("x", Number(5))], Prim1(Add1, Id("x")))
+```rust
+Let(vec![("x".to_string(), Box::new(Number(5)))], Box::new(Prim1(Add1, Box::new(Id("x".to_string())))))
 ```
 
 **Result**
