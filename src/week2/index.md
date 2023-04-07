@@ -202,58 +202,60 @@ Prim1(Sub1, Number(5))
 ```
 (let ((x 10) (y 7)) (* (- x y) 2))
 # as an expr
-Let([("x", Number(10)), ("y", Number(7))],
-  Prim2(Times, Prim2(Minus, Id("x"), Id("y")), Number(2)))
+Let(vec![("x".to_string(), Box::new(Number(10))), ("y".to_string(), Box::new(Number(7)))],
+        Box::new(Prim2(Times, Box::new(Prim2(Minus, Box::new(Id("x".to_string())),
+                              Box::new(Id("y".to_string())))), Box::new(Number(2)))));
 # evaluates to
 6
 ```
 
-### Implementing a Compiler for Anaconda
+### Implementing a Compiler for Boa
 
 You've been given a starter codebase that has several pieces of
 infrastructure:
 
-* A stub for a parser for Anaconda which takes a s-expression that represents
-  the code, and converts it to an abstract syntax tree (`parser.ml`). You need to
+* A stub for a parser for Boa which takes an s-expression that represents
+  the code, and converts it to an abstract syntax tree (`parser.rs`). You need to
   implement the parser to actually perform the conversion.
-* A main program (`main.ml`) that uses the parser and compiler to produce
-  assembly code from an input Anaconda text file.  **You don't need to edit this.**
-* A `Makefile` that builds `main.ml`, builds a tester for Anaconda
-  (`test.ml`), and manipulates assembly programs created by the Anaconda
-  compiler.  You don't need to edit the `Makefile` or `test.ml`, but you
-  will edit `myTests.ml`.
+* A main program (`main.rs`) that uses the parser and compiler to produce
+  assembly code from an input Boa text file.  **You don't need to edit this.**
+* A `Makefile` that builds `main.rs`, builds a tester for Boa
+  (`test.rs`), and manipulates assembly programs created by the Boa
+  compiler.  You don't need to edit the `Makefile` or `test.rs`, but you
+  will edit `myTests.rs`.
   Specifically, you will add your own tests by filling in
   `myTestList` following the instructions in the beginning of the file.
 
-  You need to add _at least 10 tests_ to `myTests.ml`. Focus on making these
+  You need to add _at least 10 tests_ to `myTests.rs`. Focus on making these
   interesting and thorough, as you will get credit for showing thoughtful
   testing.
-* An OCaml program (`runner.ml`) that works in concert with the `Makefile` to
-  allow you to compile and run an Anaconda program from within OCaml, which
-  is quite useful for testing. You don't need to edit `runner.ml`.
+* A Rust program (`runner.rs`) that works in concert with the `Makefile` to
+  allow you to compile and run a Boa program from within Rust, which
+  is quite useful for testing. You don't need to edit `runner.rs`.
 
 All of your edits—which will be to write the compiler for Anaconda, and test
-it—will happen in `parser.ml`, `compile.ml`, `asm.ml` and `myTests.ml`. You
-shouldn't edit `expr.ml`, `test.ml`, `runner.ml`, or `main.ml`, though you
-should read and understand `expr.ml`.
+it—will happen in `parser.rs`, `compile.rs`, `asm.rs` and `myTests.rs`. You
+shouldn't edit `expr.rs`, `test.rs`, `runner.rs`, or `main.rs`, though you
+should read and understand `expr.rs`.
 
 ### Writing the Parser
 
 The parser will be given a S-expression representing the whole program, and
-must build a AST of the `expr` data type (refer to `expr.ml`) from this S-expression.
+must build a AST of the `expr` data type (refer to `expr.rs`) from this S-expression.
 
-An S-expression in OCaml (from the Core library) is of the following type:
+An S-expression in Rust is of the following type:
 ```
-type sexp =
-| List of sexp list
-| Atom of string
+pub enum Sexp {
+    String(String),
+    List(Vec<Sexp>),
+    Empty,
+}
 ```
-For more info about S-expressions in Core, see [here](https://dev.realworldocaml.org/data-serialization.html)
 
 Thus, an example S-expression that could be parsed into a program would be as
 follows
 ```
-List([Atom("let"); List([List([Atom("x"); Atom("5")])]); Atom("x")])
+List(vec![Atom("let"), List(vec![List([Atom("x"), Atom("5")])]), Atom("x")])
 ```
 which corresponds to
 ```
