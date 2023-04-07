@@ -32,9 +32,9 @@ course, as well as the syllabus.
 - Tests **(in Friday Discussion Section)**: May 5 (Week 5), June 2 (Week 9)
 - Final Exam (used for making up test credit): Wed June 14, 11:30-2:30, Location TBD
 
-- Podcasts: Coming soon
-- Q&A Forum: Coming soon
-- Gradescope: <https://www.gradescope.com> will be used for submissions (instructions will accompany the first programming assignment)
+- Podcasts: [podcast.ucsd.edu](https://podcast.ucsd.edu/watch/sp23/cse131cse231_a00)
+- Q&A Forum: [EdStem](https://edstem.org/us/courses/38748)
+- Gradescope: [https://www.gradescope.com](https://www.gradescope.com)
 - Textbook/readings: There's no official textbook, but we will link to
   different online resources for you to read to supplement lecture. Versions
   of this course have been taught at several universities, so sometimes I'll
@@ -66,11 +66,14 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 ## Staff & Resources
 
 Office hours are concentrated on Friday, Monday, and Tuesday, since most
-assignments are due Tuesday evening. Please check the calendar before you come in
-case there have been any changes. When you come to the office hour, we may
+assignments are due Tuesday evening. Please check the calendar before you come
+in case there have been any changes. When you come to the office hour, we may
 ask you to put your name in the queue using the whiteboard. Read the
-description about [collaboration below](#policies) for some context about office
-hours.
+description about [collaboration below](#policies) for some context about
+office hours. The office hours schedule is below; each event has details about
+remote/in-person:
+
+<iframe src="https://calendar.google.com/calendar/embed?src=c_c1586a0a6e6455fce678e079b70229d7a08fa87ff273967e084fdb60683da37f%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 
 ## Course Components and Grading
 
