@@ -1,9 +1,3 @@
----
-layout: page
-title: "PA2 – Simple Compiler with Binary Operations"
-doodle: "../doodle.png"
----
-
 # Week 2: Boa, Due [TODO: fill] (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called
