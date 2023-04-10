@@ -13,10 +13,10 @@ _multiple_ variables defined within a single let.
 
 ## Setup
 
-Get the assignment at [https://classroom.github.com/a/1bvTt9dk]. This will make a
+Get the assignment at <https://classroom.github.com/a/1bvTt9dk>. This will make a
 private-to-you copy of the repository hosted within the course's
 organization. You can also access the public starter code [directly from this
-public URL]() [https://github.com/ucsd-compilers-s23/boa-starter] if you don't have
+public URL](https://github.com/ucsd-compilers-s23/boa-starter) if you don't have
 or prefer not to use a Github account.
 
 ## The Boa Language
