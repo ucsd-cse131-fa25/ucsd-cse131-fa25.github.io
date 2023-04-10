@@ -294,54 +294,59 @@ which may be helpful for handling `let` expressions.
 
 ### Writing the Compiler
 
-The primary task of writing the Anaconda compiler is simple to state: take an
-instance of the `expr` datatype and turn it into a list of assembly
-instructions.  The provided compiler skeleton is set up to do just this,
-broken up over a few functions.
-
-The first is
+The primary task of writing the Boa compiler is simple to state: take an
+instance of the `Expr` type and turn it into a list of assembly
+instructions. Start by defining a function that compiles an expression into a
+list of instructions:
 ```
-compile : expr -> instruction list
+fn compile_to_instrs(e: &Expr) -> Vec<Instr> {
+    todo!("compile_to_instrs");
+}
 ```
 
-which takes an `expr` value (abstract syntax) and turns it into a list of
-assembly instructions, represented by the `instruction` type.  Use only the
+which takes an `Expr` value (abstract syntax) and turns it into a list of
+assembly instructions, represented by the `Instr` type.  Use only the
 provided instruction types for this assignment; we will be gradually expanding
-this as the quarter progresses.  This function has an associated helper that
-takes some extra arguments to track the variable environment and stack
-offset.  These will be discussed in more detail in lecture. `compile` also
-calls some other helper functions that help us seperate out the code,
-it is up to you to use these or not.
+this as the quarter progresses.
 
-**Note**: For variable bindings, we use a `(string * int) list`.  
-  This is a simple data structure that's often called an association list.  
-  There is a provided `find` function that looks up a value (an `int`) by key
-  (a `string`).  Adding to an association list is trivial – simply add onto 
-  the front with `::`.  You are responsible for understanding how ordering
-  in the case of duplicate keys may interact with scope.
+**Note**: For variable bindings, we use `im::HashMap<&'a str, i32>` from the
+  [`im`](https://docs.rs/im/latest/im/) crate.
+  We use the immutable HashMap here to make nested scopes easier because you
+  won't need to remember to pop variables when you leave a scope.
 
-The other component you need to implement is:
+The other functions you need to implement is:
 
+```rust
+fn instr_to_str(i: &Instr) -> String {
+    todo!("instr_to_str");
+}
+
+fn val_to_str(v: &Val) -> String {
+    todo!("val_to_str");
+}
 ```
-i_to_asm : instruction -> string
-```
 
-which is found in `asm.ml`. It renders individual instances of the
-instruction datatype into a string representation of the instruction (this is
-done for you for `mov` and `ret`). This second step is straightforward, but
+They render individual instances of the `Instr` type and `Val` type into a string
+representation of the instruction. This second step is straightforward, but
 forces you to understand the syntax of the assembly code you are generating.
 Most of the compiler concepts happen in the first step, that of generating
 assembly instructions from abstract syntax. Feel free to ask or refer to
 on-line resources if you want more information about a particular assembly
-instruction! You should also fill out the rest of `arg_to_asm : arg ->
-string` to support the `RegOffset` datatype, which will enable memory
-accesses (see stackloc in `compile.ml` and the assembly reference for help).
+instruction!
+
+After that, put everything together with a `compile` function that compiles an
+expression into assembly represented by a string.
+```rust
+fn compile(e: &Expr) -> String {
+    todo!("compile");
+}
+```
 
 ### Assembly instructions
-The assembly instructions that you will have to become familiar with for this
-assignment are:
+The `Instr` type is defined in the starter code. The assembly instructions that
+you will have to become familiar with for this assignment are:
 
-* `IMov of arg * arg` — Copies the right operand (source) into the left operand
+* `IMov(Val, Val)` — Copies the right operand (source) into the left operand
   (destination). The source can be an immediate argument, a register or a
   memory location, whereas the destination can be a register or a memory
   location.
@@ -352,47 +357,51 @@ assignment are:
     mov [rax], 4
   ```
 
-* `IAdd of arg * arg` — Add the two operands, storing the result in its first
+* `IAdd(Val, Val)` — Add the two operands, storing the result in its first
   operand.
 
   Example: `add rax, 10`
 
-* `ISub of arg * arg` — Store in the value of its first operand the result of
+* `ISub(Val, Val)` — Store in the value of its first operand the result of
   subtracting the value of its second operand from the value of its first
   operand.
 
   Example: `sub rax, 216`
 
-* `IMul of arg * arg` — Multiply the left argument by the right argument, and
+* `IMul(Val, Val)` — Multiply the left argument by the right argument, and
   store in the left argument (typically the left argument is `rax` for us)
 
   Example: `imul rax, 4`
 
-### Running main
+### Running
 
-The `main` program built with `make main` takes a single file as its
-command-line argument, and outputs the compiled assembly string on standard
-out. Note the `.ana` extension.
+Put your test `.snek` files in the `test/` directory. Run `make test/<file>.s`
+to compile your snek file into assembly.
 
 ```
-$ make main
-$ ./main input/forty_two.ana
+$ make test/add1.s
+cargo run -- test/add1.snek test/add1.s
+$ cat test/add1.s
+
 section .text
 global our_code_starts_here
 our_code_starts_here:
-  mov rax, 42
+  mov rax, 131
   ret
 ```
 
-To actually evaluate your assembly code, first we must create a `.s` assembly file, and
-then link it with `main.c` to create an executable.
+To actually evaluate your assembly code, first we must create a `.s` assembly
+file, and then link it with `runtime.rs` to create an executable. This is
+covered in the `Makefile`
 ```
-$ make output/forty_two.s (create the assembly file)
-$ make output/forty_two.run (create the executable)
+$ make test/add1.run
+nasm -f elf64 test/add1.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc -L runtime/ runtime/start.rs -o test/add1.run
 ```
 Finally you can run the file by executing to see the evaluated output:
 ```
-$ ./output/forty_two.run
+$ ./test/add1.run
 ```
 
 ### Testing the Compiler
@@ -402,7 +411,7 @@ The test file has the helper function `t` that will be useful to you:
 ```
 t : string -> string -> string -> OUnit.test
 ```
-The first string given to `t` (test) is a test name, followed by an Anaconda
+The first string given to `t` (test) is a test name, followed by an Boa
 program (in concrete syntax) to compile and evaluate, followed by a string for
 the expected output of the program (this will just be an integer in quotes).
 This helper compiles, links, and runs the given program, and if the compiler
@@ -462,31 +471,11 @@ then extend it for multiple bindings.
 commit and leave a message for yourself. That way you can get back to a good
 working state later if you end up stuck.
 
-**Asking For Help**
-
-This assignment is _closed to collaboration_, so TAs won't answer questions
-about your code or algorithms, and you should treat it like a take-home test.
-In office hours, we _can_ answer any questions you have about the code or
-concepts from class (and for this assignment, much of the class code is quite
-helpful).
-
-You can also always ask questions _privately_ on the course message board. We
-may not answer questions in as much detail as we would for open collaboration
-assignments. Rather, we will read all the questions and aggregate frequently
-asked questions and advice based on the questions we get.
-
 **Extensions**
 
-These are not required, nor will they give you any extra credit, but they are
-interesting to think about!
+TODO: extensions (REPL)
 
-- There are a lot of extra stores to memory where a value is immediately
-re-fetched from memory. How could you change the compiler to avoid these?
-- In Scheme and Racket, the `+` operator takes any number of arguments, so
-`(+ 1 2 3)` evaluates to 6. Extend your implementation of operators to allow
-for these arbitrary-arity cases.
-
-**FAQ F2019**
+**FAQ**
 
 **How to write tests for parse?**
 `t_parse` and `t_parse_error` functions are provided in `test.ml`, which you can use to write your own tests for parser.
@@ -507,30 +496,20 @@ To make this test pass, you would add code to `parser.ml` to handle the `Atom` c
 
 From the PA writeup: “Let bindings should evaluate all the binding expressions to values one by one, and after each, store a mapping from the given name to the corresponding value in both (a) the rest of the bindings, and (b) the body of the let expression. Identifiers evaluate to whatever their current stored value is.”
 
-**Are the let bindings from class valid anaconda programs, or do anaconda programs always have the extra parentheses around the bindings?**
+**Do Boa programs always have the extra parentheses around the bindings?**
 
-In Anaconda, there's always the extra set of parens around the list.
-
-**I get an error that says "Error: Signalled -10 when running output/file"**
-
-That's typically a segmentation fault. See the discussion podcast from 10-04 for some suggestions on debugging.
-
-[https://podcast.ucsd.edu/watch/fa19/cse131_a00/21/screen](https://podcast.ucsd.edu/watch/fa19/cse131_a00/21/screen)
-
-**I get an error like `"ocamlfind: Package sexplib not found"` when I run `make` on my laptop**
-
-Try running `opam install sexplib` to make sure you have the package installed.
+In Boa, there's always the extra set of parens around the list.
 
 **Can we write additional helper functions?**
 
 Yes.
 
 
-**Do we care about the text return from failwith?**
+**Do we care about the text return from panic?**
 
 Absolutely. Any time you write software you should strive to write thoughtful error messages. They will help you while debugging, you when you make a mistake coming back to your code later, and anyone else who uses your code.
 
-As for the autograder, we expect you to catch parsing and compilation errors. For parsing errors you should `failwith` an error message containing the word `Invalid`. For compilation errors, you should catch duplicate binding and unbound variable identifier errors and `failwith` `Duplicate binding` and `Unbound variable identifier {identifier}` respectively. We've also added these instructions to the PA writeup.
+As for the autograder, we expect you to catch parsing and compilation errors. For parsing errors you should `panic!` an error message containing the word `Invalid`. For compilation errors, you should catch duplicate binding and unbound variable identifier errors and `panic!` `Duplicate binding` and `Unbound variable identifier {identifier}` respectively. We've also added these instructions to the PA writeup.
 
 **How should we check that identifiers are valid according to the description in the writeup?**
 
@@ -540,33 +519,7 @@ From the PA writeup: “You can **assume** that an id is a valid string of form 
 
 **What should the program "()" compile to?**
 
-Is `()` an anaconda program (does it match the grammar)? What should the compiler do with a program that doesn't match the grammar?
-
-**What does "and" mean in Ocaml?**
-
-A construction like
-
-```
-let rec f ... = ...
-and g ... = ....
-```
-
-allows `f` and `g` to be mutually recursive (if they were separate `let rec`s, `g` could refer to `f` but not vice versa.)
-
-**What does the writeup mean when it says that duplicate bindings should be an error? Does that mean each variable can only be defined once?**
-
-Consider this Ocaml example, which is directly analogous to the design described for anaconda:
-
-```
-# let x = 10 in let x = x + 1 in x;;
-- : int = 11
-# let x = 10 and x = x + 1 in x;;
-Error: Variable x is bound several times in this matching
-```
-
-**I wrote out some expected output like `(ELet([("x", ENumber(10)), ("y", ENumber(7))], EPrim2(Times, EPrim2(Minus, EId("x"), EId("y")), ENumber(2))))` and Ocaml is giving me a type error that is hard to make sense of.**
-
-Remember that `;` (semicolon) separates list items and `,` (comma) separates tuple elements.
+Is `()` a Boa program (does it match the grammar)? What should the compiler do with a program that doesn't match the grammar?
 
 **What's the best way to test? What is test case <some-test-name-from-autograder> testing?**
 
@@ -575,4 +528,3 @@ A few suggestions:
 - First, make sure to test all the different expressions as a baseline
 - Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
 - Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
-
