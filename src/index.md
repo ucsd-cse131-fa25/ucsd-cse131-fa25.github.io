@@ -53,6 +53,18 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Sunday evenings.
 
+### Week 2 - Binary Operators, Booleans, and Conditionals
+
+- [Assignment (due Tuesday, April 18, 10pm)](./week2/index.md)
+- Reading and resources:
+  - [Max New on Let and the Stack](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html)
+    _Max New and Ben Lerner have done a nice job writing up notes on some of
+    my original scrawlings around this material. They don't use exactly the
+    same style or make the same decisions I do in this class, but things are
+    close enough to be useful._
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
+    [(pptx)](https://docs.google.com/presentation/d/1i3Mf3UVZoHmXJy3RhHpa4WMgt_M-MD38/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
+
 ### Week 1 - Rust and Source to Assembly Conversion
 
 - [Assignment (due Tuesday, April 11, 10pm)](./week1/index.md)
