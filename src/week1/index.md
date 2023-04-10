@@ -292,7 +292,7 @@ The first command _assembles_ the assembly code to an object file. The basic
 work there is generating the machine instructions for each assembly
 instruction, and enough information about labels like `our_code_starts_here` to
 do later linking. The `ar` command takes this object file and puts it in a
-standard format for dynamic library linking used by `#[link` in Rust. Then
+standard format for ~~dynamic~~ static library linking used by `#[link` in Rust. Then
 `rustc` combines that `.a` file and `start.rs` into a single executable binary
 that we named `31.run`.
 
