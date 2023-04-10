@@ -13,10 +13,10 @@ _multiple_ variables defined within a single let.
 
 ## Setup
 
-Get the assignment at [TODO: fill Github classroom link]. This will make a
+Get the assignment at [https://classroom.github.com/a/1bvTt9dk]. This will make a
 private-to-you copy of the repository hosted within the course's
 organization. You can also access the public starter code [directly from this
-public URL]() [TODO: fill] if you don't have
+public URL]() [https://github.com/ucsd-compilers-s23/boa-starter] if you don't have
 or prefer not to use a Github account.
 
 ## The Boa Language
@@ -109,7 +109,7 @@ assembly code for each instruction.
 A Boa program always evaluates to a single integer.
 
 - Numbers evaluate to
-themselves (so a program just consisting of `Num(5)` should evaluate to the
+themselves (so a program just consisting of `Number(5)` should evaluate to the
 integer `5`).
 - Primitive expressions perform addition or subtraction by one on
 their argument.
