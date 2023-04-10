@@ -95,9 +95,9 @@ enum Op2 {
 enum Expr {
     Number(i32),
     Id(String),
-    Let(Vec<(String, Box<Expr>)>, Box<Expr>),
-    Prim1(Op1, Box<Expr>),
-    Prim2(Op2, Box<Expr>, Box<Expr>)
+    Let(Vec<(String, Expr)>, Box<Expr>),
+    UnOp(Op1, Box<Expr>),
+    BinOp(Op2, Box<Expr>, Box<Expr>)
 }
 ```
 
@@ -115,7 +115,7 @@ integer `5`).
 their argument.
 - Binary operator expressions evaluate their arguments and combine them
 based on the operator.
-- Let bindings should evaluate all the binding expressions to
+- Let bindings should use lexical scoping: evaluate all the binding expressions to
 values one by one, and after each, store a mapping from the given name to the
 corresponding value in both (a) the rest of the bindings, and (b) the body of
 the let expression. Identifiers evaluate to whatever their current stored
@@ -161,7 +161,7 @@ Number(5)
 **Abstract Syntax**
 
 ```rust
-Prim1(Sub1, Box::new(Prim1(Add1, Box::new(Prim1(Sub1, Box::new(Number(5)))))));
+UnOp(Sub1, Box::new(UnOp(Add1, Box::new(UnOp(Sub1, Box::new(Number(5)))))))
 ```
 
 **Result**
@@ -181,7 +181,7 @@ Prim1(Sub1, Box::new(Prim1(Add1, Box::new(Prim1(Sub1, Box::new(Number(5)))))));
 **Abstract Syntax**
 
 ```rust
-Let(vec![("x".to_string(), Box::new(Number(5)))], Box::new(Prim1(Add1, Box::new(Id("x".to_string())))))
+Let(vec![("x".to_string(), Number(5))], Box::new(UnOp(Add1, Box::new(Id("x".to_string())))))
 ```
 
 **Result**
@@ -194,7 +194,7 @@ Let(vec![("x".to_string(), Box::new(Number(5)))], Box::new(Prim1(Add1, Box::new(
 ```
 (sub1 5)
 # as an expr
-Prim1(Sub1, Number(5))
+UnOp(Sub1, Box::new(Number(5)))
 # evaluates to
 4
 ```
@@ -202,9 +202,9 @@ Prim1(Sub1, Number(5))
 ```
 (let ((x 10) (y 7)) (* (- x y) 2))
 # as an expr
-Let(vec![("x".to_string(), Box::new(Number(10))), ("y".to_string(), Box::new(Number(7)))],
-        Box::new(Prim2(Times, Box::new(Prim2(Minus, Box::new(Id("x".to_string())),
-                              Box::new(Id("y".to_string())))), Box::new(Number(2)))));
+Let(vec![("x".to_string(), Number(10)), ("y".to_string(), Number(7))],
+    Box::new(BinOp(Times, Box::new(BinOp(Minus, Box::new(Id("x".to_string())),
+                          Box::new(Id("y".to_string())))), Box::new(Number(2)))));
 # evaluates to
 6
 ```
