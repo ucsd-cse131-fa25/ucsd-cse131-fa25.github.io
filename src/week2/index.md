@@ -390,9 +390,8 @@ our_code_starts_here:
   ret
 ```
 
-To actually evaluate your assembly code, first we must create a `.s` assembly
-file, and then link it with `runtime.rs` to create an executable. This is
-covered in the `Makefile`
+To actually evaluate your assembly code, we need to link it with `runtime.rs` to
+create an executable. This is covered in the `Makefile`.
 ```
 $ make test/add1.run
 nasm -f elf64 test/add1.s -o runtime/our_code.o
@@ -402,56 +401,8 @@ rustc -L runtime/ runtime/start.rs -o test/add1.run
 Finally you can run the file by executing to see the evaluated output:
 ```
 $ ./test/add1.run
+131
 ```
-
-### Testing the Compiler
-
-The test file has the helper function `t` that will be useful to you:
-
-```
-t : string -> string -> string -> OUnit.test
-```
-The first string given to `t` (test) is a test name, followed by an Boa
-program (in concrete syntax) to compile and evaluate, followed by a string for
-the expected output of the program (this will just be an integer in quotes).
-This helper compiles, links, and runs the given program, and if the compiler
-ends in error, it will report the error message as a string.  This includes
-problems building at the assembler/linker level, as well as any explicit
-`failwith` statements in the compiler itself.
-
-If your tests do not have any errors, a `.s` file and `.run` executable is generated
-in the `output/` directory, containing the compiled assembly code and executable
-for that case.
-
-You can test all the provided tests and the tests you have provided in `myTests.ml`
-by running
-```
-$ make test
-$ ./test
-```
-This should report all tests that fail to compile or diverge from the specified
-result.
-
-
-There is also a function `t_err` that will help with testing for errors:
-```
-t_err : string -> string -> string -> OUnit.test
-```
-This will let you check that error messages are correctly printed by your
-compiler.
-
-**Note**: You should name your tests, but keep in mind that test
-names cannot have spaces; this is due to the way the `Makefile`
-relies on test names being used for filenames.
-
-**Debug/Protip**: Check your assembly files as a means of debugging your code.
-*If you can work through
-the assembly and identify incorrect assembly instructions, you can trace the
-problem back to your compiler! You can use `make output/file.s` to build the
-assembly for a file in `input/file.ana`. You can use `make output/file.run`
-to build the binary for a file in `input/file.ana`. You can just run the
-first step (to build the assembly), then manually edit your `.s` to see what
-some assembly code may do if you want to experiment.
 
 ## Help, Strategies, and Extensions
 
@@ -476,21 +427,6 @@ working state later if you end up stuck.
 TODO: extensions (REPL)
 
 **FAQ**
-
-**How to write tests for parse?**
-`t_parse` and `t_parse_error` functions are provided in `test.ml`, which you can use to write your own tests for parser.
-
-An example of a parse test is
-
-```
-  let myTestList =
-    [ (* Fill in your tests here: *)
-      t_parse "example" "1" (ENumber(1));
-    ]
-  ;;
-```
-
-To make this test pass, you would add code to `parser.ml` to handle the `Atom` case, similar to how our parser in class worked.
 
 **What should `(let ((x 5) (z x)) z)` produce?**
 
@@ -517,7 +453,7 @@ From the PA writeup: “You can **assume** that an id is a valid string of form 
 
 **Assume** means that we're not expecting you to check this for the purposes of the assignment (though you're welcome to if you like).
 
-**What should the program "()" compile to?**
+**What should the program `()` compile to?**
 
 Is `()` a Boa program (does it match the grammar)? What should the compiler do with a program that doesn't match the grammar?
 
