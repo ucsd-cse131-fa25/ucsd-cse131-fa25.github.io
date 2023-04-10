@@ -7,7 +7,7 @@ doodle: "../doodle.png"
 # Week 2: Boa, Due [TODO: fill] (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called
-Anaconda, that has let bindings and binary operators. The key difference
+Boa, that has let bindings and binary operators. The key difference
 between this language and what we implemented in class is that there can be
 _multiple_ variables defined within a single let.
 
@@ -233,7 +233,7 @@ infrastructure:
   allow you to compile and run a Boa program from within Rust, which
   is quite useful for testing. You don't need to edit `runner.rs`.
 
-All of your edits—which will be to write the compiler for Anaconda, and test
+All of your edits—which will be to write the compiler for Boa, and test
 it—will happen in `parser.rs`, `compile.rs`, `asm.rs` and `myTests.rs`. You
 shouldn't edit `expr.rs`, `test.rs`, `runner.rs`, or `main.rs`, though you
 should read and understand `expr.rs`.
@@ -261,21 +261,24 @@ which corresponds to
 ```
 (let ((x 5)) x)
 ```
-in anaconda or
+in Boa or
+```rust
+{
+    let x = 5;
+    x
+}
 ```
-let x = 5 in x
-```
-in OCaml.
+in Rust.
 
 This should then parse to the AST
-```
-ELet([("x",ENumber(5))],EId("x"))
+```rust
+Let(vec![("x".to_string(), Number(5))], Id("x".to_string()))
 ```
 which can then be compiled.
 
 Since most S-expressions are lists, you will need to check the first element
 of the list to see if the operation to perform is a `let`, `add1`, `*`, and so
-on. If a S-expression is of an invalid form, (i.e. a `let` with no body, a `+`
+on. If an S-expression is of an invalid form, (i.e. a `let` with no body, a `+`
 with three arguments, etc.) report an error using failwith **that contains the string `"Invalid"`**.
 
 You can assume that an id is a valid string of form `[a-zA-z][a-zA-Z0-9]*`.
@@ -284,11 +287,16 @@ the language's reserved words, such as `let`, `add1`, and `sub1`.
 
 The parsing should be implemented in
 ```
-parse: sexp -> expr
+fn parse_expr(s: &Sexp) -> Expr {
+    todo!("parse_expr");
+}
 ```
-There is also an added function parse_binding,
+
+You can also implement a helper function `parse_bind`
 ```
-parse_binding: sexp -> (string, expr)
+fn parse_bind(s: &Sexp) -> (String, Expr) {
+    todo!("parse_bind");
+}
 ```
 which may be helpful for handling `let` expressions.
 
