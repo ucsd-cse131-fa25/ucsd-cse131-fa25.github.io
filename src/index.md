@@ -158,33 +158,39 @@ of working through a problem on your own is _healthy_ frustration).
 
 There are two types of assignments in this course:
 
-- **Open collaboration** assignments, for which you can talk to anyone else in the
-  course, post snippets of code online, get lots of help from TAs, and
+- **Open collaboration** assignments, for which you can talk to anyone else in
+  the course, post snippets of code online, get lots of help from TAs, and
   generally come up with solutions collaboratively. TAs will be happy to look
   at your code and suggest fixes, along with explaining them. There are a few
   restrictions:
   - Any code that you didn't write must be cited in the README file that goes
     along with your submission
-    - **Example:** On an open collaboration assignment, you and another
-      student chat online about the solution, you figure out a particular
-      helper method together. Your README should say “The FOO function was
-      developed in collaboration with Firstname Lastname”
+    - **Example:** On an open collaboration assignment, you and another student
+      chat online about the solution, you figure out a particular helper method
+      together. Your README should say “The FOO function was developed in
+      collaboration with Firstname Lastname”
     - **Example:** On an open collaboration assignment, a student posts the
       compilation strategy they used to handle a type of expression you were
-      struggling with. Your README should say “I used the code from
-      the forum post at [link]”
+      struggling with. Your README should say “I used the code from the forum
+      post at [link]”
   - Anyone you work with in-person must be noted in your README
     - **Example:** You and another student sit next to each other in the lab,
-      and point out mistakes and errors to one another as you work through
-      the assignment. As a result, your solutions are substantially similar.
-      Your README should say “I collaborated with Firstname Lastname to
-      develop my solution.”
-  - You cannot share an entire repository of code or paste an entire solution
-    into a message board. Keep snippets to reasonable, descriptive chunks of
-    code; think a dozen lines or so to get the point across.
-  - You still _cannot_ use code that you find online, or get assistance or code
-    from students outside of this offering of the class. All the code that is
-    handed in should be developed by you or someone in the class.
+      and point out mistakes and errors to one another as you work through the
+      assignment. As a result, your solutions are substantially similar.  Your
+      README should say “I collaborated with Firstname Lastname to develop my
+      solution.”
+  - You cannot share publicly your entire repository of code or paste an entire
+    solution into a message board. Keep snippets to reasonable, descriptive
+    chunks of code; think a dozen lines or so to get the point across.
+  - You still _cannot_ use whole solutions that you find online (though
+    copy-paste from Stack Overflow, tutorials etc, if you need help with Rust
+    patterns, etc.) You shouldn't get assistance or code from students outside
+    of this offering of the class. All the code that is handed in should be
+    developed by you or someone in the class.
+  - If you can get ChatGPT, Copilot, or another LLM to generate code that works
+    for the course, feel free, but you **must** put comments in your code
+    describing the prompt you used to get it if you do. If you have Copilot on,
+    put a comment if it generates an entire method or match case.
 
   This doesn’t mean the staff will be handing out answers. We’ll mostly
   respond with leading questions and advice, and you shouldn’t expect a
