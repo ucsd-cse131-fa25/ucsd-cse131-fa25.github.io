@@ -1,4 +1,4 @@
-# Week 2: Boa, Due [TODO: fill] (Open Collaboration)
+# Week 2: Boa, Due Tuedsay, April 17 (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called
 Boa, that has let bindings and binary operators. The key difference
@@ -406,7 +406,13 @@ $ ./test/add1.run
 131
 ```
 
-## Help, Strategies, and Extensions
+
+
+
+
+
+
+## Strategies, and FAQ
 
 **Working Incrementally**
 
@@ -424,9 +430,6 @@ then extend it for multiple bindings.
 commit and leave a message for yourself. That way you can get back to a good
 working state later if you end up stuck.
 
-**Extensions**
-
-TODO: extensions (REPL)
 
 **FAQ**
 
@@ -466,3 +469,58 @@ A few suggestions:
 - First, make sure to test all the different expressions as a baseline
 - Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
 - Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
+
+## Assembling Directly from Rust
+
+Boa is set up as a traditional ahead-of-time compiler that generates an
+assembly file and (with some help from system linkers) eventually a binary.
+
+Many language systems work this way (it's what `rustc`, `gcc`, and `clang` do,
+for instance), but many modern systems also generate machine code directly from
+the process that runs the compiler, and the compiler's execution can be
+interleaved with users' program execution. [This isn't a new
+idea](http://eecs.ucf.edu/~dcm/Teaching/COT4810-Spring2011/Literature/JustInTimeCompilation.pdf),
+Smalltalk and LISP are early examples of languages built atop runtime code
+generation. JavaScript engines in web browsers are likely the most ubiquitous
+use case.
+
+Rust, with detailed control over memory and a broad package system, provides a
+pretty good environment for doing this kind of runtime code generation. In
+these assignment extensions, we'll explore how to build on our compiler to
+create a system in this style, and showcase some unique features it enables.
+
+These extensions are not required, nor are they graded. However, we'd be
+delighted to hear about what you're trying for them in office hours, see what
+you've done, and give feedback on them. Joe and the staff have done a little
+bit of work to proof-of-concept some of this, but you'll be largely on your
+own and things aren't guaranteed to be obviously possible.
+
+The primary tool we think is particularly useful here is
+[dynasm](https://censoredusername.github.io/dynasm-rs/language/index.html).
+(You might also find [assembler](https://crates.io/crates/assembler) useful,
+but it hasn't been updated in a while and `dynasm` was what Joe found easiest
+to use). The basic idea is that `dynasm` provides Rust macros that build up a
+vector of bytes representing machine instructions. References to these vectors
+can be cast using
+[mem::transmute](https://doc.rust-lang.org/std/mem/index.html) Rust functions,
+which can be called from our code.
+
+As a first step towards building a dynamic system, you should try building a
+_REPL_, or read-eval-print loop, re-using as much as possible from the Boa
+compiler. That is, you should be able to support interactions like the below,
+where one new syntactic form, `define`, has been added.
+
+```
+$ cargo run -- -i # rather than input/output files, specify -i for interactive
+> (let ((x 5)) (+ x 10))
+15
+> (define x 47)
+> x
+47
+> (+ x 4)
+51
+```
+
+A sample of how to get started with this is at
+[adder-dyn](https://github.com/compilers-course-materials/adder-dyn)
+
