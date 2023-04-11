@@ -218,6 +218,8 @@ There are two types of assignments in this course:
     post questions about material from lecture or past assignments!
   - All of the examples in the open collaboration section above would be
     academic integrity violations on a closed collaboration assignment
+    **except** for using tutorials/LLMs. If you use code from tutorials/Stack
+    Overflow/LLMs, cite them as described above.
 
 Programming assignments will explicitly list whether they are open or closed
 collaboration.
