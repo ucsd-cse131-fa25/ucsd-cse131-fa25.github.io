@@ -132,7 +132,9 @@ The _compiler_ should stop and report an error if:
 If there are multiple errors, the compiler can report any non-empty subset of
 them.
 
-Here are some examples of Boa programs:
+Here are some examples of Boa programs. In the "Abstract Syntax" parts, we
+assume that the program has appropriate `use` statements to avoid the `Expr::`
+and other prefixes in order to write the examples compactly.
 
 #### Example 1
 
@@ -219,9 +221,6 @@ Let(vec![("x".to_string(), Number(10)), ("y".to_string(), Number(7))],
 You've been given a starter codebase that has several pieces of
 infrastructure:
 
-* A stub for a parser for Boa which takes an s-expression that represents
-  the code, and converts it to an abstract syntax tree (`parser.rs`). You need to
-  implement the parser to actually perform the conversion.
 * A main program (`main.rs`) that uses the parser and compiler to produce
   assembly code from an input Boa text file.  You don't need to edit this much
   except to change how `result` is filled in.
@@ -239,7 +238,7 @@ infrastructure:
 ### Writing the Parser
 
 The parser will be given a S-expression representing the whole program, and
-must build a AST of the `expr` data type (refer to `expr.rs`) from this S-expression.
+must build a AST of the `Expr` data type from this S-expression.
 
 An S-expression in Rust is of the following type:
 ```
