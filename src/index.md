@@ -62,6 +62,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
     my original scrawlings around this material. They don't use exactly the
     same style or make the same decisions I do in this class, but things are
     close enough to be useful._
+  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
     [(pptx)](https://docs.google.com/presentation/d/1i3Mf3UVZoHmXJy3RhHpa4WMgt_M-MD38/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
 
