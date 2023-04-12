@@ -1,9 +1,10 @@
 # Week 2: Boa, Due Tuedsay, April 17 (Open Collaboration)
 
-In this assignment you'll implement a compiler for a small language called
-Boa, that has let bindings and binary operators. The key difference
-between this language and what we implemented in class is that there can be
-_multiple_ variables defined within a single let.
+In this assignment you'll implement a compiler for a small language called Boa,
+that has let bindings and binary operators. The key difference between this
+language and what we implemented in class is that there can be _multiple_
+variables defined within a single let. There are a number of other details
+where we fill in exact behavior.
 
 ## Setup
 
@@ -35,23 +36,27 @@ The concrete syntax of Boa is:
 <expr> :=
   | <number>
   | <identifier>
-  | (let (<bindings>) <expr>)
+  | (let (<binding> +) <expr>)
   | (add1 <expr>)
   | (sub1 <expr>)
   | (+ <expr> <expr>)
   | (- <expr> <expr>)
   | (* <expr> <expr>)
 
-<bindings> :=
-  | (<identifier> <expr>)
-  | (<identifier> <expr>) <bindings>
+<binding> := (<identifier> <expr>)
 ```
-Here, a `let` expression can have one *or more* bindings.
+
+Here, a `let` expression can have one *or more* bindings (that's what the
+`<binding> +` notation means). `<number>`s are in base 10 and must be
+representable as an `i32`. `<identifier>`s are names and should be limited to
+alphanumeric characters, hyphens, and underscores, and should start with a
+letter. (The `sexp` library handles more than this, but this keeps things
+nicely readable.)
 
 ### Abstract Syntax
 
-The abstract syntax of Boa is a Rust enum. Note that this
-representation is differen from what we used in
+The abstract syntax of Boa is a Rust `enum`. Note that this
+representation is different from what we used in
 [Adder](https://ucsd-compilers-s23.github.io/week1/index.html).
 
 <!--- previous ocaml types
@@ -106,9 +111,11 @@ A Boa program always evaluates to a single integer.
 themselves (so a program just consisting of `Number(5)` should evaluate to the
 integer `5`).
 - Primitive expressions perform addition or subtraction by one on
-their argument.
+their argument. If the result wouldn't fit in an `i32`, the program can
+have any behavior (e.g. overflow with `add1` or underflow with `sub1`).
 - Binary operator expressions evaluate their arguments and combine them
-based on the operator.
+based on the operator. If the result wouldn't fit in an `i32`, the program can
+have any behavior (e.g. overflow or underflow with `+`/`-`/`*`).
 - Let bindings should use lexical scoping: evaluate all the binding expressions to
 values one by one, and after each, store a mapping from the given name to the
 corresponding value in both (a) the rest of the bindings, and (b) the body of
@@ -121,6 +128,9 @@ The _compiler_ should stop and report an error if:
 
 * There is a binding list containing two or more bindings with the same name. **The error should contain the string `"Duplicate binding"`**
 * An identifier is unbound (there is no surrounding let binding for it) **The error should contain the string `"Unbound variable identifier {identifier}"` (where the actual name of the variable is substituted for `{identifier}`)**
+
+If there are multiple errors, the compiler can report any non-empty subset of
+them.
 
 Here are some examples of Boa programs:
 
@@ -175,7 +185,8 @@ UnOp(Sub1, Box::new(UnOp(Add1, Box::new(UnOp(Sub1, Box::new(Number(5)))))))
 **Abstract Syntax**
 
 ```rust
-Let(vec![("x".to_string(), Number(5))], Box::new(UnOp(Add1, Box::new(Id("x".to_string())))))
+Let(vec![("x".to_string(), Number(5))],
+  Box::new(UnOp(Add1, Box::new(Id("x".to_string())))))
 ```
 
 **Result**
@@ -212,25 +223,18 @@ infrastructure:
   the code, and converts it to an abstract syntax tree (`parser.rs`). You need to
   implement the parser to actually perform the conversion.
 * A main program (`main.rs`) that uses the parser and compiler to produce
-  assembly code from an input Boa text file.  **You don't need to edit this.**
-* A `Makefile` that builds `main.rs`, builds a tester for Boa
-  (`test.rs`), and manipulates assembly programs created by the Boa
-  compiler.  You don't need to edit the `Makefile` or `test.rs`, but you
-  will edit `myTests.rs`.
-  Specifically, you will add your own tests by filling in
-  `myTestList` following the instructions in the beginning of the file.
-
-  You need to add _at least 10 tests_ to `myTests.rs`. Focus on making these
-  interesting and thorough, as you will get credit for showing thoughtful
-  testing.
-* A Rust program (`runner.rs`) that works in concert with the `Makefile` to
-  allow you to compile and run a Boa program from within Rust, which
-  is quite useful for testing. You don't need to edit `runner.rs`.
-
-All of your edits—which will be to write the compiler for Boa, and test
-it—will happen in `parser.rs`, `compile.rs`, `asm.rs` and `myTests.rs`. You
-shouldn't edit `expr.rs`, `test.rs`, `runner.rs`, or `main.rs`, though you
-should read and understand `expr.rs`.
+  assembly code from an input Boa text file.  You don't need to edit this much
+  except to change how `result` is filled in.
+* A `Makefile` and a runner (`runtime/start.rs`) that are basically the same as
+  the ones from [Week 1](/week1/)
+* Extra infrastructure for running unit tests in `tests/infra` (you don't need
+  to edit `tests/infra`, but you may enjoy reading it).
+* A test file, `tests/all_tests.rs`, which describes the _expected output_ and
+  _expected errors_ for `.snek` files in the `tests/` directory.
+  You will add your own tests by filling in new entries in `success_tests!` and
+  `failure_tests!`; we've provided a few examples. Each entry corresponds to a
+  single `.snek` file. You will add a lot more – focus on making these
+  interesting and thorough!
 
 ### Writing the Parser
 
@@ -311,12 +315,13 @@ assembly instructions, represented by the `Instr` type.  Use only the
 provided instruction types for this assignment; we will be gradually expanding
 this as the quarter progresses.
 
-**Note**: For variable bindings, we use `im::HashMap<&'a str, i32>` from the
-  [`im`](https://docs.rs/im/latest/im/) crate.
-  We use the immutable HashMap here to make nested scopes easier because you
-  won't need to remember to pop variables when you leave a scope.
+**Note**: For variable bindings, we used `im::HashMap<String, i32>` from the
+[`im`](https://docs.rs/im/latest/im/) crate.
+We use the immutable HashMap here to make nested scopes easier because we
+found it annoying to remember to pop variables when you leave a scope.
+You're welcome to use any reasonable strategy here.
 
-The other functions you need to implement is:
+The other functions you need to implement are:
 
 ```rust
 fn instr_to_str(i: &Instr) -> String {
@@ -345,6 +350,7 @@ fn compile(e: &Expr) -> String {
 ```
 
 ### Assembly instructions
+
 The `Instr` type is defined in the starter code. The assembly instructions that
 you will have to become familiar with for this assignment are:
 
@@ -406,11 +412,20 @@ $ ./test/add1.run
 131
 ```
 
+### Ignoring or Changing the Starter Code
 
+You can change a lot of what we describe above; it's a (relatively strong)
+suggestion, not a requirement. You might have different ideas for how to
+organize your code or represent things. That's a good thing! What we've shown
+in class and this writeup is far from the only way to implement a compiler.
 
-
-
-
+To ease the burden of grading, we ask that you keep the following in mind: we
+will grade your submission (in part) by copying our own `tests/` directory in
+place of the one you submit and running `cargo test`. This relies on the
+interface provided by the `Makefile` of producing `.s` files and `.run` files.
+It _doesn't_ rely on any of the data definitions or function signatures in
+`src/main.rs`. So with that constraint in mind, feel free to make new
+architectural decisions yourself.
 
 ## Strategies, and FAQ
 
