@@ -562,3 +562,4 @@ give any hints or support beyond this except:
 - You'll need to figure out how to store the `define`d variables on the heap
   somewhere and refer to them from the generated code
 
+Happy hacking!
