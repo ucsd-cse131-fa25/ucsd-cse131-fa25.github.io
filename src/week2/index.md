@@ -110,7 +110,7 @@ A Boa program always evaluates to a single integer.
 - Numbers evaluate to
 themselves (so a program just consisting of `Number(5)` should evaluate to the
 integer `5`).
-- Primitive expressions perform addition or subtraction by one on
+- Unary operator expressions perform addition or subtraction by one on
 their argument. If the result wouldn't fit in an `i32`, the program can
 have any behavior (e.g. overflow with `add1` or underflow with `sub1`).
 - Binary operator expressions evaluate their arguments and combine them
