@@ -274,10 +274,11 @@ Let(vec![("x".to_string(), Number(5))], Id("x".to_string()))
 ```
 which can then be compiled.
 
-Since most S-expressions are lists, you will need to check the first element
-of the list to see if the operation to perform is a `let`, `add1`, `*`, and so
-on. If an S-expression is of an invalid form, (i.e. a `let` with no body, a `+`
-with three arguments, etc.) report an error using failwith **that contains the string `"Invalid"`**.
+Since most S-expressions are lists, you will need to check the first element of
+the list to see if the operation to perform is a `let`, `add1`, `*`, and so on.
+If an S-expression is of an invalid form, (i.e. a `let` with no body, a `+`
+with three arguments, etc.) panic with a message containing the string
+`"Invalid"`.
 
 You can assume that an id is a valid string of form `[a-zA-z][a-zA-Z0-9]*`.
 You will, however, have to check that the string does not match any of
@@ -485,7 +486,25 @@ A few suggestions:
 - Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
 - Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
 
-## Assembling Directly from Rust
+## Grading
+
+A lot of the credit you get will be based on us running autograded tests on
+your submission. You'll be able to see the result of some of these on while the
+assignment is out, but we may have more that we don't show results for until
+after assignments are all submitted.
+
+We'll combine that with some amount of manual grading involving looking at your
+testing and implementation strategy. You should have your own thorough test
+suite (it's not unreasonable to write many dozens of tests; you probably don't
+need hundreds), and you need to have recognizably implemented a compiler. For
+example, you _could_ try to calculate the answer for these programs and
+generate a single `mov` instruction: don't do that, it doesn't demonstrate the
+learning outcomes we care about.
+
+Any credit you lose will come with instructions for fixing similar mistakes on
+future assignments.
+
+## Extension: Assembling Directly from Rust
 
 Boa is set up as a traditional ahead-of-time compiler that generates an
 assembly file and (with some help from system linkers) eventually a binary.
