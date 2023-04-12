@@ -555,5 +555,10 @@ $ cargo run -- -i # rather than input/output files, specify -i for interactive
 ```
 
 A sample of how to get started with this is at
-[adder-dyn](https://github.com/compilers-course-materials/adder-dyn)
+[adder-dyn](https://github.com/compilers-course-materials/adder-dyn). We won't
+give any hints or support beyond this except:
+
+- The REPL is probably best implemented as a `while` loop in `main`
+- You'll need to figure out how to store the `define`d variables on the heap
+  somewhere and refer to them from the generated code
 
