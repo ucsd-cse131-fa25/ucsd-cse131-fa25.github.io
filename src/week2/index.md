@@ -1,3 +1,5 @@
+![boa](./boa.jpg)
+
 # Week 2: Boa, Due Tuedsay, April 17 (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called Boa,
