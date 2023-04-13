@@ -143,7 +143,7 @@ and other prefixes in order to write the examples compactly.
 **Concrete Syntax**
 
 ```scheme
-5               
+5
 ```
 
 **Abstract Syntax**
@@ -155,7 +155,7 @@ Number(5)
 **Result**
 
 ```
-5      
+5
 ```
 
 #### Example 2
@@ -423,7 +423,7 @@ in class and this writeup is far from the only way to implement a compiler.
 
 To ease the burden of grading, we ask that you keep the following in mind: we
 will grade your submission (in part) by copying our own `tests/` directory in
-place of the one you submit and running `cargo test`. This relies on the
+place of the one you submit and running `cargo test -- --test-threads 1`. This relies on the
 interface provided by the `Makefile` of producing `.s` files and `.run` files.
 It _doesn't_ rely on any of the data definitions or function signatures in
 `src/main.rs`. So with that constraint in mind, feel free to make new
@@ -486,6 +486,11 @@ A few suggestions:
 - First, make sure to test all the different expressions as a baseline
 - Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
 - Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
+
+**My tests non-deterministically fail some times**
+
+You are probably running `cargo test` instead of `cargo test -- --test-threads 1`. The testing infrastructure interacts with the file system in a way that can cause data races when
+tests run in parallel. Limiting the number of threads to 1 will probably fix the issue.
 
 ## Grading
 
