@@ -1,6 +1,6 @@
 ![doodle](./doodle.jpg)
 
-# Compiler Construction (Spring 2023 Edition 🦀)
+# Compiler Construction (Spring 2023 Edition)
 
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
 - Mark Barbone (tutor)
