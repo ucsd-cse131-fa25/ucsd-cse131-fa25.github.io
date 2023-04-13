@@ -1,6 +1,6 @@
 ![boa](./boa.jpg)
 
-# Week 2: Boa, Due Tuedsay, April 17 (Open Collaboration)
+# Week 2: Boa, Due Tuesday, April 18 (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called Boa,
 that has let bindings and binary operators. The key difference between this
