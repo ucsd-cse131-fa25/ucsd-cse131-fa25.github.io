@@ -487,7 +487,7 @@ A few suggestions:
 - Then, look at the grammar. There are lots of places where `<expr>` appears. In each of those positions, _any other expression_ could appear. So `let` can appear inside `+` and vice versa, and in the binding position of let, and so on. Make sure you've tested enough _nested expressions_ to be confident that each expression works no matter the context
 - Names of variables are interesting – the names can appear in different places and have different meanings depending on the structure of let. Make sure that you've tried different combinations of `let` naming and uses of variables.
 
-**My tests non-deterministically fail some times**
+**My tests non-deterministically fail sometimes**
 
 You are probably running `cargo test` instead of `cargo test -- --test-threads 1`. The testing infrastructure interacts with the file system in a way that can cause data races when
 tests run in parallel. Limiting the number of threads to 1 will probably fix the issue.
