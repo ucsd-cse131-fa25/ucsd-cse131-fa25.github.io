@@ -245,9 +245,13 @@ must build a AST of the `Expr` data type from this S-expression.
 An S-expression in Rust is of the following type:
 ```
 pub enum Sexp {
-    String(String),
+    Atom(Atom),
     List(Vec<Sexp>),
-    Empty,
+}
+pub enum Atom {
+    S(String),
+    I(i64),
+    F(f64),
 }
 ```
 
