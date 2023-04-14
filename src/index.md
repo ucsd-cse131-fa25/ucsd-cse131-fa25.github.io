@@ -56,21 +56,34 @@ schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
 The typical due dates are that **assignments** are due on Tuesday evenings and
-**quizzes** are due Sunday evenings.
+**quizzes** are due Friday evenings.
 
 ### Week 2 - Binary Operators, Booleans, and Conditionals
 
 - [Assignment (due Tuesday, April 18, 10pm)](./week2/index.md)
+- Handouts:
+  - Friday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+    [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/lecture3)
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
+    [(pptx)](https://docs.google.com/presentation/d/1i3Mf3UVZoHmXJy3RhHpa4WMgt_M-MD38/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
 - Reading and resources:
+  - [Memory Representation of Values in Ocaml](https://dev.realworldocaml.org/runtime-memory-layout.html)
+    _More discussion of a language with tagged value representations (and Ocaml
+    is type-checked!)._
+  - [V8 Blog Post Including Number Representations](https://v8.dev/blog/pointer-compression)
+    _This goes a little further than we are right now, but focus on the fact
+    that V8, one of the widely deployed JS engines, uses tag bits for
+    its numbers._
+  - [V8 Blog Post Including Number Representations](https://v8.dev/blog/pointer-compression)
+    _This goes a little further than we are right now, but focus on the fact
+    that V8, one of the widely deployed JS engines, uses tag bits for
+    its numbers._
   - [Max New on Let and the Stack](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html)
     _Max New and Ben Lerner have done a nice job writing up notes on some of
     my original scrawlings around this material. They don't use exactly the
     same style or make the same decisions I do in this class, but things are
     close enough to be useful._
-  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-    [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/lecture3)
-  - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
-    [(pptx)](https://docs.google.com/presentation/d/1i3Mf3UVZoHmXJy3RhHpa4WMgt_M-MD38/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
