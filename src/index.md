@@ -62,7 +62,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 - [Assignment (due Tuesday, April 18, 10pm)](./week2/index.md)
 - Handouts:
-  - Friday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+  - Friday Handout: [(pdf)](https://drive.google.com/open?id=1--oHIGna7kRj0w7yYmtHYsX7Iprjhvj1&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1--VHG_NpiO_CF6OUlksf-G3a4EJ9yNnp?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
   - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
     [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/lecture3)
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
