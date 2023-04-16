@@ -155,12 +155,58 @@ The _compiler_ should stop and report an error if:
 If there are multiple errors, the compiler can report any non-empty subset of
 them.
 
-Here are some examples of Cobra programs. FILL
+Here are some examples of Cobra programs.
 
-- something w set! in expr position
-- something w nested loops
-- something w loop in expr position
-- factorial of input
+#### Example 1
+
+**Concrete Syntax**
+
+```scheme
+(let ((x 5))
+     (block (set! x (+ x 1))))
+```
+
+**Abstract Syntax**
+
+```rust
+Let(vec![("x".to_string(), Number(5))],
+    Box::new(Block(
+      vec![Set("x".to_string(),
+               Box::new(BinOp(Plus, Id("x".to_string()),
+                                    Number(1)))])))
+```
+
+**Result**
+
+```
+6
+```
+
+
+#### Example 2
+
+- FILL something w nested loops
+
+```scheme
+```
+
+#### Example 3
+
+This program calculates the factorial of the input.
+```scheme
+(let
+  ((i 1) (acc 1))
+  (loop
+    (if (> i input)
+      (break acc)
+      (block
+        (set! acc (* acc i))
+        (set! i (+ i 1))
+      )
+    )
+  )
+)
+```
 
 ### Implementing a Compiler for Cobra
 
