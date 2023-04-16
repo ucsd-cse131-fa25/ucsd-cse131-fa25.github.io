@@ -258,7 +258,7 @@ pub enum Atom {
 Thus, an example S-expression that could be parsed into a program would be as
 follows
 ```
-List(vec![Atom("let"), List(vec![List([Atom("x"), Atom("5")])]), Atom("x")])
+List(vec![Atom("let"), List(vec![List(vec![Atom("x"), Atom("5")])]), Atom("x")])
 ```
 which corresponds to
 ```
