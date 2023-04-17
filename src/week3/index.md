@@ -185,8 +185,6 @@ Let(vec![("x".to_string(), Number(5))],
 
 #### Example 2
 
-- FILL something w nested loops
-
 ```scheme
 (let ((a 2) (b 3) (c 0) (i 0) (j 0)) 
    (loop
@@ -203,12 +201,6 @@ Let(vec![("x".to_string(), Number(5))],
       )
    )
 )
-```
-
-**Abstract Syntax**
-
-```rust
-
 ```
 
 **Result**
