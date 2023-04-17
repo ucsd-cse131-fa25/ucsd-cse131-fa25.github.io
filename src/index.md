@@ -58,6 +58,13 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
+### Week 3 - Tags, Conditionals, and Loops
+
+- Handouts:
+  - Monday Handout: [(pdf)](https://drive.google.com/open?id=1-6vUpvSapNiC2KsKigUnU2bKi_YFAQ7c&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1-93ApFcsJpvs8cZI_0160pfjjVEmWj_8?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/cobra)
+- Reading and Resources:
+  - [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
+
 ### Week 2 - Binary Operators, Booleans, and Conditionals
 
 - [Assignment (due Tuesday, April 18, 10pm)](./week2/index.md)
