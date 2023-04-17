@@ -186,20 +186,20 @@ Let(vec![("x".to_string(), Number(5))],
 #### Example 2
 
 ```scheme
-(let ((a 2) (b 3) (c 0) (i 0) (j 0)) 
-   (loop
-      (if (< i a)
-         (block
-            (loop
-               (if (< j b)
-                  (block (set! c (add1 c)) (set! j (sub1 j)))
-                  (break (c))
-               )
-            )
-            (set! i (add1 i)))
-         (break (c))
-      )
-   )
+(let ((a 2) (b 3) (c 0) (i 0) (j 0))
+  (loop
+    (if (< i a)
+      (block
+        (loop
+          (if (< j b)
+            (block (set! c (add1 c)) (set! j (sub1 j)))
+            (break c)
+          )
+        )
+        (set! i (add1 i)))
+      (break c)
+    )
+  )
 )
 ```
 
