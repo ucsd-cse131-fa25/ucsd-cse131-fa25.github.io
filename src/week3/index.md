@@ -287,6 +287,22 @@ learning outcomes we care about.
 Any credit you lose will come with instructions for fixing similar mistakes on
 future assignments.
 
+## FAQ
+
+**Some of my tests fail with a `No such file or directory` error**
+
+The initial version of the starter code contained an error in the testing infrastructure. If you
+cloned before we fixed it, you'll have to update the code. You can update the code by running:
+
+```console
+git remote add upstream https://github.com/ucsd-compilers-s23/cobra-starter
+git pull upstream main --allow-unrelated-histories
+```
+
+This will merge all commits from the template into your repository. Alternatively, you can also
+clone <https://github.com/ucsd-compilers-s23/cobra-starter> and manually replace your `tests/`
+directory.
+
 ## Extension: Using Dynamic Information to Optimize
 
 A compiler for Cobra needs to generate extra instructions to check for booleans
@@ -348,7 +364,7 @@ Happy hacking!
 ### Discussion
 
 It's worth re-emphasizing that a static type-checker could recover a lot of
-this performance, and for Cobra it's pretty straightforward to implement a 
+this performance, and for Cobra it's pretty straightforward to implement a
 type-checker (especially for expressions that don't involve `input`).
 
 However, we'll soon introduce functions, which add a whole new layer of
