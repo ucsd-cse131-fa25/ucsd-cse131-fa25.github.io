@@ -171,7 +171,7 @@ Let(vec![("x".to_string(), Number(5))],
       (block
         (loop
           (if (< j b)
-            (block (set! c (add1 c)) (set! j (sub1 j)))
+            (block (set! c (sub1 c)) (set! j (add1 j)))
             (break c)
           )
         )
