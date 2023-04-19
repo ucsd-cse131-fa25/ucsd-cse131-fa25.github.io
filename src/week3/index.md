@@ -9,10 +9,11 @@ which extends Boa with booleans, conditionals, variable assignment, and loops.
 
 ## Setup
 
-Get the assignment at FILL.github.com/a/1bvTt9dk>. This will make a
-private-to-you copy of the repository hosted within the course's organization.
-You can also access the public starter code FILL if you don't have or prefer
-not to use a Github account.
+Get the assignment at <https://classroom.github.com/a/mHUq5XJd> This will make
+a private-to-you copy of the repository hosted within the course's
+organization.  You can also access the public starter code
+<https://github.com/ucsd-compilers-s23/cobra-starter> if you don't have or
+prefer not to use a Github account.
 
 ## The Cobra Language
 
@@ -50,44 +51,12 @@ Numbers should be representable as a signed 63-bit number (e.g. from
 
 ### Abstract Syntax
 
-The abstract syntax of Cobra is a Rust `enum` that extends the one used in Boa.
-
-<!--- previous ocaml types
-```
-type prim1 =
-  | Add1
-  | Sub1
-
-type prim2 =
-  | Plus
-  | Minus
-  | Times
-
-type expr =
-  | Number of int
-  | Id of string
-  | Let of (string * expr) list * expr
-  | Prim1 of prim1 * expr
-  | Prim2 of prim2 * expr * expr
-```
- --->
+You can choose the abstract syntax you use for Cobra. We recommend something like this:
 
 ```
-enum Op1 {
-    Add1,
-    Sub1
-}
+enum Op1 { Add1, Sub1, IsNum, IsBool, }
 
-enum Op2 {
-    Plus,
-    Minus,
-    Times,
-    Equal,
-    Greater,
-    GreaterEqual,
-    Less,
-    LessEqual
-}
+enum Op2 { Plus, Minus, Times, Equal, Greater, GreaterEqual, Less, LessEqual, }
 
 enum Expr {
     Number(i32),
@@ -110,25 +79,35 @@ A "semantics" describes the languages' behavior without giving all of the
 assembly code for each instruction.
 
 A Cobra program always evaluates to a single integer, a single boolean, or ends
-with an error.
+with an error. When ending with an error, it should print a message to
+_standard error_ (`eprintln!` in Rust works well for this) and a non-zero exit
+code (`std::process::exit(N)` for nonzero `N` in Rust works well for this).
 
+- `input` expressions evaluate to the first command-line argument given to the
+  program. The command-line argument can be any Cobra value: a valid number or
+  `true` or `false`. If no command-line argument is provided, the value of
+  `input` is `false`. When running the program the argument should be provided
+  as `true`, `false`, or a base-10 number value.
 - All Boa programs evaluate in [the same way as before](../week2/index.md), with one
   exception: if numeric operations would overflow a 63-bit integer, the program
-  should end in error, reporting `"overflow"` as a part of the error.
+  should end in error, **reporting `"overflow"` as a part of the error**.
 - If the operators other than `=` are used on booleans, an error should be
-  raised *from the compiled program*, and **the error should contain "invalid
-  argument"**. Note that this is not a compilation error.
+  raised from the running program, and **the error should contain "invalid
+  argument"**. Note that this is not a compilation error, nor can it be in all
+  cases due to `input`'s type being unknown until the program starts.
+- The relative comparison operators like `<` and `>` evaluate their arguments
+  and then evaluate to `true` or `false` based on the comparison result.
+- The equality operator `=` evaluates its arguments and compares them for
+  equality. It should raise an error if they are not both numbers or not both
+  booleans, and the error should contain **"invalid argument"** if the types
+  differ.
 - Boolean expressions (`true` and `false`) evaluate to themselves
-- `input` expressions evaluate to the first command-line argument given to the
-  program. The command-line argument can be any value: a valid number or `true`
-  or `false`. If no command-line argument is provided, the value of `input` is
-  `false`.
 - `if` expressions evaluate their first expression (the condition) first. If it's
   `false`, they evaluate to the third expression (the “else” block), and to
   the second expression if any other value (including numbers).
 - `block` expressions evaluate the subexpressions in order, and evaluate to the
   result of the _last_ expression. Blocks are mainly useful for writing
-  sequences that include `set!`
+  sequences that include `set!`, especially in the body of a loop.
 - `set!` expressions evaluate the expression to a value, and change the value
   stored in the given variable to that value (e.g. variable assignment). The
   `set!` expression itself evaluates to the new value.
@@ -166,7 +145,7 @@ Here are some examples of Cobra programs.
      (block (set! x (+ x 1))))
 ```
 
-**Abstract Syntax**
+**Abstract Syntax Based on Our Design**
 
 ```rust
 Let(vec![("x".to_string(), Number(5))],
@@ -229,43 +208,71 @@ This program calculates the factorial of the input.
 
 ### Implementing a Compiler for Cobra
 
-FILL
+The [starter code](https://github.com/ucsd-compilers-s23/cobra-starter) makes a
+few infrastructural suggestions. You can change these as you feel is
+appropriate in order to meet the specification.
 
-- Give starter code/class code for passing in `input`
-- Give starter code/class code for throwing a runtime exception
-- Discuss choices in representation
-- Emphasize what needs to be dynamic vs. static
+#### Reporting Dynamic Errors
 
+We've provided some infrastructure for reporting errors via the
+[`snek_error`](https://github.com/ucsd-compilers-s23/cobra-starter/blob/main/runtime/start.rs#L13)
+function in `start.rs`. This is a function that can be _called from the
+generated program_ to report an error. for now we have it take an error code as
+an argument; you might find the error code useful for deciding which error
+message to print.  This is also listed as an `extern` in [the generated
+assembly startup
+code](https://github.com/ucsd-compilers-s23/cobra-starter/blob/main/src/main.rs#L17).
 
-### Running
+#### Calculating Input
 
-FILL
+We've provided a
+[`parse_input`](https://github.com/ucsd-compilers-s23/cobra-starter/blob/main/runtime/start.rs#L27)
+stub for you to fill in to turn the command-line argument to `start.rs` into a
+value suitable for passing to `our_code_starts_here`. As a reminder/reference,
+the first argument in the x86_64 calling convention is stored in `rdi`. This
+means that, for example, moving `rdi` into `rax` is a good way to get “the
+answer” for the expression `input`.
 
-- How to pass a command-line arg, how to pass it in tests
+#### Representations
 
-### Ignoring or Changing the Starter Code
+In class we chose representations with `0` as a tag bit for numbers and `1` for
+booleans with the values `3` for `true` and `1` for `false`. You **do not**
+have to use those, though it's a great starting point and we recommend it. Your
+only obligation is to match the behavior described in the specification, and if
+you prefer a different way to distinguish types, you can use it. (Keep in mind,
+though, that you still must generate assembly programs that have the specified
+behavior!)
 
-You can change a lot of what we describe above; it's a (relatively strong)
-suggestion, not a requirement. You might have different ideas for how to
-organize your code or represent things. That's a good thing! What we've shown
-in class and this writeup is far from the only way to implement a compiler.
+### Running and Testing
 
-To ease the burden of grading, we ask that you keep the following in mind: we
-will grade your submission (in part) by copying our own `tests/` directory in
-place of the one you submit and running `cargo test -- --test-threads 1`. This relies on the
-interface provided by the `Makefile` of producing `.s` files and `.run` files.
-It _doesn't_ rely on any of the data definitions or function signatures in
-`src/main.rs`. So with that constraint in mind, feel free to make new
-architectural decisions yourself.
+The test format changed slightly to require a _test name_ along with a _test
+file name_. This is to support using the same _test file_ with different
+_command line arguments_. You can see several of these in the [sample
+tests](https://github.com/ucsd-compilers-s23/cobra-starter/blob/main/tests/all_tests.rs).
+Note that providing `input` is optional. These also illustrate how to check for
+errors.
 
-## Strategies, and FAQ
+If you want to try out a single file from the command line (and perhaps from a
+debugger like `gdb` or `lldb`), you can still run them directly from the
+command line with:
+
+```
+$ make tests/some-file.run
+$ ./tests/some-file.run 1234
+```
+
+where the `1234` could be any valid command-line argument.
+
+As a note on running all the tests, the best option is to use `make test`,
+which ensures that `cargo build` is run first and independently before `cargo
+test`.
 
 ## Grading
 
-A lot of the credit you get will be based on us running autograded tests on
-your submission. You'll be able to see the result of some of these on while the
-assignment is out, but we may have more that we don't show results for until
-after assignments are all submitted.
+As with the previous assignment, a lot of the credit you get will be based on
+us running autograded tests on your submission. You'll be able to see the
+result of some of these on while the assignment is out, but we may have more
+that we don't show results for until after assignments are all submitted.
 
 We'll combine that with some amount of manual grading involving looking at your
 testing and implementation strategy. You should have your own thorough test
@@ -285,7 +292,8 @@ being used in binary operators. We could use a static type-checker to avoid
 these, but at the same time, the language is fundamentally dynamic because the
 compiler cannot know the type of `input` until the program starts running
 (which happens after it is compiled). This is the general problem that systems
-for languages like JavaScript and Python face.
+for languages like JavaScript and Python face; it will get worse when we
+introduce functions in the next assignment.
 
 However, if our compiler can make use of some dynamic information, we can do
 better.
@@ -331,7 +339,9 @@ later. We could avoid tag checks for `x` in the later use:
 
 Note a pitfall here – if you allow `set!` on `define`d variables, their types
 could change mid-expression, so there are some restrictions on when this should
-be applied.
+be applied. Make sure to test this case.
+
+Happy hacking!
 
 ### Discussion
 
