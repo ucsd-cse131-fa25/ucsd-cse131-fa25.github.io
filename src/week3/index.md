@@ -169,13 +169,15 @@ Let(vec![("x".to_string(), Number(5))],
   (loop
     (if (< i a)
       (block
+        (set! j 0)
         (loop
           (if (< j b)
             (block (set! c (sub1 c)) (set! j (add1 j)))
             (break c)
           )
         )
-        (set! i (add1 i)))
+        (set! i (add1 i))
+      )
       (break c)
     )
   )
