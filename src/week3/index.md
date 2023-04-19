@@ -2,7 +2,7 @@
 
 # Week 3: Cobra, Due Tuesday, April 25 (Open Collaboration)
 
-_(Yes, that's 3 open collaboration assignments in a row 🙂_
+_(Yes, that's 3 open collaboration assignments in a row 🙂)_
 
 In this assignment you'll implement a compiler for a small language called Cobra,
 which extends Boa with booleans, conditionals, variable assignment, and loops.
@@ -19,7 +19,7 @@ not to use a Github account.
 
 ### Concrete Syntax
 
-The concrete syntax of Boa is:
+The concrete syntax of Cobra is:
 
 ```
 <expr> :=
@@ -112,7 +112,7 @@ assembly code for each instruction.
 A Cobra program always evaluates to a single integer, a single boolean, or ends
 with an error.
 
-- All Boa programs evaluate in [the same way as before](/week2/), with one
+- All Boa programs evaluate in [the same way as before](../week2/index.md), with one
   exception: if numeric operations would overflow a 63-bit integer, the program
   should end in error, reporting `"overflow"` as a part of the error.
 - If the operators other than `=` are used on booleans, an error should be
@@ -121,18 +121,18 @@ with an error.
 - Boolean expressions (`true` and `false`) evaluate to themselves
 - `input` expressions evaluate to the first command-line argument given to the
   program. The command-line argument can be any value: a valid number or `true`
-  or `false`. If no command-line argument is provided the value of `input` is
-  `false`
-- If expressions evaluate their first expression (the condition) first. If it's
+  or `false`. If no command-line argument is provided, the value of `input` is
+  `false`.
+- `if` expressions evaluate their first expression (the condition) first. If it's
   `false`, they evaluate to the third expression (the “else” block), and to
   the second expression if any other value (including numbers).
-- Block expressions evaluate the subexpressions in order, and evaluate to the
+- `block` expressions evaluate the subexpressions in order, and evaluate to the
   result of the _last_ expression. Blocks are mainly useful for writing
   sequences that include `set!`
 - `set!` expressions evaluate the expression to a value, and change the value
   stored in the given variable to that value (e.g. variable assignment). The
   `set!` expression itself evaluates to the new value.
-- Loop and break expressions work together. Loops evaluate their subexpression
+- `loop` and `break` expressions work together. Loops evaluate their subexpression
   in an infinite loop until `break` is used. Break expressions evaluate their
   subexpression and the resulting value becomes the result of the entire loop.
   Typically the body of a loop is written with `block` to get a sequence of
@@ -155,12 +155,77 @@ The _compiler_ should stop and report an error if:
 If there are multiple errors, the compiler can report any non-empty subset of
 them.
 
-Here are some examples of Cobra programs. FILL
+Here are some examples of Cobra programs.
 
-- something w set! in expr position
-- something w nested loops
-- something w loop in expr position
-- factorial of input
+#### Example 1
+
+**Concrete Syntax**
+
+```scheme
+(let ((x 5))
+     (block (set! x (+ x 1))))
+```
+
+**Abstract Syntax**
+
+```rust
+Let(vec![("x".to_string(), Number(5))],
+    Box::new(Block(
+      vec![Set("x".to_string(),
+               Box::new(BinOp(Plus, Id("x".to_string()),
+                                    Number(1)))])))
+```
+
+**Result**
+
+```
+6
+```
+
+
+#### Example 2
+
+```scheme
+(let ((a 2) (b 3) (c 0) (i 0) (j 0))
+  (loop
+    (if (< i a)
+      (block
+        (loop
+          (if (< j b)
+            (block (set! c (add1 c)) (set! j (sub1 j)))
+            (break c)
+          )
+        )
+        (set! i (add1 i)))
+      (break c)
+    )
+  )
+)
+```
+
+**Result**
+
+```
+-6
+```
+
+#### Example 3
+
+This program calculates the factorial of the input.
+```scheme
+(let
+  ((i 1) (acc 1))
+  (loop
+    (if (> i input)
+      (break acc)
+      (block
+        (set! acc (* acc i))
+        (set! i (+ i 1))
+      )
+    )
+  )
+)
+```
 
 ### Implementing a Compiler for Cobra
 
