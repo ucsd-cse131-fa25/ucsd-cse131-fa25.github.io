@@ -64,6 +64,8 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
   - Monday Handout: [(pdf)](https://drive.google.com/open?id=1-6vUpvSapNiC2KsKigUnU2bKi_YFAQ7c&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1-93ApFcsJpvs8cZI_0160pfjjVEmWj_8?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/cobra)
 - Reading and Resources:
   - [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
+  - [Mark Barbone on x86_64 calling convention](https://markis.cool/posts/2023-04-17-sysv-abi.html)
+  - [Wikipedia on x86_64 calling convention](https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI)
 
 ### Week 2 - Binary Operators, Booleans, and Conditionals
 
