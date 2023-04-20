@@ -85,13 +85,6 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
     _This goes a little further than we are right now, but focus on the fact
     that V8, one of the widely deployed JS engines, uses tag bits for
     its numbers._
-<<<<<<< HEAD
-=======
-  - [V8 Blog Post Including Number Representations](https://v8.dev/blog/pointer-compression)
-    _This goes a little further than we are right now, but focus on the fact
-    that V8, one of the widely deployed JS engines, uses tag bits for
-    its numbers._
->>>>>>> cobra
   - [Max New on Let and the Stack](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html)
     _Max New and Ben Lerner have done a nice job writing up notes on some of
     my original scrawlings around this material. They don't use exactly the
