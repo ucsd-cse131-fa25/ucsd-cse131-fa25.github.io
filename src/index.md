@@ -63,6 +63,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/open?id=1-6vUpvSapNiC2KsKigUnU2bKi_YFAQ7c&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1-93ApFcsJpvs8cZI_0160pfjjVEmWj_8?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/cobra)
   - Wednesday Handout [(pdf)](https://drive.google.com/open?id=1-SCUezmScSj-c17rCKmK-4wYqTn1tLdU&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+  - Friday Handout [(pdf)](https://drive.google.com/file/d/1-UfeA9oHc-8o8jDrjNLVBhoajhDhtPBO/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-1EH6n5o6niyLlGOcEO0EV8pKeF8vIIH/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) 
 - Reading and Resources:
   - [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
   - [Mark Barbone on x86_64 calling convention](https://markis.cool/posts/2023-04-17-sysv-abi.html)
