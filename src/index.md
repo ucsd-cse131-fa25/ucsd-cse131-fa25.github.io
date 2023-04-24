@@ -60,8 +60,12 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 4 - Functions and Calling Conventions
 
-- Handouts:
-  -  Monday Handout: [(pdf)](https://drive.google.com/file/d/1-5hSur3hmEAciOPWTaTOkk-Oa52zNzKL/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-5a4jzUUbO_mUY6GJ_iVR1tMyOkcMzTz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+- Handouts and recordings:
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-5hSur3hmEAciOPWTaTOkk-Oa52zNzKL/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-5a4jzUUbO_mUY6GJ_iVR1tMyOkcMzTz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Monday Recordings:
+      [01](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
+      [02](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
+      [03](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
 
 - Reading and Resources:
   - [Lerner/New on Errors](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-calls_notes.html)
