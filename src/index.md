@@ -58,6 +58,12 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
+### Week 4 - Functions and Calling Conventions
+
+- Reading and Resources:
+  - [Lerner/New on Errors](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-calls_notes.html)
+  - [Lerner/New on Defining Functions](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-defs_notes.html)
+
 ### Week 3 - Tags, Conditionals, and Loops
 
 - Handouts:
