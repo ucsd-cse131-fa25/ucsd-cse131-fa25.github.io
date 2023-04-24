@@ -251,7 +251,7 @@ There are two types of assignments in this course:
   However, TAs will not look at your code or comment on it. Lab/office hours
   these weeks are for conceptual questions or for questions about past
   assignments only, no code assistance. On these assignments:
-  - You cannot look at or use anyone else's code
+  - You cannot look at or use anyone else's code for the assignment
   - You cannot discuss the assignment with other students
   - You cannot post publicly about the assignment on the course message
     board (or on social media or other forums). Of course, you can still
@@ -260,6 +260,9 @@ There are two types of assignments in this course:
     academic integrity violations on a closed collaboration assignment
     **except** for using tutorials/LLMs. If you use code from tutorials/Stack
     Overflow/LLMs, cite them as described above.
+
+You can always use code from class or shared by the instructional team
+(properly attributed).
 
 Programming assignments will explicitly list whether they are open or closed
 collaboration.
