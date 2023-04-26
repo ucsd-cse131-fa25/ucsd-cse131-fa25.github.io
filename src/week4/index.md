@@ -1,6 +1,6 @@
 ![caduceus](./caduceus.png)
 
-## Week 4: Caduceus, Due Tuesday, May 3, 10pm
+## Week 4: Caduceus, Due Wednesday, May 3, 10pm
 
 In this assignment, you'll spend time reflecting on, and learning from, the
 designs you and others chose for PA3.
