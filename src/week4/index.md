@@ -22,7 +22,7 @@ constructive.
 ### Assigned Compilers
 
 All submitted compilers and the instructions for downloading them are available
-via [this Piazza post](https://piazza.com/class/l19qaxisql23rt?cid=228).
+via FILL (an EdStem post and a file shared on ieng6).
 
 ### Tracing the Compiler
 
