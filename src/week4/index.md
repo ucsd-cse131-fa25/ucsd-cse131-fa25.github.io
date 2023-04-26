@@ -1,4 +1,4 @@
-![caduceus][./caduceus.png]
+![caduceus](./caduceus.png)
 
 ## Week 4: Caduceus, Due Tuesday, May 3, 10pm
 
