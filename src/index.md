@@ -60,6 +60,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 4 - Functions and Calling Conventions
 
+- [Assignment (due Wednesday, May 3, 10pm)](./week4/index.md)
 - Handouts and recordings:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-5hSur3hmEAciOPWTaTOkk-Oa52zNzKL/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-5a4jzUUbO_mUY6GJ_iVR1tMyOkcMzTz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Monday Recordings:
