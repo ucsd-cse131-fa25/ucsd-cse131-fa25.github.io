@@ -64,12 +64,10 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 - Handouts and recordings:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-5hSur3hmEAciOPWTaTOkk-Oa52zNzKL/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-5a4jzUUbO_mUY6GJ_iVR1tMyOkcMzTz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1-WP0sx7mJNHwSFFa9UVWPIDiJN1v_7Qr/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-djfbJ3JJ5ijQP7DOWkUvBAm27NOCDnz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
-  - Monday Recordings:
-      [01](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
-      [02](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
-      [03](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
-
+  - [Monday Recordings](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
 - Reading and Resources:
+  - [José Manuel Calderón Trilla on Tail Calls](https://twitter.com/josecalderon/status/1247983114875527171?s=20)
+  - [Tail Calls the Musical](https://www.youtube.com/watch?v=-PX0BV9hGZY)
   - [Lerner/New on Errors](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-calls_notes.html)
   - [Lerner/New on Defining Functions](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-defs_notes.html)
 
