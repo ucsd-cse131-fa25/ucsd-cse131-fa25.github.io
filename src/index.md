@@ -152,10 +152,18 @@ The standards for grade levels are:
 
 - **A**:
   - Exam point total 5 or higher (High Pass on one exam and Pass or better on the other) (including final make-up)
-  - High Pass on half the assignments, Pass on others, no missing assignments
+  - **One of**:
+    - High Pass on half the assignments, Pass on others, no missing assignments
+    - High Pass on 4 of 5 assignments from A4 (Caduceus) and later (planned
+      8 total assignments, actual total TBD), any grade on the other
+      assignmentst. (If we end up with less than 8, I'll update this)
+
 - **B**:
   - Exam point total 4 or higher (one High Pass and one Low Pass, or two Passes) (including final make-up)
-  - Pass or above on all assignments, up to one missing assignment
+  - **One of**:
+    - Pass or above on all assignments, up to one missing assignment
+    - High pass on two assignments from A1-4, High pass on two
+      assignments from A5-8, any grade on others
 - **C**
   - Exam point total 3 or higher (including final make-up)
   - Pass or above on half the assignments, any score on the others
