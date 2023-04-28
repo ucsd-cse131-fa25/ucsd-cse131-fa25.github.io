@@ -71,6 +71,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
   - [Tail Calls the Musical](https://www.youtube.com/watch?v=-PX0BV9hGZY)
   - [Lerner/New on Errors](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-calls_notes.html)
   - [Lerner/New on Defining Functions](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-defs_notes.html)
+  - [Lerner on Tail Calls](https://course.ccs.neu.edu/cs4410sp20/lec_tail-calls_stack_notes.html)
 
 ### Week 3 - Tags, Conditionals, and Loops
 
