@@ -22,7 +22,7 @@ constructive.
 ### Assigned Compilers
 
 All submitted compilers and the instructions for downloading them are available
-via FILL (an EdStem post and a file shared on ieng6).
+via this EdStem post: https://edstem.org/us/courses/38748/discussion/3036419
 
 ### Tracing the Compiler
 
