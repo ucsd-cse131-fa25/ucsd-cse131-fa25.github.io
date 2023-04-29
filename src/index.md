@@ -66,6 +66,9 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1-WP0sx7mJNHwSFFa9UVWPIDiJN1v_7Qr/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-djfbJ3JJ5ijQP7DOWkUvBAm27NOCDnz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Friday Handout: [(filled)](https://drive.google.com/open?id=1-iF3jpc4RwkmOoczuRquXVRGsiDJYZXt&authuser=jpolitz%40ucsd.edu&usp=drive_fs)[(pdf)](https://drive.google.com/file/d/1-cPkeTcqGrrEIVQf1_gO1vAdsDQ_E4gY/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-X_KaWnFNFgw5Vth-coIFGA6TERJmhB8/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - [Monday Recordings](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
+  - Calling Conventions:
+    - [Using Negative RSP offsets](https://github.com/ucsd-compilers-s23/lecture1/tree/diamondback)
+    - [Subtracting depth(e) from RSP](https://github.com/ucsd-compilers-s23/lecture1/tree/stack_alloc_first)
 - Reading and Resources:
   - [José Manuel Calderón Trilla on Tail Calls](https://twitter.com/josecalderon/status/1247983114875527171?s=20)
   - [Tail Calls the Musical](https://www.youtube.com/watch?v=-PX0BV9hGZY)
