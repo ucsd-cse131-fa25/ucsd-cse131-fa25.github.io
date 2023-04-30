@@ -78,6 +78,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 3 - Tags, Conditionals, and Loops
 
+- [Assignment (due Tuesday, April 25)](./week3/index.md)
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/open?id=1-6vUpvSapNiC2KsKigUnU2bKi_YFAQ7c&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1-93ApFcsJpvs8cZI_0160pfjjVEmWj_8?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/cobra)
   - Wednesday Handout [(pdf)](https://drive.google.com/open?id=1-SCUezmScSj-c17rCKmK-4wYqTn1tLdU&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
