@@ -87,7 +87,51 @@ them.
 
 Here are some examples of Diamondback programs.
 
-FILL
+#### Example 1
+
+```scheme
+(fun (fact n)
+  (let
+    ((i 1) (acc 1))
+    (loop
+      (if (> i n)
+        (break acc)
+        (block
+          (set! acc (* acc i))
+          (set! i (+ i 1))
+        )
+      )
+    )
+  )
+)
+(fact input)
+```
+
+#### Example 2
+
+```scheme
+(fun (isodd n)
+  (if (< n 0)
+      (isodd (- 0 n))
+      (if (= n 0)
+          false
+          (iseven (sub1 n))
+      )
+  )
+)
+
+(fun (iseven n)
+  (if (= n 0)
+      true
+      (isodd (sub1 n))
+  )
+)
+
+(block
+  (print input)
+  (print (iseven input))
+)
+```
 
 ### Implementing a Compiler for Diamondback
 
