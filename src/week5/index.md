@@ -25,7 +25,7 @@ parts are function definitions, function calls, and the `print` unary operator.
 
 ```
 <prog> := <defn>+ <expr>                (new!)
-<defn> := (fun <name> (<name>*) <expr>) (new!)
+<defn> := (fun (<name> <name>*) <expr>) (new!)
 <expr> :=
   | <number>
   | true
@@ -75,6 +75,7 @@ There are several examples further down to make this concrete.
 The _compiler_ should stop and report an error if:
 
 * There is a call to a function name that doesn't exist
+* Multiple functions are defined with the same name
 * A function's parameter list has a duplicate name
 * There is a call to a function with the wrong number of arguments
 * `input` is used in a function definition (rather than in the expression at
@@ -90,16 +91,18 @@ FILL
 
 ### Implementing a Compiler for Diamondback
 
-The FILL makes a few infrastructural suggestions. You can change these as you
-feel is appropriate in order to meet the specification.
+The main new feature in Diamondback is functions. You should choose and
+implement a calling convention for these. You're welcome to use the
+“standard” x86_64 sysv as a convention, or use some of what we discussed in
+class, or choose something else entirely. Remember that when calling _runtime_
+functions in Rust, the generated code needs to respect that calling convention.
 
-#### Calling Convention
-
-FILL difference between calling a rust function (e.g. print) and calling
+A compiler for Diamondback does not need guarantee safe-for-space tail calls,
+but they are allowed.
 
 ### Running and Testing
 
-I think nothing new here.
+Running and testing are as for Cobra, there is no new infrastructure.
 
 ## Grading
 
@@ -119,7 +122,45 @@ learning outcomes we care about.
 Any credit you lose will come with instructions for fixing similar mistakes on
 future assignments.
 
+## Grading
 
-## Extension: Compiling Functions when Types are Known
+As with the previous assignment, a lot of the credit you get will be based on
+us running autograded tests on your submission. You'll be able to see the
+result of some of these on while the assignment is out, but we may have more
+that we don't show results for until after assignments are all submitted.
+
+We'll combine that with some amount of manual grading involving looking at your
+testing and implementation strategy. You should have your own thorough test
+suite (it's not unreasonable to write many dozens of tests; you probably don't
+need hundreds), and you need to have recognizably implemented a compiler. For
+example, you _could_ try to calculate the answer for these programs and
+generate a single `mov` instruction: don't do that, it doesn't demonstrate the
+learning outcomes we care about.
+
+Any credit you lose will come with instructions for fixing similar mistakes on
+future assignments.
+
+## Extension 1: Proper Tail Calls
+
+Implement safe-for-space tail calls for Diamondback. Test with deeply-nested
+recursion. To make sure you've tested _proper tail calls_ and not just _tail
+recursion_, test deeply-nested mutual recursion between functions with
+different numbers of arguments.
+
+## Extension 2: Compiling Functions with Dynamically-Discovered Types
+
+Consider a function like this one from class:
+
+```
+(fun (sumrec num sofar)
+  (if (= num 0)
+      sofar
+      (sumrec (+ num -1) (+ sofar num))))
+```
+
+Because this function _could_ be called with booleans for `num` or `sofar`, the
+compiler is obligated to insert tag checks for the `=` and `+` operations here.
+However, if the function 
+
 
 
