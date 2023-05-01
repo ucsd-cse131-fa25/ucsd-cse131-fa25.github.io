@@ -58,6 +58,11 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
+
+### Week 5
+- Handouts and recordings:
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-jEMoSArvCf0LdIb14Q7Gb_0iOmgig3p/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-fw8ySJnoNvdiCy6xVJik2KoZIM9qyAd/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+
 ### Week 4 - Functions and Calling Conventions
 
 - [Assignment (due Wednesday, May 3, 10pm)](./week4/index.md)
