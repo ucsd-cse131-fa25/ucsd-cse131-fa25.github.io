@@ -187,15 +187,20 @@ compiler is obligated to insert tag checks for the `=` and `+` operations here.
 (Actually, there are some kinds of purely-static optimizations we could do
 here; if control-flow reaches the else branch we know that `num` is a number
 because otherwise the `=` check would have errored, so could elide the checks
-for `(+ num -1)`. However that won't be the focus of this extension.)
+for `(+ num -1)`; there are some similar examples in [section 2 of this
+paper](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=e36cf5f586a8612d1bf427b8aefe5b2e92e1f43c),
+which discusses some more complex cases.  However that won't be the focus of
+this extension.)
 
 We _could_ save some work by doing all the tag checks before entering the
 function body, compiling specific versions of the function for each different
 combination of arguments, then dispatching to the correct one based on the
-observed tags. This would re-use some of the ideas from the previous assignment
-on using the observed types of `input` and `define`d variables to specialize
-code. In the `sumrec` example, the compiler would generate _4_ different
-functions for something like `sumrec`:
+observed tags. This is common practice in JIT compilers, both [at the function
+leve](https://kipp.ly/blog/jits-intro/) and [at the block
+level](https://arxiv.org/abs/1411.0352). This would re-use some of the ideas
+from the previous assignment on using the observed types of `input` and
+`define`d variables to specialize code. In the `sumrec` example, the compiler
+would generate _4_ different functions for something like `sumrec`:
 
 ```
 (fun (sumrec num sofar)
@@ -209,7 +214,9 @@ functions for something like `sumrec`:
 However, this quickly explodes generated code size as we introduce more types
 and more arguments (it's (#types) _to the power of_ (#args), and for a
 general-purpose compiler we should avoid creating binaries that are exponential
-in the size of the source program!). We need to be a bit more clever.
+in the size of the source program!). The references above use dynamic
+information to avoid this ahead-of-time explosion. We need to be a bit more
+clever as well.
 
 For this extension, we'll pick a simple model that is surprisingly effective
 and uses the dynamic code-generation techniques we've been studying:
@@ -236,7 +243,12 @@ in the
 [`adder-dyn`](https://github.com/ucsd-compilers-s23/adder-dyn/blob/main/src/main.rs#L176)
 repository.
 
-Here's what we suggest.
+The process of taking a running function, jumping to the compiler, rewriting
+the code of that function, then going back to it, involves some thought about
+stack manipulation manipulation. (In general, in real-world JIT compilers, the
+process of on-stack replacement (OSR) grows quite complex, with shuffling
+registers and converting between stack frame layouts.) Here's one way we
+recommend implementing the required behavior.
 
 - Start from your code for `eval` in the previous assignment (e.g. make sure
   you're in the context of the compiler with all the necessary pieces imported)
@@ -248,14 +260,22 @@ Here's what we suggest.
 
   ```
   <function-name>:
-    push argN
-    ...
-    push arg1
-    push <reference>      ; an actual reference, like an &Expr
-    call compile_opt_N
-  ```
+    mov rdi, <fun reference> ; The address of a reference, like a *const Definition
+    mov rsi, arg1
+    mov rdx, arg2
+    ... all args ...
+    jmp compile_opt_N
 
-  To get a reference to the Snek function being compiled, you can get a [raw
+  ; Just one copy of compile_opt_N in the generated code, not one per function
+  compile_opt_N:
+    call compile_opt_rust_N  ; 
+    jmp rax                  ; compile_opt_N will return a function pointer!
+                             ; depending on your calling convention, you may
+                             ; or may not need to clean up and set up some
+                             ; registers before the jmp to make the stack frame
+                             ; “look right”
+  ```
+- To get a reference to the Snek function being compiled, you can get a [raw
   pointer](https://doc.rust-lang.org/std/primitive.pointer.html) to the actual
   `Fun` definition object, and put the number of that address into the
   generated code as an immediate value. You can then cast back to a
@@ -264,23 +284,45 @@ Here's what we suggest.
   that vector back to the stub, below, so some raw address will probably be
   needed. Think about lifetimes just as much as you need to make sure the AST
   will be available and not dropped by the time this compilation happens!
-- In the dynamic compiler (in Rust), compile the optimized version of the
-  function based on the given arguments' tags. You can probably re-use code you
-  wrote for the previous extension to compile the optimized version with known
-  tags for those arguments.
-- Use `alter` for two different purposes:
+- The `compile_opt_rust_N` function will be implemented in Rust and have a
+  signature like:
+
+  ```
+  extern "C" fn compile_opt_rust_N(
+    def: *const Definition,
+    arg1: u64,
+    ...
+    argN: u64
+  ) {
+    // compile the definition and return a function pointer to the version to
+    // call
+  }
+  ```
+
+  In this Rust function you can compile the optimized version of the function
+  based on the given arguments' tags. You can probably re-use code you wrote
+  for the previous extension to compile the optimized version with known tags
+  for those arguments.
+
+- This code will likely use `alter` for two different purposes:
 
   1. First, add a new label `fast_<function-name>` with the generated optimized
   code at _the end_ of the generated code.
   2. Then, _rewrite_ the body of `<function-name>` to have a conditional check
   for the provided tags, and `jmp` to the `fast` or `slow` version as
   appropriate (note that this is trivially a tail call)
-- Don't forget to get the address of the generated code and call it! Future
-  calls to `<function-name>` will use the overwritten code, but for this first
-  call you need to make sure to do the call yourself.
+- Don't forget to get the address of the generated code that it can be called!
+  Future calls to `<function-name>` will use the overwritten code, but for this
+  first call you need to make sure to do the call yourself.
+- We recommend creating a few versions of `compile_opt_N` for argument list
+  lengths 0, 1, 2 until the pattern is clear, and only then try to generalize
+  to a varargs Rust function.
 
-There are definitely other ways to set this up, but we think this scheme will
-work reasonably well.
+There are definitely other ways to set this up, but we think this scheme can be
+made to work.
 
-
+There is a lot of thinking and debugging required here! Don't be surprised if
+this takes longer than the previous extensions; we don't have a great
+calibration of the expected pace of these, so there's no expectation that it
+takes (only) a week.
 
