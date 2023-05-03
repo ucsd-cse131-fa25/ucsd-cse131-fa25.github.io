@@ -24,7 +24,7 @@ languages. It distinguishes _top-level declarations_ from expressions.  The new
 parts are function definitions, function calls, and the `print` unary operator.
 
 ```
-<prog> := <defn>+ <expr>                (new!)
+<prog> := <defn>* <expr>                (new!)
 <defn> := (fun (<name> <name>*) <expr>) (new!)
 <expr> :=
   | <number>
@@ -163,27 +163,6 @@ need hundreds), and you need to have recognizably implemented a compiler. For
 example, you _could_ try to calculate the answer for these programs and
 generate a single `mov` instruction: don't do that, it doesn't demonstrate the
 learning outcomes we care about.
-
-Any credit you lose will come with instructions for fixing similar mistakes on
-future assignments.
-
-## Grading
-
-As with the previous assignment, a lot of the credit you get will be based on
-us running autograded tests on your submission. You'll be able to see the
-result of some of these on while the assignment is out, but we may have more
-that we don't show results for until after assignments are all submitted.
-
-We'll combine that with some amount of manual grading involving looking at your
-testing and implementation strategy. You should have your own thorough test
-suite (it's not unreasonable to write many dozens of tests; you probably don't
-need hundreds), and you need to have recognizably implemented a compiler. For
-example, you _could_ try to calculate the answer for these programs and
-generate a single `mov` instruction: don't do that, it doesn't demonstrate the
-learning outcomes we care about.
-
-Any credit you lose will come with instructions for fixing similar mistakes on
-future assignments.
 
 ## Extension 1: Proper Tail Calls
 
