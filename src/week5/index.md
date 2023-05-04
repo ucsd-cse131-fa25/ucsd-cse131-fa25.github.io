@@ -10,10 +10,11 @@ collaboration**](https://ucsd-compilers-s23.github.io/#programming).
 
 ## Setup
 
-Get the assignment at FILL This will make a private-to-you copy of the
-repository hosted within the course's organization.  You can also access the
-public starter code FILL if you don't have or prefer not to use a Github
-account.
+Get the assignment at <https://classroom.github.com/a/q383lTNN> This will make
+a private-to-you copy of the repository hosted within the course's
+organization.  You can also access the public starter code
+<https://github.com/ucsd-compilers-s23/diamondback-starter> if you don't have
+or prefer not to use a Github account.
 
 ## The Diamondback Language
 
