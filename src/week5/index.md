@@ -172,7 +172,15 @@ recursion. To make sure you've tested _proper tail calls_ and not just _tail
 recursion_, test deeply-nested mutual recursion between functions with
 different numbers of arguments.
 
-## Extension 2: Compiling Functions with Dynamically-Discovered Types
+## Extension 2: Add Function Definitions to the REPL
+
+Add the ability to define functions to the REPL. Entries should be a definition
+(which could be `define` or `fun`) or an expression.
+
+Functions should be able to use global variables `define`d in earlier entries
+in the function body.
+
+## Extension 3: Compiling Functions with Dynamically-Discovered Types
 
 Consider a function like this one from class:
 
@@ -325,5 +333,5 @@ made to work.
 There is a lot of thinking and debugging required here! Don't be surprised if
 this takes longer than the previous extensions; we don't have a great
 calibration of the expected pace of these, so there's no expectation that it
-takes (only) a week.
+takes (only) a week -- it may well take the rest of the quarter.
 
