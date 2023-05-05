@@ -1,6 +1,6 @@
 ![diamondback](./diamondback.jpeg)
 
-# Week 4: Diamondback, Due Thursday, May 11 (Closed Collaboration)
+# Week 5: Diamondback, Due Thursday, May 11 (Closed Collaboration)
 
 In this assignment you'll implement a compiler for a language called Diamondback,
 which has top-level function definitions.
@@ -149,6 +149,14 @@ but they are allowed.
 ### Running and Testing
 
 Running and testing are as for Cobra, there is no new infrastructure.
+
+## Reference interpreter
+
+You may check the behavior of programs using this interpreter.
+
+<div id=embed></div>
+<script src="diamondback.js" type=text/javascript></script>
+<script src="diamondback-embed.js" type=text/javascript></script>
 
 ## Grading
 
