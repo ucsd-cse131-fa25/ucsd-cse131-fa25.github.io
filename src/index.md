@@ -63,7 +63,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-jEMoSArvCf0LdIb14Q7Gb_0iOmgig3p/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-fw8ySJnoNvdiCy6xVJik2KoZIM9qyAd/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1-sW0TLc02EqjLKmoZD-tsZp4rQ1CynjH/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-qBKC14vKPwmOHN7sJ9aU9EnxnWdXVa4/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
-  - Friday Handout: [(pdf)](https://drive.google.com/file/d/1-sW0TLc02EqjLKmoZD-tsZp4rQ1CynjH/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-qBKC14vKPwmOHN7sJ9aU9EnxnWdXVa4/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Friday Handout: [(pdf)](https://drive.google.com/file/d/102m4bDEZEIDMXrjMAJvLkbGgJ7WF03bz/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-vFIGpVCc2rYWjK_104rJVRw6VUgZ_1E/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
 
 ### Week 4 - Functions and Calling Conventions
 
