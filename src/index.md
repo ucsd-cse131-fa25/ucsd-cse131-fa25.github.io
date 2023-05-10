@@ -61,6 +61,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 6
 - Handouts:
+  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=10Oi5eDSom0ooIZh6544saNasxVrEbFaX&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/10N6pBYMXlmNcj44ZG0lfE7R2TUu76Rtk/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10CQguVrO_CsM5tRdB-s6P1uG8k4j_lhD/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
 - Reading and Resources
   - [Pairs Implementation](https://github.com/ucsd-compilers-s23/lecture1/tree/egg-eater)
