@@ -7,4 +7,4 @@
 - [Week 3 - Cobra](./week3/index.md)
 - [Week 4 - Caduceus](./week4/index.md)
 - [Week 5 - Diamondback](./week5/index.md)
-- [Week 5 - Egg Eater](./week6/index.md)
+- [Week 6 - Egg Eater](./week6/index.md)
