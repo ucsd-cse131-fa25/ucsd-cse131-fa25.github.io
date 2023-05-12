@@ -1,4 +1,4 @@
-![egg-eater](./egg-eater.jpeg)
+![egg-eater](./egg-eater.jpg)
 
 # Week 6: Egg Eater, Due Tuesday, May 23 (Open Collaboration)
 
@@ -77,10 +77,8 @@ The following features are explicitly optional and **not** required:
 
 ## Handin and Design Document
 
-You will submit your implementation to pa6, which will run any tests you write
-(including the required tests that you add).  There are no autograding tests or
-associated points, your submission will be graded based on an associated design
-document you submit, summarized below.
+There are no autograding tests or associated points, your submission will be
+graded based on an associated design document you submit, summarized below.
 
 Your PDF should contain:
 
@@ -110,6 +108,21 @@ Your PDF should contain:
   readings like Stack Overflow or blog posts with design ideas), and students
   or course staff discussions you had in-person. Please do collaborate and give
   credit to your collaborators.
+
+Submit a PDF containing this writeup to the `pa6-doc` assignment. Submit your
+code, including all tests, and **also including the same PDF in the root of the
+repository as design.pdf**, to the `pa6-code` assignment. This dual submission
+is best for us to review and grade the assignments.
+
+Happy hacking!
+
+## Extensions
+
+- Add structure update (e.g. `setfst!` from class)
+- Add structural equality (choose a new operator if you like)
+- Update your compiler with extensions from previous assignments to support
+  heap allocation (e.g. REPL, JIT, and so on). Leave out any new tag checks
+  related to heap-allocated values as appropriate.
 
 ## Grading
 
