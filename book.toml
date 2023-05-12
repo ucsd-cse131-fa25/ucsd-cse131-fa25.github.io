@@ -3,7 +3,7 @@ authors = ["Nico Lehmann"]
 language = "en"
 multilingual = false
 src = "src"
-title = "ucsd-compilers-s23"
+title = "Compiler Construction – Spring 2023 Edition"
 
 [output.html.playground]
 runnable = false

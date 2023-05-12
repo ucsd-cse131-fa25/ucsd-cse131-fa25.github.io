@@ -1,6 +1,6 @@
 ![doodle](./doodle.jpg)
 
-# Compiler Construction (Spring 2023 Edition)
+# UCSD CSE131/231 Syllabus and Logistics
 
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
 - Mark Barbone (tutor)

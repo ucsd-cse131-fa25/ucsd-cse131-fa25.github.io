@@ -109,6 +109,9 @@ Your PDF should contain:
   or course staff discussions you had in-person. Please do collaborate and give
   credit to your collaborators.
 
+Write a professional document that could be shared with a team that works on
+the language, or users of it, to introduce them to it.
+
 Submit a PDF containing this writeup to the `pa6-doc` assignment. Submit your
 code, including all tests, and **also including the same PDF in the root of the
 repository as design.pdf**, to the `pa6-code` assignment. This dual submission
