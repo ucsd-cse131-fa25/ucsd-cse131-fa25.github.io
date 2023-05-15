@@ -59,6 +59,10 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
 
+### Week 7:
+- Handouts:
+  - Monday Handout: [(pdf)](https://drive.google.com/open?id=10prpN9EVhU1BPfpgDDsZjEpy-p6mauj4&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+
 ### Week 6
 - Handouts:
   - Friday Handout: [(pdf)](https://drive.google.com/open?id=10cELq6XOarsRYQcnNBSnHl-72FoARbZc&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
