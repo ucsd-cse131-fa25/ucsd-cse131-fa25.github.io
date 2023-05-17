@@ -62,6 +62,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 ### Week 7:
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/open?id=10prpN9EVhU1BPfpgDDsZjEpy-p6mauj4&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/10rWE3fzStKvzD_wpKMlyrZ45ZkQiwLCP/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/10qdRRHrAWrLQQ_DfSMLgTcVw1nMr9ae6/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
 
 ### Week 6
 - Handouts:
