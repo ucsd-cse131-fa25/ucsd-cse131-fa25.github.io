@@ -61,15 +61,15 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 7:
 - Handouts:
-  - Monday Handout: [(pdf)](https://drive.google.com/open?id=10prpN9EVhU1BPfpgDDsZjEpy-p6mauj4&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-  - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/10rWE3fzStKvzD_wpKMlyrZ45ZkQiwLCP/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/10qdRRHrAWrLQQ_DfSMLgTcVw1nMr9ae6/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
-  - Friday Handout: [(pdf)](https://drive.google.com/file/d/119qdwLq6YHhKOzQzjcKP1c-B-PZ4reV7/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/10s-0oBxichZzxEYI6ihbal_TMsjIIY-C/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Monday Handout: [(pdf)](https://drive.google.com/open?id=10prpN9EVhU1BPfpgDDsZjEpy-p6mauj4&authuser=jpolitz%40ucsd.edu&usp=drive_fs)  [(pptx)](https://docs.google.com/presentation/d/10eVuV8gXYLNpFAs61vjdCuaZ45tiSyx3/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1mWfC5H6v_0MbO23Oc2Cee6B8fz-_V2Fv/view?usp=share_link)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/10rWE3fzStKvzD_wpKMlyrZ45ZkQiwLCP/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10qdRRHrAWrLQQ_DfSMLgTcVw1nMr9ae6/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(notes)](https://drive.google.com/file/d/1llafRhpA8FTCZZngm_9G3qaUALr90Mgv/view?usp=share_link) 
+  - Friday Handout: [(pdf)](https://drive.google.com/file/d/119qdwLq6YHhKOzQzjcKP1c-B-PZ4reV7/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10s-0oBxichZzxEYI6ihbal_TMsjIIY-C/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1jhJDa8xQ7s9M3NJGhHLdL9IG_c2CXzRL/view?usp=share_link)
 
 ### Week 6
 - Handouts:
-  - Friday Handout: [(pdf)](https://drive.google.com/open?id=10cELq6XOarsRYQcnNBSnHl-72FoARbZc&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=10Oi5eDSom0ooIZh6544saNasxVrEbFaX&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-  - Monday Handout: [(pdf)](https://drive.google.com/file/d/10N6pBYMXlmNcj44ZG0lfE7R2TUu76Rtk/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10CQguVrO_CsM5tRdB-s6P1uG8k4j_lhD/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/10N6pBYMXlmNcj44ZG0lfE7R2TUu76Rtk/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10CQguVrO_CsM5tRdB-s6P1uG8k4j_lhD/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1WtEB0rxFsUcKT38s3VQBsY_XMs7wpUeR/view?usp=share_link)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=10Oi5eDSom0ooIZh6544saNasxVrEbFaX&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1-jBhVNii45-dd0HwwTh_AZueaecoYlGE/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true)
+  - Friday Handout: [(pdf)](https://drive.google.com/open?id=10cELq6XOarsRYQcnNBSnHl-72FoARbZc&authuser=jpolitz%40ucsd.edu&usp=drive_fs)[(pptx)](https://docs.google.com/presentation/d/10c2RfDK5E8qLacnqZ9np0JhpVU5vHhiI/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1Fir7zmXnfBWDUKhxTLS4WnjAAFWatXgc/view?usp=share_link)
 - Reading and Resources
   - [Pairs Implementation](https://github.com/ucsd-compilers-s23/lecture1/tree/egg-eater)
   - [New/Lerner on Pairs and Tuples](https://maxsnew.com/teaching/eecs-483-fa21/lec_tuples_notes.html)
@@ -79,7 +79,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 ### Week 5
 - Handouts:
-  - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-jEMoSArvCf0LdIb14Q7Gb_0iOmgig3p/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-fw8ySJnoNvdiCy6xVJik2KoZIM9qyAd/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-jEMoSArvCf0LdIb14Q7Gb_0iOmgig3p/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-fw8ySJnoNvdiCy6xVJik2KoZIM9qyAd/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/17wgnP5RIvzZjyC_ONaLLYy88-EejGyKk/view?usp=share_link) 
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1-sW0TLc02EqjLKmoZD-tsZp4rQ1CynjH/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-qBKC14vKPwmOHN7sJ9aU9EnxnWdXVa4/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Friday Handout: [(pdf)](https://drive.google.com/file/d/102m4bDEZEIDMXrjMAJvLkbGgJ7WF03bz/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-vFIGpVCc2rYWjK_104rJVRw6VUgZ_1E/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
 
@@ -89,7 +89,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 - Handouts and recordings:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/1-5hSur3hmEAciOPWTaTOkk-Oa52zNzKL/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-5a4jzUUbO_mUY6GJ_iVR1tMyOkcMzTz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1-WP0sx7mJNHwSFFa9UVWPIDiJN1v_7Qr/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-djfbJ3JJ5ijQP7DOWkUvBAm27NOCDnz/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
-  - Friday Handout: [(filled)](https://drive.google.com/open?id=1-iF3jpc4RwkmOoczuRquXVRGsiDJYZXt&authuser=jpolitz%40ucsd.edu&usp=drive_fs)[(pdf)](https://drive.google.com/file/d/1-cPkeTcqGrrEIVQf1_gO1vAdsDQ_E4gY/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-X_KaWnFNFgw5Vth-coIFGA6TERJmhB8/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true)
+  - Friday Handout: [(pdf)](https://drive.google.com/file/d/1-cPkeTcqGrrEIVQf1_gO1vAdsDQ_E4gY/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1-X_KaWnFNFgw5Vth-coIFGA6TERJmhB8/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(filled)](https://drive.google.com/open?id=1-iF3jpc4RwkmOoczuRquXVRGsiDJYZXt&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
   - [Monday Recordings](https://drive.google.com/drive/u/0/folders/1HkhKGG2XGbjWUJV2xozTOh-qBkHuYBoF)
   - Calling Conventions:
     - [Using Negative RSP offsets](https://github.com/ucsd-compilers-s23/lecture1/tree/diamondback)
@@ -117,11 +117,10 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 
 - [Assignment (due Tuesday, April 18, 10pm)](./week2/index.md)
 - Handouts:
-  - Friday Handout: [(pdf)](https://drive.google.com/open?id=1--oHIGna7kRj0w7yYmtHYsX7Iprjhvj1&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1--VHG_NpiO_CF6OUlksf-G3a4EJ9yNnp?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(filled)](https://drive.google.com/open?id=1-1p5EQoMrJ4iLgXgsHaXLOUOnbuSP-TX&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
-    [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/lecture3)
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/15xYXbx9VVfXv9-xuKqH8lcMLKt8gP4cu/view?usp=share_link)
     [(pptx)](https://docs.google.com/presentation/d/1i3Mf3UVZoHmXJy3RhHpa4WMgt_M-MD38/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/open?id=1pyn-5AhrBKH4nE4V4g3VWKDD-HM9J3R5&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/14c0AVN8LQH3_JH6YswtJbjWYlPJTS9UC?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(code)](https://github.com/ucsd-compilers-s23/lecture1/tree/lecture3)
+  - Friday Handout: [(pdf)](https://drive.google.com/open?id=1--oHIGna7kRj0w7yYmtHYsX7Iprjhvj1&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(pptx)](https://docs.google.com/presentation/d/1--VHG_NpiO_CF6OUlksf-G3a4EJ9yNnp?rtpof=true&authuser=jpolitz%40ucsd.edu&usp=drive_fs) [(filled)](https://drive.google.com/open?id=1-1p5EQoMrJ4iLgXgsHaXLOUOnbuSP-TX&authuser=jpolitz%40ucsd.edu&usp=drive_fs)
 - Reading and resources:
   - [Memory Representation of Values in Ocaml](https://dev.realworldocaml.org/runtime-memory-layout.html)
     _More discussion of a language with tagged value representations (and Ocaml
