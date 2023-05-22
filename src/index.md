@@ -58,6 +58,9 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
+### Week 8:
+- Handouts:
+  - Monday Handout: [(pdf)](week89/week89-monday-handout.pdf)
 
 ### Week 7:
 - Handouts:
