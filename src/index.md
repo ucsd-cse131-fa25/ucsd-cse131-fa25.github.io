@@ -67,6 +67,8 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
   - Monday Handout: [(pdf)](https://drive.google.com/open?id=10prpN9EVhU1BPfpgDDsZjEpy-p6mauj4&authuser=jpolitz%40ucsd.edu&usp=drive_fs)  [(pptx)](https://docs.google.com/presentation/d/10eVuV8gXYLNpFAs61vjdCuaZ45tiSyx3/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1mWfC5H6v_0MbO23Oc2Cee6B8fz-_V2Fv/view?usp=share_link)
   - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/10rWE3fzStKvzD_wpKMlyrZ45ZkQiwLCP/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10qdRRHrAWrLQQ_DfSMLgTcVw1nMr9ae6/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(notes)](https://drive.google.com/file/d/1llafRhpA8FTCZZngm_9G3qaUALr90Mgv/view?usp=share_link) 
   - Friday Handout: [(pdf)](https://drive.google.com/file/d/119qdwLq6YHhKOzQzjcKP1c-B-PZ4reV7/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/10s-0oBxichZzxEYI6ihbal_TMsjIIY-C/edit?usp=share_link&ouid=108036649104448650609&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1jhJDa8xQ7s9M3NJGhHLdL9IG_c2CXzRL/view?usp=share_link)
+- Reading and Resources
+  - [Wilson on GC](./week67/gcsurvey.pdf)
 
 ### Week 6
 - Handouts:
