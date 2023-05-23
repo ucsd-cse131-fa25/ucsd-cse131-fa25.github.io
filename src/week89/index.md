@@ -18,6 +18,10 @@ If you use the starter code, you'll only have to modify the runtime.
 However, feel free to instead update your own Egg-Eater compiler to match the Forest
 Flame spec.
 
+If you are participating in the Rust error study, please make sure you have the
+`build.rs` and `config.txt` files in the new repository and set a new `project`
+value in `config.txt`.
+
 [github classroom]: FILL
 [public starter code]: https://github.com/ucsd-compilers-s23/forest-flame-starter
 
