@@ -327,20 +327,34 @@ it should, and (c) doesn't run out of memory when it shouldn't.
 
 - Your runtime should only allocate as many words of heap space as specified by
   the command-line argument.
-- Your runtime needs to be able to use the whole heap.
+- Your runtime needs to be able to use the whole heap (so you're more or less
+  forced to use mark/compact)
 - Data on the heap is *live* if it is reachable from some variable or some
   currently-in-use temporary storage. (This is exactly the data kept after a GC.)
-
-  If, during an allocation, `(total live data size) + (new object size)` ≤
+- If, during an allocation, `(total live data size) + (new object size)` ≤
   `(total heap size)`, then the allocation should succeed. Otherwise, it should
-  halt with the message `out of memory`.
+  halt with the message `out of memory`. By “during an allocation”, we mean:
+  - In a `make-vec` expression _after_ the value and size subexpressions have
+    been evaluated
+  - In a `vec` expression _after_ the element expressions have been evaluated
 
-This assignment is **closed to collaboration**, but you may share test cases
-with your peers by submitting them to this [**student test repo**]. Have test
-cases case you think will break your classmates' GCs? Test cases that helped you
-fix a bug? Cool programs you just want to share? Make a PR!
+  (This is relevant because it specifies that an expression like `(vec (+ nil
+  9))` could never trigger out-of-memory, it would _only_ error because of the
+  runtime tag check on `+`. We aren't actively trying to test for these kinds
+  of specific cases, but it helps to disambiguate.)
 
-[**student test repo**]: https://github.com/ucsd-compilers-s23/forest-flame-student-tests
+This assignment is officially **closed to collaboration**, but we have some
+specific categories where we encourage you to share:
+
+- You may share test cases with your peers by submitting them to the [**student
+  test repo**] below. Have test cases case you think will break your
+  classmates' GCs? Test cases that helped you fix a bug? Cool programs you just
+  want to share? Make a PR! We'll merge in the pull requests every day or two.
+- You may share (publicly on EdStem or otherwise) diagrams or other
+  representations of the heap + stack at various stages in garbage collection
+  to understand examples
+
+[Student Test Repo]: https://github.com/ucsd-compilers-s23/forest-flame-student-tests
 
 ## Extension: simple generational GC
 
