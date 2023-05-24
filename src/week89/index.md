@@ -152,7 +152,33 @@ of memory`.
 
 ### Examples
 
-TODO FILL examples of programs and what they do
+This program implements several linked list manipluations, which involve
+allocating a lot of data which eventually becomes garbage.
+It prints out `"1\n2\n3\n4\n5\n5\n4\n3\n2\n1"`.
+
+```scheme
+(fun (range n m)
+  (if (= n m) (vec n nil) (vec n (range (add1 n) m))))
+
+(fun (append list1 list2)
+  (if (= list1 nil)
+      list2
+      (vec (vec-get list1 0) (append (vec-get list1 1) list2))))
+
+(fun (reverse list)
+  (if (= list nil) nil (append (reverse (vec-get list 1)) (vec (vec-get list 0) nil))))
+
+(fun (printall list) (loop
+  (if (= list nil) (break nil) (block
+    (print (vec-get list 0))
+    (set! list (vec-get list 1))
+  ))))
+
+(let ((list (range 1 5)))
+  (printall (append list (reverse list))))
+```
+
+See also the other examples in the `tests/` directory of the starter code.
 
 ## Garbage collection
 
@@ -237,9 +263,14 @@ this section talks about Nico's compiler's interface for what the stack looks
 like, etc. Will appreciate Nico's help (are we using the frame pointer to walk
 the stack?) at the very least to proofread it
 
-## Submission and grading
+## Submission, testing, and grading
 
 Submit via Gradescope. (TODO anything else?)
+
+TODO: in this section we talk about how we'll test it. (ie OOM stuff)
+and also other requirements: "needs to be able to use the whole heap", etc
+(Relatedly, maybe we should have some tests which would fail with mark-sweep due
+to fragmentation?)
 
 ## Extension: simple generational GC
 
