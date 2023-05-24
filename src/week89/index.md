@@ -20,7 +20,7 @@ Flame spec.
 
 If you are participating in the Rust error study, please make sure you have the
 `build.rs` and `config.txt` files in the new repository and set a new `project`
-value in `config.txt`.
+value in `config.txt` if you are using the starter code.
 
 [github classroom]: FILL
 [public starter code]: https://github.com/ucsd-compilers-s23/forest-flame-starter
