@@ -199,7 +199,7 @@ A Forest Flame heap object has two metadata words, followed by the actual data.
 For example, the data `(vec false true 17)` stored at heap address `0x100` would
 be represented by the value `0x101` and this heap data:
 
-FILL image
+![object-layout](./object-layout.png)
 
 As a running example, consider this program, run with a heap size of 15 words:
 
@@ -214,7 +214,7 @@ As a running example, consider this program, run with a heap size of 15 words:
 
 At the start of collection, the heap looks like this:
 
-FILL image
+![heap-layout](./heap-layout.png)
 
 The stack contains the variables `x` and `y`. `x` has value `0x149` = `C` and
 `y` is `nil`, so the root set is {`C`}.
@@ -227,7 +227,10 @@ heap, starting from the roots found on the stack.
 
 Here's what the heap looks like after marking:
 
-FILL image
+![after-marking](./after-marking.png)
+
+Since object A is not marked, we know that it's dead and we can safely remove it
+from the heap.
 
 ### Compacting
 
@@ -245,7 +248,7 @@ are still alive get forwarding addresses: this is its *new* address that it will
 be moved to after compacting. Computing forwarding addresses is done by a
 linear scan though the heap. Here's what the heap looks like afterwards:
 
-FILL image
+![after-computing](./after-computing.png)
 
 #### Compacting 2: update references
 
@@ -254,17 +257,17 @@ to point to the new location. We do this by a linear scan though both the heap
 *and* the stack, changing each vector to point to the vector's eventual new
 location. Here's what the heap looks like afterwards:
 
-FILL image
+![after-updating](./after-updating.png)
 
-And on the stack, the stack slot storing the variable `x` has been updated to
-FILL.
+Note that the heap address stored in object C has been changed, and on the
+stack, the stack slot storing the variable `x` has been updated to `0x121`.
 
 #### Compacting 3: move the objects
 
 Lastly, we do the actual compacting, moving heap objects to their destinations.
 This is also a linear scan through the heap. Here's the final result:
 
-FILL image
+![final-heap](./final-heap.png)
 
 ## Starter code
 
@@ -283,8 +286,6 @@ Like the lecture compiler, the starter code uses `r15` as a heap pointer. It is
 passed to the functions `snek_gc` and `snek_try_gc` as the argument `heap_ptr`.
 The space between `HEAP_START` and `heap_ptr` is full of objects, and the space
 between `heap_ptr` and `HEAP_END` is free.
-
-FILL image
 
 ### Stack layout
 
@@ -307,11 +308,15 @@ Then, on function exit, it:
 
  - Moves `rsp` back to where it used to be
  - Restores the old value of `rbp` by popping it
- - Executes `ret`
 
+(These operations are so common that x86 even has [special][enter]
+[instructions][leave] for them!)
 Concretely, the stack ends up looking like this:
 
-FILL image
+[enter]: https://www.felixcloutier.com/x86/enter
+[leave]: https://www.felixcloutier.com/x86/leave
+
+![stack-layout](./stack-layout.png)
 
 ## Submission, testing, and grading
 
