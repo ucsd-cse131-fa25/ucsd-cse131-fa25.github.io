@@ -354,7 +354,7 @@ specific categories where we encourage you to share:
   representations of the heap + stack at various stages in garbage collection
   to understand examples
 
-[Student Test Repo]: https://github.com/ucsd-compilers-s23/forest-flame-student-tests
+Student Test Repo: <https://github.com/ucsd-compilers-s23/forest-flame-student-tests>
 
 ## Extension: simple generational GC
 
