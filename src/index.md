@@ -61,6 +61,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
 ### Week 8:
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/11Oa5JhCGMl_tbjzrP9h4eE-0H4e_GbK7/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/11DVMTLinA85y3fbHmaEcJPpPKoUS5DiP/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1FbsqmPwXNsa3Pka1gyR4Cdsr1vLtK3kf/view?usp=share_link)
+  - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/11nf4wQWzyfFSybv1icX_52vN7zFMWaLd/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/11fmzGibK9k8U-8_AV-6iLMkxIW2pmDF-/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true)
 - Reading and Resources
   - [Might on ANF](https://matt.might.net/articles/a-normalization/)
   - [Lerner on ANF](https://courses.ccs.neu.edu/cs4410/lec_anf_notes.html)
