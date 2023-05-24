@@ -91,8 +91,8 @@ It adds these new syntax constructs:
  - `(make-vec count value)` allocates a new vector on the heap of size `count`
    with contents `[value, value, value, ...]`.
 
-    It gives a runtime error if `count` does not evaluate to a nonnegative
-    number.
+   It gives a runtime error if `count` does not evaluate to a number, or if it
+   evaluates to a negative number.
 
  - `(vec-get vec index)` gets the `index`th component of `vec`.
 
@@ -165,30 +165,67 @@ blah blah gc
 
 ### Heap layout
 
-this section describes the heap object layout with its two words of metadata.
+A Forest Flame heap object has two metadata words, followed by the actual data.
 
-it also introduces a running example and shows what the heap looks like at the
-start of a collection.
+ - First, there is a GC word, used to store the mark bit and the forwarding
+   pointer during garbage collection. Outside of garbage collection, the GC word
+   is always `0`.
+ - Next, there is a word which stores the length of the vector. (Note that a
+   vector of length `len` actually uses `len + 2` words, from the metadata.)
+ - Next, there is each element of the vector, in order.
+
+For example, the data `(vec false true 17)` stored at heap address `0x100` would
+be represented by the value `0x101` and this heap data:
+
+FILL image
+
+As a running example, consider this program:
+
+```scheme
+(let ((x (vec false true 17))
+      (y (vec 1 2)))
+     (block
+        (set! x (vec nil y nil))
+        (set! y nil)
+        (gc)))
+```
+
+At the start of collection, the heap looks like this:
+
+FILL image
+
+The stack contains the variables `x` and `y`. `x` has value `0x149` = `C` and
+`y` is `nil`, so the root set is {`C`}.
 
 ### Marking
 
-this section states that marking does a graph traversal of the heap, marking
-which objects are live, and shows what the heap looks like afterwards for the
-running example
+The first step of mark-compact is marking. We mark a heap object by setting its
+mark bit, the lowest bit of the GC word. Marking does a graph traversal of the
+heap, starting from the roots found on the stack.
+
+Here's what the heap looks like after marking:
+
+FILL image
 
 ### Compacting
 
-#### Compacting: compute forwarding locations
+The second step of mark-compact is compacting. Compacting has three parts:
+
+ 1. Computing forwarding locations
+ 2. Updating references
+ 3. Moving objects
+
+#### Compacting 1: compute forwarding addresses
 
 this section states that it's a linear scan through the heap, and shows the
 result
 
-#### Compacting: update references
+#### Compacting 2: update references
 
 this section states that it's a linear scan through *both* the stack and the heap,
 and shows the result
 
-#### Compacting: move the objects
+#### Compacting 3: move the objects
 
 this section shows the end result of moving all the objects
 
