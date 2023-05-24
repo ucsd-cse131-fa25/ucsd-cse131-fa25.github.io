@@ -52,7 +52,7 @@ collection.
   | (break <expr>)
   | (gc)
   | (vec <expr>*)
-  | (make-vec <expr> <expr>) count thing
+  | (make-vec <expr> <expr>)
   | (vec-get <expr> <expr>)
   | (vec-set! <expr> <expr> <expr>)
   | (vec-len <expr>)
