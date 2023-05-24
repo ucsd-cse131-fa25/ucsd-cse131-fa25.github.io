@@ -182,14 +182,10 @@ See also the other examples in the `tests/` directory of the starter code.
 
 ## Garbage collection
 
-TODO (also all the subsections)
+You will edit `runtime/start.rs` to implement a mark-compact garbage collector,
+as described in lecture.
 
-this section is about garbage collection and it says what the heap layout is and
-it reminds you how mark-compact works.
-
-blah blah gc
-
-### Heap layout
+### Object layout
 
 A Forest Flame heap object has two metadata words, followed by the actual data.
 
@@ -205,7 +201,7 @@ be represented by the value `0x101` and this heap data:
 
 FILL image
 
-As a running example, consider this program:
+As a running example, consider this program, run with a heap size of 15 words:
 
 ```scheme
 (let ((x (vec false true 17))
@@ -243,34 +239,103 @@ The second step of mark-compact is compacting. Compacting has three parts:
 
 #### Compacting 1: compute forwarding addresses
 
-this section states that it's a linear scan through the heap, and shows the
-result
+Once marking is finished, we now know which objects are still alive and which
+are garbage based on whether the mark bit is set in the GC header. Objects which
+are still alive get forwarding addresses: this is its *new* address that it will
+be moved to after compacting. Computing forwarding addresses is done by a
+linear scan though the heap. Here's what the heap looks like afterwards:
+
+FILL image
 
 #### Compacting 2: update references
 
-this section states that it's a linear scan through *both* the stack and the heap,
-and shows the result
+In order to move an object, we also have to update all references to that object
+to point to the new location. We do this by a linear scan though both the heap
+*and* the stack, changing each vector to point to the vector's eventual new
+location. Here's what the heap looks like afterwards:
+
+FILL image
+
+And on the stack, the stack slot storing the variable `x` has been updated to
+FILL.
 
 #### Compacting 3: move the objects
 
-this section shows the end result of moving all the objects
+Lastly, we do the actual compacting, moving heap objects to their destinations.
+This is also a linear scan through the heap. Here's the final result:
+
+FILL image
 
 ## Starter code
 
-TODO
+The starter code contains the function headers for `snek_try_gc` and `snek_gc`
+which need to be implemented. `snek_gc` is called by the `(gc)` operation, and
+`snek_try_gc` is called when there is not enough room for an allocation.
 
-this section talks about Nico's compiler's interface for what the stack looks
-like, etc. Will appreciate Nico's help (are we using the frame pointer to walk
-the stack?) at the very least to proofread it
+### Heap layout
+
+The `static mut` Rust variable `HEAP_START` has the address of the start of
+the heap, and `HEAP_END` has the address of the end of the heap. These are set
+once in `main` when the heap is allocated, and should never change again
+throughout the running of the program.
+
+Like the lecture compiler, the starter code uses `r15` as a heap pointer. It is
+passed to the functions `snek_gc` and `snek_try_gc` as the argument `heap_ptr`.
+The space between `HEAP_START` and `heap_ptr` is full of objects, and the space
+between `heap_ptr` and `HEAP_END` is free.
+
+FILL image
+
+### Stack layout
+
+Not everything on the stack is a snek value -- there's also return addresses and
+some saved registers in there. So, to traverse the stack, it helps to know the
+exact layout of what it looks like.
+
+The starter code compiler uses a stack frame layout that'll be hopefully
+familiar if you've talked about stack frames in other classes, by using `rbp` as
+the frame pointer. This means that during a function's execution, `rbp` points
+to the bottom of the current function's stack frame.
+
+On function entry, the function:
+
+ - Pushes the old value of `rbp`
+ - Saves `rsp` in `rbp`
+ - Subtracts an amount of words from `rsp` to make room for local variables
+
+Then, on function exit, it:
+
+ - Moves `rsp` back to where it used to be
+ - Restores the old value of `rbp` by popping it
+ - Executes `ret`
+
+Concretely, the stack ends up looking like this:
+
+FILL image
 
 ## Submission, testing, and grading
 
-Submit via Gradescope. (TODO anything else?)
+Submit via Gradescope.
 
-TODO: in this section we talk about how we'll test it. (ie OOM stuff)
-and also other requirements: "needs to be able to use the whole heap", etc
-(Relatedly, maybe we should have some tests which would fail with mark-sweep due
-to fragmentation?)
+We will test that your compiler + runtime (a) works, (b) runs out of memory when
+it should, and (c) doesn't run out of memory when it shouldn't.
+
+- Your runtime should only allocate as many words of heap space as specified by
+  the command-line argument.
+- Your runtime needs to be able to use the whole heap.
+- Data on the heap is *live* if it is reachable from some variable or some
+  currently-in-use temporary storage. (This is exactly the data kept after a GC.)
+
+  If, during an allocation, `(total live data size) + (new object size)` ≤
+  `(total heap size)`, then the allocation should succeed. Otherwise, it should
+  halt with the message `out of memory`.
+
+This assignment is **closed to collaboration**, but you may share test cases
+with your peers by submitting them to this [**student test repo**]. Have test
+cases case you think will break your classmates' GCs? Test cases that helped you
+fix a bug? Cool programs you just want to share? Make a PR!
+
+[**student test repo**]: https://github.com/ucsd-compilers-s23/forest-flame-student-tests
 
 ## Extension: simple generational GC
 
