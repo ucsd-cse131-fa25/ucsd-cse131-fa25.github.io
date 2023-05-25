@@ -22,7 +22,7 @@ If you are participating in the Rust error study, please make sure you have the
 `build.rs` and `config.txt` files in the new repository and set a new `project`
 value in `config.txt` if you are using the starter code.
 
-[github classroom]: FILL
+[github classroom]: https://classroom.github.com/a/3zWbuK8d
 [public starter code]: https://github.com/ucsd-compilers-s23/forest-flame-starter
 
 ## The Forest Flame Language
