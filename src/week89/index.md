@@ -134,8 +134,8 @@ It adds these new syntax constructs:
 
 In addition, the compiled program now takes *two* arguments instead of just one.
 
- - The first argument is the input, which may be `true`, `false`, a number, or
-   `nil` (new!). If no arguments are provided, the default input is `false`.
+ - The first argument is the input, which may be `true`, `false`, or a number.
+   If no arguments are provided, the default input is `false`.
 
  - The second argument is the *heap size* in (8-byte) words, which must be a
    nonnegative number. If no second argument is provided, the default heap size
