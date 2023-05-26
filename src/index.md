@@ -67,6 +67,7 @@ The typical due dates are that **assignments** are due on Tuesday evenings and
   - [Might on ANF](https://matt.might.net/articles/a-normalization/)
   - [Lerner on ANF](https://courses.ccs.neu.edu/cs4410/lec_anf_notes.html)
   - [Jhala on ANF](https://ucsd-cse131.github.io/sp21/lectures/04-boa.html)
+  - [Politz on ANF (I forgot that I had written this)](https://www.cs.swarthmore.edu/~jpolitz/cs75/s16/n_anf-tutorial.html)
 
 ### Week 7:
 - Handouts:
