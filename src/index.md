@@ -58,6 +58,11 @@ you can know roughly where we are headed.
 The typical due dates are that **assignments** are due on Tuesday evenings and
 **quizzes** are due Friday evenings.
 
+### Week 9:
+- Handouts:
+  - “Monday ” Handout: [(pdf)](https://drive.google.com/open?id=1-wfiOdPL6smtwGfWd_GltUGiYF6Y3fd3&usp=drive_fs)
+  - “Monday” Video: [(mov)](https://drive.google.com/file/d/106pTiFcJ0A_VPaG_3iumd39mJ8O-d01k/view)
+
 ### Week 8:
 - Handouts:
   - Monday Handout: [(pdf)](https://drive.google.com/file/d/11Oa5JhCGMl_tbjzrP9h4eE-0H4e_GbK7/view?usp=share_link)  [(pptx)](https://docs.google.com/presentation/d/11DVMTLinA85y3fbHmaEcJPpPKoUS5DiP/edit?usp=share_link&ouid=105656546547059517622&rtpof=true&sd=true) [(filled)](https://drive.google.com/file/d/1FbsqmPwXNsa3Pka1gyR4Cdsr1vLtK3kf/view?usp=share_link)
