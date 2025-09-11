@@ -220,42 +220,24 @@ policy if I notice you not following it in class. Note that I really don't
 mind if you want to sit in the back and try to multi-task in various ways
 while participating in lecture (I may not recommend it, but it's your time!)
 
-### Diversity and Inclusion and Professionalism
+### Professionalism
 
 This is an upper division course, so everyone here has been in college for a
 little bit. Indeed, you are likely closer to your post-college life than the
 start of it.
 
 Practicing being a professional should start now for you, if it hasn't already.
+Some of the people in this course may be your colleagues in the near future!
 In the context of this course, the goal is learning about (and building!)
 compilers. So professionalism means making choices that are more likely to
-increase your learning and the learning of those around you. Here are some
-examples.
+increase your learning and the learning of those around you. Keep course
+discussions on topics around compilers, don't demean or talk down to fellow
+students, don't do things solely to show off or compare yourself to other
+students, make space for others in discussions (and take space if you need to),
+and so on.
 
-- Sharing ideas about compilers is great. Asking hard questions and presenting
-  challenging ideas about programming languages and their creation is welcome.
-  _People may feel uncomfortable about difficult technical questions, and that
-  is OK_. Learning is not always easy and the feeling of scrambling for an
-  answer is one feeling you may have while your brain is making new
-  connections.
-- Asking questions that are way out of the discussion context, or bringing up
-  things that you have lots of experience with that others may not, should be
-  done with care. It's unlikely to support others' learning if there's not
-  dedicated time to explore it, and if you already know a lot about it, it's
-  unlikely to support your learning. For example, sharing detailed knowledge
-  from a Rust mailing list may not be constructive in class.
-- Remarks that _aren't_ about course topics, targeted at specific people, that
-  make them personally uncomfortable, are not productive or acceptable. This
-  could range from sarcastic comments to showing off or bragging about your
-  abilities to inappropriate remarks, gestures, or actions. Many of these
-  simply boil down to _harassment_, which is prohibited by most institutions
-  including this one ([OPHD](https://ophd.ucsd.edu)). In a course setting the
-  subject of harassment will have their learning suffer as a result (they may
-  choose to not show up, they may learn less well because of the distraction,
-  etc).
-- In more positive terms, one of the skills of professionalism is noticing, and
-  predicting, what will make other people unnecessarily uncomfortable, and what
-  will make them feel more welcome and more able to contribute. Some of the
-  people in this course may be your colleagues in the near future. Start
-  treating each other professionally now.
+UCSD has [Principles of Community](https://ucsd.edu/about/principles.html) that
+apply across campus and in this class; they are a good baseline for principles
+of professional behavior. Feel free to talk to me about things regarding the
+class climate that could improve your learning.
 
