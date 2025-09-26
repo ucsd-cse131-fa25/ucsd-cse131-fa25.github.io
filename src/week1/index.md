@@ -9,25 +9,32 @@ scratch_ based on the instructions here.
 
 ## Setup
 
-The necessary tools are installed on `ieng6.ucsd.edu`; you should be able to log
-in there with your ActiveDirectory credentials.
+A few environments are supported:
 
-You may also want to work on your own computer. You will need to install `rust`
+
+- The necessary tools are installed on `ieng6.ucsd.edu`; you should be able to
+log in there with your ActiveDirectory credentials and run the `CSE131_FA25_A00`
+command to get things set up.
+
+- You can copy this `devcontainer` setup and use Github Codespaces:
+https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/tree/main/.devcontainer
+
+- You may also want to work on your own computer. You will need to install `rust`
 and `cargo`:
 
-[https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
+    [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 
-You may also (depending on your system) need to install
-[`nasm`](https://www.nasm.us/). On OSX I used `brew install nasm`; on other
-systems your package manager of choice likely has a version. On Windows you
-should use [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/)
+    You may also (depending on your system) need to install
+    [`nasm`](https://www.nasm.us/). On OSX I used `brew install nasm`; on other
+    systems your package manager of choice likely has a version. On Windows you
+    should use [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/)
 
-**The assignments assume that your computer can build and run x86-64-bit
-binaries.  This is true of most (but not all) mass-market Windows and Linux
-laptops. Newer Macs use a different ARM architecture, _but_ can also run legacy
-x86-64-bit binaries, so those are fine as well.  You should ensure that
-whatever you do to build your compiler also runs on `ieng6`, which is our
-standard environment for testing these.**
+    **The assignments assume that your computer can build and run x86-64-bit
+    binaries.  This is true of most (but not all) mass-market Windows and Linux
+    laptops. Newer Macs use a different ARM architecture, _but_ can also run legacy
+    x86-64-bit binaries, so those are fine as well.  You should ensure that
+    whatever you do to build your compiler also runs on `ieng6`, which is our
+    standard environment for testing these.**
 
 The first few sections of the [Rust
 Book](https://doc.rust-lang.org/book/ch01-00-getting-started.html) walk you
