@@ -51,14 +51,15 @@ you can know roughly where we are headed.
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
-- [Assignment (due Tuesday, April 11, 10pm)](./week1/index.md)
-- Reading and resources:
-  - Friday Handout: [(pdf)](https://drive.google.com/file/d/1eYTybBS3QNRYkhIbsEnPCHXGACMqEJ5p/view?usp=share_link) [(pptx)](https://docs.google.com/presentation/d/1gGeC4Wp68sHLZLR6YbPAAdJk3NevdYcM/edit?usp=share_link&ouid=117453768726816085396&rtpof=true&sd=true)
-  - Wednesday Handout: [(pdf)](https://drive.google.com/file/d/1WgOu07dQTGT9NXzGqnDUHDprMRq5btRn/view?usp=sharing) [(pptx)](https://docs.google.com/presentation/d/1QO22FXOAui0fT_2zbixQh6cwFzWEz2pi-2RRU4EuLBI/edit?usp=share_link) [(code)](https://github.com/ucsd-compilers-s23/lecture1)
-  - [Monday Handout](https://drive.google.com/file/d/1AOZ-MRYc1DYdbBlz6xkMrETaeCfHujZI/view?usp=share_link)
-  - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
-  - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
-  - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
+- Assignment 1 (due Wednesday, October 1, 10pm) Coming soon!
+
+### Week 0 – Welcome
+  - [Friday repository](https://github.com/ucsd-cse29/fa25-01-w0f-hello)
+  - [Friday Handout](https://drive.google.com/file/d/1AOZ-MRYc1DYdbBlz6xkMrETaeCfHujZI/view?usp=share_link)
+  - Reading and resources:
+    - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
+    - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
+    - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
 
 ## Course Components and Grading
 
