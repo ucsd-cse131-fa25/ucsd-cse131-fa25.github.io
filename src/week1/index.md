@@ -673,8 +673,93 @@ us use all the pieces of infrastructure that we'll build on throughout the quart
   abstract syntax (`parse_expr`)
 - A code generator (`compile_expr`) that generates assembly from `Expr`s
 
-Most of our future assignments will be built from just these pieces, plus extra
-infrastructure added as we need it.
+## Another Approach: Jumping Straight To It
+
+The compiler you implemented above is a traditional **ahead of time** compiler.
+
+Many language systems work this way (it's what `rustc`, `gcc`, and `clang` do,
+for instance), but many modern systems also generate machine code directly from
+the process that runs the compiler, and the compiler's execution can be
+interleaved with program execution. [This isn't a new
+idea](https://dl.acm.org/doi/pdf/10.1145/857076.857077): Smalltalk and LISP are
+early examples of languages built atop runtime code generation.
+[JavaScript](https://firefox-source-docs.mozilla.org/js/index.html#javascript-jits)
+[engines](https://v8.dev/blog/maglev) in web browsers are likely the most
+high-profile implementations of JITs.
+
+Rust, with detailed control over memory and a broad package system, provides a
+pretty good environment for doing this kind of runtime code generation. In each
+assignment in the course, we will _also_ explore a dynamic, just-in-time feature
+that goes with what we are currently studying. This will give a hands-on view
+into a whole other class of runtime systems for programming languages (like the
+one running in the browser you are using to read this!).
+
+In this part of the tutorial, we will update our compiler to have a flag, `-e`
+standing for `eval`, that immediately evaluates the program rather than
+outputting the assembly for it. So when we are done we should be able to run
+programs directly and see their output:
+
+```
+$ cargo run -- -e test/add.snek
+72
+```
+
+### Generating Machine Code Dynamically
+
+A fundamental tool a JIT needs is the ability to generate machine code, and jump
+to it, at runtime. That means allocating not just new memory, but new
+_executable memory containing fully assembled instructions_.
+
+This is a nontrivial extra step – above we used `nasm` to take strings of
+assembly and generate appropriate machine code representations that resolve
+labels, encode instructions, and so on. Thankfully, this is a task that many
+programmers care about, and there are libraries for doing this. The one we will
+use is called [dynasm](https://github.com/CensoredUsername/dynasm-rs), which is
+built on a long history of APIs for runtime code generation.
+
+We can add `dynasm` to our project by adding these lines to the `[dependencies]`
+section of our `Cargo.toml`:
+
+```
+dynasm = "2.0.0"
+dynasmrt = "2.0.0"
+```
+
+And we can import it into our Rust code in `main.rs` with
+
+```
+use dynasmrt::{dynasm, DynasmApi};
+```
+
+Then we can use it in our `main` to do the work we need. First, we create a new
+`Assembler` instance. This is a dynasm concept: we will add a sequence of
+instructions to the `Assembler` and later ask dynasm to turn them into machine
+code. We also store `start`, which is a pointer to the beginning of the
+newly-generated machine code.
+
+```
+let mut ops = dynasmrt::x64::Assembler::new().unwrap();
+let start = ops.offset();
+```
+
+Then, we use a new helper called `instrs_to_asm`, similar to `instr 
+
+```
+instrs_to_asm(&instrs, &mut ops);
+```
+
+dynasm!(ops
+; .arch x64
+; ret);
+let buf = ops.finalize().unwrap();
+let jitted_fn: extern "C" fn() -> i64 = unsafe { mem::transmute(buf.ptr(start)) };
+let result = jitted_fn()
+println!("{}", result);
+```
+
+
+
+
 
 ## Your TODOs
 
@@ -685,7 +770,9 @@ tests for `negate` as well.
 3. In your terminal, demonstrate your compiler working on at least 5 different
 examples by using `cat` on a source `snek` file, then showing `make` running,
 using `cat` on the resulting `.s` file, and then running the resulting binary.
-Copy this interactino into a file called `transcript.txt`
+Copy this interaction into a file called `transcript.txt`. For each example,
+make sure it works both compiling the file ahead of time and dynamically
+assembling the code and jumping directly to it.
 
 Hand in your entire repository to the `assignment-1-tutorial` assignment on
 Gradescope. There is no automated grading for this assignment; we want you to
