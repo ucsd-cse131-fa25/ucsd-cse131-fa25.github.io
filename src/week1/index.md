@@ -9,12 +9,8 @@ scratch_ based on the instructions here.
 
 ## Setup
 
-The necessary tools are installed on `ieng6.ucsd.edu`, and you should have a
-course-specific account set up that you can access [via
-ETS](https://sdacs.ucsd.edu/~icc/index.php). You can use standard remote access
-tools like `ssh` or Visual Studio Code plugins like
-[`sshfs`](https://marketplace.visualstudio.com/items?itemName=Kelvin.vscode-sshfs)
-to match your preferred working style.
+The necessary tools are installed on `ieng6.ucsd.edu`; you should be able to log
+in there with your ActiveDirectory credentials.
 
 You may also want to work on your own computer. You will need to install `rust`
 and `cargo`:
@@ -694,14 +690,9 @@ that goes with what we are currently studying. This will give a hands-on view
 into a whole other class of runtime systems for programming languages (like the
 one running in the browser you are using to read this!).
 
-In this part of the tutorial, we will update our compiler to have a flag, `-e`
-standing for `eval`, that immediately evaluates the program rather than
-outputting the assembly for it. So when we are done we should be able to run
-programs directly and see their output:
-
 ```
-$ cargo run -- -e test/add.snek
-72
+$ cargo run -- test/add.snek test/add.s
+72 # prints result directly in addition to writing assembly file
 ```
 
 ### Generating Machine Code Dynamically
@@ -732,34 +723,63 @@ use dynasmrt::{dynasm, DynasmApi};
 ```
 
 Then we can use it in our `main` to do the work we need. First, we create a new
-`Assembler` instance. This is a dynasm concept: we will add a sequence of
-instructions to the `Assembler` and later ask dynasm to turn them into machine
-code. We also store `start`, which is a pointer to the beginning of the
-newly-generated machine code.
+[`Assembler`](https://censoredusername.github.io/dynasm-rs/dynasmrt/x64/type.Assembler.html)
+instance. This is a dynasm concept: we will add a sequence of instructions to
+the `Assembler` and later ask dynasm to turn them into machine code. We also
+store `start`, which is a pointer to the beginning of the newly-generated
+machine code.
 
 ```
 let mut ops = dynasmrt::x64::Assembler::new().unwrap();
 let start = ops.offset();
 ```
 
-Then, we use a new helper called `instrs_to_asm`, similar to `instr 
+Then, we need to compile the code, but instead of generating just a string, we
+have to use dynasm's special API to append the instructions to `ops` one at a time.
+For this tutorial, we'll just write a new top-level function:
 
 ```
-instrs_to_asm(&instrs, &mut ops);
+fn compile_ops(e : &Expr, ops : &mut dynasmrt::x64::Assembler) {
+    match e {
+        Expr::Num(n) => { dynasm!(ops ; .arch x64 ; mov rax, *n); }
+        Expr::Add1(subexpr) => {
+            compile_ops(&subexpr, ops);
+            dynasm!(ops ; .arch x64 ; add rax, 1);
+        }
+        Expr::Sub1(subexpr) => {
+            compile_ops(&subexpr, ops);
+            dynasm!(ops ; .arch x64 ; sub rax, 1);
+        }
+    }   
+}
 ```
 
-dynasm!(ops
-; .arch x64
-; ret);
+The [`dynasm!`](https://censoredusername.github.io/dynasm-rs/dynasmrt/macro.dynasm.html) macro lets us write close-to-x86 syntax, and handles the details
+internally about instruction encoding.
+
+Then in our running main, we can add:
+
+```
+compile_ops(&expr, &mut ops);
+```
+
+And finally, use `dynasm!` again to add the `ret` statement. Then we
+[`finalize()`](https://censoredusername.github.io/dynasm-rs/dynasmrt/struct.Assembler.html#method.finalize)
+the assembler, which gives us back a buffer with the raw executable memory.
+Then we can use an unsafe cast with `mem::transmute` to ask Rust to treat a
+pointer to the start of that buffer as a C function, and call it!
+
+```
+dynasm!(ops ; .arch x64 ; ret);
 let buf = ops.finalize().unwrap();
 let jitted_fn: extern "C" fn() -> i64 = unsafe { mem::transmute(buf.ptr(start)) };
 let result = jitted_fn()
 println!("{}", result);
 ```
 
-
-
-
+We can add this code along with the code we had before to put the generated
+assembly into the `.s` file, and then when we run with `cargo run` we'll see the
+direct output and the created assembly file.
 
 ## Your TODOs
 
@@ -772,7 +792,8 @@ examples by using `cat` on a source `snek` file, then showing `make` running,
 using `cat` on the resulting `.s` file, and then running the resulting binary.
 Copy this interaction into a file called `transcript.txt`. For each example,
 make sure it works both compiling the file ahead of time and dynamically
-assembling the code and jumping directly to it.
+assembling the code and jumping directly to it (e.g. the result should print
+directly _and_ it should make the assembly file).
 
 Hand in your entire repository to the `assignment-1-tutorial` assignment on
 Gradescope. There is no automated grading for this assignment; we want you to
