@@ -788,6 +788,18 @@ We can add this code along with the code we had before to put the generated
 assembly into the `.s` file, and then when we run with `cargo run` we'll see the
 direct output and the created assembly file.
 
+In this step, if you're on an ARM Mac, you may get an “illegal instruction”
+error.  This is because the default target for Rust is ARM, and we can't mix the
+instruction types within one process. On a mac, use:
+
+```
+cargo run --target x86_64-apple-darwin -- test/72.snek test/72.s
+```
+
+That will make the compiler be an `x86_64` binary, so your Mac will start the
+process in the right mode for
+[Rosetta](https://en.wikipedia.org/wiki/Rosetta_(software)) to kick in.
+
 ## Your TODOs
 
 1. Do the whole tutorial above, creating the project repository as you go. Write
