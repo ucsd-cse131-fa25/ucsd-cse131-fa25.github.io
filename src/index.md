@@ -54,6 +54,7 @@ you can know roughly where we are headed.
 - Assignment 1 (due Wednesday, October 1, 10pm) Coming soon!
 
 ### Week 0 – Welcome
+  - [Friday In-class Notes](./notes/lecture1.pdf)
   - [Friday repository](https://github.com/ucsd-cse29/fa25-01-w0f-hello)
   - [Friday Handout](https://drive.google.com/file/d/1AOZ-MRYc1DYdbBlz6xkMrETaeCfHujZI/view?usp=share_link)
   - Reading and resources:
