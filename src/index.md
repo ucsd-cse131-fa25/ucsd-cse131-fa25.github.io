@@ -6,6 +6,7 @@
 
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
 - Shaurya Raswan (TA)
+  - OH: Mondays at 12PM, B275 CSE Basement
 
 [Basics](#basics) -
 [Schedule](#schedule) -
