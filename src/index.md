@@ -51,11 +51,18 @@ you can know roughly where we are headed.
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
-- Assignment 1 (due Wednesday, October 1, 10pm) Coming soon!
+- [Assignment 1](./week1/index.md)
+- [Repository (includes PDF of handout)](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture)
+
+- Reading and resources:
+  - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
+  - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
+  - [x86-64 quick reference (Brown)](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
+  - [Max New on Adder](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html#%28part._incr._.Growing_the_language__adding__and_subtracting__1%29) _Max New and Ben Lerner have done a nice job writing up notes on some of my original scrawlings around this material. They don't use exactly the same style or make the same decisions I do in this class, so make sure you implement what's in **our** assignments, not what they wrote, but things are close enough to be useful._
 
 ### Week 0 – Welcome
   - [Friday In-class Notes](./notes/lecture1.pdf)
-  - [Friday repository](https://github.com/ucsd-cse29/fa25-01-w0f-hello)
+  - [Friday repository](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture)
   - [Friday Handout](https://drive.google.com/file/d/1AOZ-MRYc1DYdbBlz6xkMrETaeCfHujZI/view?usp=share_link)
   - Reading and resources:
     - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
