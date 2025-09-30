@@ -3,6 +3,7 @@
 # UCSD CSE131 Syllabus and Logistics
 
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
+  - OH: Tuesday 3pm and Wednesday 1pm, CSE 3206 (Joe's office)
 - Shaurya Raswan (TA)
   - OH: Mondays at 12PM, B275 CSE Basement
 
