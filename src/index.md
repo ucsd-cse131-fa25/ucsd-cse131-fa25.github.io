@@ -2,8 +2,6 @@
 
 # UCSD CSE131 Syllabus and Logistics
 
-**This website is a draft syllabus until the first day of instruction.**
-
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
 - Shaurya Raswan (TA)
   - OH: Mondays at 12PM, B275 CSE Basement
