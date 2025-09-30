@@ -107,13 +107,6 @@ demos**.
   reviews puts a C ceiling on your grade (if you miss one you can still earn an
   A).
 
-**Engagement** – Most lectures will come with a 1-2 page handout with fillable
-questions/follow-along work in class. You can submit the handout any time up
-until the start of the next lecture. Attendance/participation in lecture
-sessions will also be taken as a measure of engagement. There may be other
-opportunities for engagement credit, like attending discussion section, office
-hours, or seminars related to programming languages and compilers.
-
 The standards for grade levels are below. You must achieve the thresholds for
 *all* course elements to earn that letter grade.
 
@@ -127,10 +120,10 @@ The standards for grade levels are below. You must achieve the thresholds for
   - Exam point total 3 or 4
   - Assignment point total 12 or higher
 
-**Engagement** is used to add +/- modifiers at the end of the quarter, and
-won't make the difference between A/B/C etc. If we note minimal engagement
-throughout the quarter (e.g. attending no lectures, no contact with course
-staff or course community other than reviews), you will lose a letter grade.
++/- modifiers will be assigned around the boundaries of these categories
+consistently across students, and will also take into consideration
+participation in class and Piazza, as well as exceptional assignment or code
+review performance.
 
 
 ## Policies
