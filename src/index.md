@@ -30,10 +30,10 @@ course, as well as the syllabus.
 
 ## Basics
 
-- Lecture:
-- Discussion Section:
-
-- Q&A Forum:
+- Office Hours:
+  - Joe: Tuesday 3pm and Wednesday 1pm, CSE 3206 (Joe's office)
+  - Shaurya: Monday 12pm, also discussion Wednesday 12pm (CSE B275)
+- Q&A Forum: [Piazza](https://piazza.com/class/mg11c8j2t3d7gi/)
 - Textbook/readings: There's no official textbook, but we will link to
   different online resources for you to read to supplement lecture. Versions
   of this course have been taught at several universities, so sometimes I'll
