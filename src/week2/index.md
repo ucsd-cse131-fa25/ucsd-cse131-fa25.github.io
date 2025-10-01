@@ -229,7 +229,7 @@ infrastructure:
   assembly code from an input Boa text file.
 * A `Makefile` and a runner (`runtime/start.rs`) that you can modify from [Adder](/week1/). You may modify your `Makefile` to add new commands. 
 * You will add your own tests by creating new .snek files in the `tests/` directory and compiling them like we did in Adder, but with an extra argument (`-c`) to specify  `cargo run -c in.snek out.s`. 
-* To speed up the testing, you can write your own automated unit testing infrastructure in the `tests/` directory.
+* To speed up the testing, you can write your own automated [unit testing](https://doc.rust-lang.org/book/ch11-01-writing-tests.html) infrastructure in the `tests/` directory.
 
 ### Writing the Parser
 
