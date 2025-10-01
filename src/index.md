@@ -53,6 +53,7 @@ you can know roughly where we are headed.
 
 - [Assignment 1](./week1/index.md)
 - [Repository (includes PDF of handout)](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture)
+- [Wednesday Handout Filled](./notes/UCSD-Compilers-S23-Week1-Friday-1)
 - [Wednesday Handout](./notes/UCSD-Compilers-S23-Week1-Friday.pdf)
 - [Monday Handout](./notes/UCSD-Compilers-FA25-Week1.pdf)
 - Reading and resources:
