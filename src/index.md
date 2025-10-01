@@ -53,7 +53,7 @@ you can know roughly where we are headed.
 
 - [Assignment 1](./week1/index.md)
 - [Repository (includes PDF of handout)](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture)
-- [Handout Wednesday](https://drive.google.com/file/d/1cRxv84Rcna0X3DVscHE8T_o292v5nM43/view?usp=sharing)
+- [Wednesday Handout](https://drive.google.com/file/d/1cRxv84Rcna0X3DVscHE8T_o292v5nM43/view?usp=sharing)
 - Reading and resources:
   - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)
   - [x86-64 quick reference (Stanford)](https://web.stanford.edu/class/archive/cs/cs107/cs107.1196/guide/x86-64.html)
