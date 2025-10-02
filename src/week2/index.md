@@ -386,8 +386,7 @@ you will have to become familiar with for this assignment are:
 With the `-c` flag, run `cargo run -- -c test.snek test.s` to compile your snek file into assembly. You can modify your `Makefile` to add a command to do this for you.
 
 ```
-$ make -c test/add1.s
-cargo run -c -- test/add1.snek test/add1.s
+$ cargo run -c -- test/add1.snek test/add1.s
 $ cat test/add1.s
 
 section .text
@@ -420,6 +419,12 @@ nasm -f macho64
 ar rcs runtime/libour_code.a runtime/our_code.o
 rustc --target x86_64-apple-darwin -L tests/ -lour_code:$* runtime/start.rs -o tests/$*.run
 ```
+OR you can simply add a new directory and folder `.cargo/config.toml` with the following contents:
+```
+[build]
+target = "x86_64-apple-darwin"
+```
+And run all commands normally.
 
 ## Part 2: Dynamic Compilation
 Now that you have an AOT compiler with all of the Boa language features, you can use it to generate machine code and execute it at runtime. Just like in Adder, you will use the [dynasm](https://github.com/CensoredUsername/dynasm-rs) crate to generate machine code at runtime. 
@@ -433,15 +438,16 @@ fn instr_to_asm(i: &Instr, ops: &mut dynasmrt::x64::Assembler) {
     todo!("instr_to_asm");
 }
 ```
-It would be a good idea to have a thorough understanding of all possible `Instr` variants and their corresponding assembly instructions. Although this is one approach, feel free to use any strategy you would like!
+Ideally, it would be nice to generate dynasm from all possible instructions; you may find it useful to restrict it to just instructions that you expect your compiler to produce. This may involve a lot of boilerplate; it's a good place to see if a LLM can do some boring work for you.
+
+Although this is one approach, feel free to use any strategy you would like!
 
 ### Running
 
 Now with the `-e` flag, run `cargo run -- -e test.snek` to compile your snek file and directly execute it. You can modify your `Makefile` to also include this command.
 
 ```
-$ make -e test/add1.snek
-cargo run -e -- test/add1.snek
+$ cargo run -e -- test/add1.snek
 131
 ```
 
@@ -450,8 +456,7 @@ Here we have already evaluated our program at runtime! Notice that we did not li
 We also will include a `-g` with `cargo run -- -g test.snek test.s` flag that will do both AOT and JIT compilation. This is for debugging purposes, since we can evaluate Boa code directly at runtime and print out the (hopefully correct) generated assembly that should produce the same evaluation. In all, your AOT and JIT compilers should be producing the same results.
 
 ```
-$ make -g test/add1.s
-cargo run -- -g test.snek test.s
+$ cargo run -- -g test.snek test.s
 131
 $ cat test/add1.s
 
