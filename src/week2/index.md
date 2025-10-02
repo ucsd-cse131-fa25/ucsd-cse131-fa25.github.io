@@ -5,7 +5,7 @@
 In this assignment you'll implement a compiler for a small language called Boa,
 that has let bindings and binary operators. The key difference between this
 language and what we implemented in class is that there can be _multiple_
-variables defined within a single let. This language as two modes, _Ahead-of-Time (AOT)_ and _Just-in-Time (JIT)_ compilation. 
+variables defined within a single let. This language has two modes, _Ahead-of-Time (AOT)_ and _Just-in-Time (JIT)_ compilation. 
 - **Part 1**: Supporting the Boa Language and _AOT_ compilation of Boa files with a generated assembly file. This is with the `-c` compile flag to the main program.
 - **Part 2**: _JIT_ compilation of Boa files with an evaluation at runtime, using [dynasm](https://github.com/CensoredUsername/dynasm-rs). This is with the `-e` eval flag to the main program. 
   - The `-g` flag prints the evaluation and writes out AOT assembly for debugging purposes.
@@ -419,7 +419,7 @@ nasm -f macho64
 ar rcs runtime/libour_code.a runtime/our_code.o
 rustc --target x86_64-apple-darwin -L tests/ -lour_code:$* runtime/start.rs -o tests/$*.run
 ```
-OR you can simply add a new directory and folder `.cargo/config.toml` with the following contents:
+OR you can simply add a new directory and file `.cargo/config.toml` with the following contents:
 ```
 [build]
 target = "x86_64-apple-darwin"
