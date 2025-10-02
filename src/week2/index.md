@@ -5,8 +5,10 @@
 In this assignment you'll implement a compiler for a small language called Boa,
 that has let bindings and binary operators. The key difference between this
 language and what we implemented in class is that there can be _multiple_
-variables defined within a single let. There are a number of other details
-where we fill in exact behavior.
+variables defined within a single let. This language has two modes, _Ahead-of-Time (AOT)_ and _Just-in-Time (JIT)_ compilation. 
+- **Part 1**: Supporting the Boa Language and _AOT_ compilation of Boa files with a generated assembly file. This is with the `-c` compile flag to the main program.
+- **Part 2**: _JIT_ compilation of Boa files with an evaluation at runtime, using [dynasm](https://github.com/CensoredUsername/dynasm-rs). This is with the `-e` eval flag to the main program. 
+  - The `-g` flag prints the evaluation and writes out AOT assembly for debugging purposes.
 
 ## Setup
 
@@ -16,12 +18,12 @@ organization. You can also access the public starter code [directly from this
 public URL](https://github.com/ucsd-compilers-s23/boa-starter) if you don't have
 or prefer not to use a Github account.
 
-## The Boa Language
+## Part 1: The Boa Language
 
 In each of the next several assignments, we'll introduce a language that we'll
 implement.  We'll start small, and build up features incrementally.  We're
 starting with Boa, which has just a few features – defining variables, and
-primitive operations on numbers.
+primitive operations on numbers. Part 1 is about making an Ahead-of-Time (AOT) compiler for the Boa Language.
 
 There are a few pieces that go into defining a language for us to compile:
 * A description of the concrete syntax – the text the programmer writes.
@@ -218,24 +220,16 @@ Let(vec![("x".to_string(), Number(10)), ("y".to_string(), Number(7))],
 6
 ```
 
-### Implementing a Compiler for Boa
+### Implementing an AOT Compiler for Boa
 
-You've been given a starter codebase that has several pieces of
+You have a starter codebase from [Adder](/week1/) that has several pieces of
 infrastructure:
 
 * A main program (`main.rs`) that uses the parser and compiler to produce
-  assembly code from an input Boa text file.  You don't need to edit this much
-  except to change how `result` is filled in.
-* A `Makefile` and a runner (`runtime/start.rs`) that are basically the same as
-  the ones from [Week 1](/week1/)
-* Extra infrastructure for running unit tests in `tests/infra` (you don't need
-  to edit `tests/infra`, but you may enjoy reading it).
-* A test file, `tests/all_tests.rs`, which describes the _expected output_ and
-  _expected errors_ for `.snek` files in the `tests/` directory.
-  You will add your own tests by filling in new entries in `success_tests!` and
-  `failure_tests!`; we've provided a few examples. Each entry corresponds to a
-  single `.snek` file. You will add a lot more – focus on making these
-  interesting and thorough!
+  assembly code from an input Boa text file.
+* A `Makefile` and a runner (`runtime/start.rs`) that you can modify from [Adder](/week1/). You may modify your `Makefile` to add new commands. 
+* You will add your own tests by creating new .snek files in the `tests/` directory and compiling them like we did in Adder, but with an extra argument (`-c`) to specify  `cargo run -c in.snek out.s`. 
+* To speed up the testing, you can write your own automated [unit testing](https://doc.rust-lang.org/book/ch11-01-writing-tests.html) infrastructure in the `tests/` directory.
 
 ### Writing the Parser
 
@@ -304,7 +298,7 @@ fn parse_bind(s: &Sexp) -> (String, Expr) {
 ```
 which may be helpful for handling `let` expressions.
 
-### Writing the Compiler
+### Writing the AOT Compiler
 
 The primary task of writing the Boa compiler is simple to state: take an
 instance of the `Expr` type and turn it into a list of assembly
@@ -319,7 +313,7 @@ fn compile_to_instrs(e: &Expr) -> Vec<Instr> {
 which takes an `Expr` value (abstract syntax) and turns it into a list of
 assembly instructions, represented by the `Instr` type.  Use only the
 provided instruction types for this assignment; we will be gradually expanding
-this as the quarter progresses.
+this as the quarter progresses. The compiled `Instr` vector can be translated into both a string representation of the assembly code and dynasm instructions for Part 2's JIT compilation.
 
 **Note**: For variable bindings, we used `im::HashMap<String, i32>` from the
 [`im`](https://docs.rs/im/latest/im/) crate.
@@ -357,7 +351,7 @@ fn compile(e: &Expr) -> String {
 
 ### Assembly instructions
 
-The `Instr` type is defined in the starter code. The assembly instructions that
+The `Instr` type is defined below. The assembly instructions that
 you will have to become familiar with for this assignment are:
 
 * `IMov(Val, Val)` — Copies the right operand (source) into the left operand
@@ -389,12 +383,10 @@ you will have to become familiar with for this assignment are:
 
 ### Running
 
-Put your test `.snek` files in the `test/` directory. Run `make test/<file>.s`
-to compile your snek file into assembly.
+With the `-c` flag, run `cargo run -- -c test.snek test.s` to compile your snek file into assembly. You can modify your `Makefile` to add a command to do this for you.
 
 ```
-$ make test/add1.s
-cargo run -- test/add1.snek test/add1.s
+$ cargo run -c -- test/add1.snek test/add1.s
 $ cat test/add1.s
 
 section .text
@@ -405,7 +397,7 @@ our_code_starts_here:
 ```
 
 To actually evaluate your assembly code, we need to link it with `runtime.rs` to
-create an executable. This is covered in the `Makefile`.
+create an executable. This is covered in the `Makefile` from Adder.
 ```
 $ make test/add1.run
 nasm -f elf64 test/add1.s -o runtime/our_code.o
@@ -417,6 +409,68 @@ Finally you can run the file by executing to see the evaluated output:
 $ ./test/add1.run
 131
 ```
+- Note: Locally on arm macs, to target with Rosetta 2, you need to use:
+```
+cargo run --target x86_64-apple-darwin -- -c test.snek test.s
+```
+and
+```
+nasm -f macho64
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L tests/ -lour_code:$* runtime/start.rs -o tests/$*.run
+```
+OR you can simply add a new directory and file `.cargo/config.toml` with the following contents:
+```
+[build]
+target = "x86_64-apple-darwin"
+```
+And run all commands normally.
+
+## Part 2: Dynamic Compilation
+Now that you have an AOT compiler with all of the Boa language features, you can use it to generate machine code and execute it at runtime. Just like in Adder, you will use the [dynasm](https://github.com/CensoredUsername/dynasm-rs) crate to generate machine code at runtime. 
+
+The dynasm crate provides macros that allow you to write assembly-like code that gets compiled into a vector of bytes representing machine instructions. You can then execute this machine code by casting it to a function pointer using `mem::transmute`. This is exactly how you evaluate the Boa program directly without generating an assembly file or linking it to `runtime.rs`!
+
+### Writing the JIT Compiler
+Notice how we used the `Instr` type to represent assembly instructions in Part 1. This abstraction is useful for generating assembly code as a string. But how about for JIT compilation, where we need to generate machine code directly with dynasm's macros? Using a vector of `Instr`, instead of generating strings, is it possible to generate machine code directly? It may be useful to have a function like this:
+```rust
+fn instr_to_asm(i: &Instr, ops: &mut dynasmrt::x64::Assembler) {
+    todo!("instr_to_asm");
+}
+```
+Ideally, it would be nice to generate dynasm from all possible instructions; you may find it useful to restrict it to just instructions that you expect your compiler to produce. This may involve a lot of boilerplate; it's a good place to see if a LLM can do some boring work for you.
+
+Although this is one approach, feel free to use any strategy you would like!
+
+### Running
+
+Now with the `-e` flag, run `cargo run -- -e test.snek` to compile your snek file and directly execute it. You can modify your `Makefile` to also include this command.
+
+```
+$ cargo run -e -- test/add1.snek
+131
+```
+
+Here we have already evaluated our program at runtime! Notice that we did not link it to `runtime.rs` to create an executable. 
+
+We also will include a `-g` with `cargo run -- -g test.snek test.s` flag that will do both AOT and JIT compilation. This is for debugging purposes, since we can evaluate Boa code directly at runtime and print out the (hopefully correct) generated assembly that should produce the same evaluation. In all, your AOT and JIT compilers should be producing the same results.
+
+```
+$ cargo run -- -g test.snek test.s
+131
+$ cat test/add1.s
+
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 131
+  ret
+```
+
+Notice how it both evaluates our program and writes to `test.s`.
+
+- Note: Locally on arm macs, make sure to target the correct architecture for dynasm also with `--target x86_64-apple-darwin`.
+
 
 ### Ignoring or Changing the Starter Code
 
@@ -427,8 +481,13 @@ in class and this writeup is far from the only way to implement a compiler.
 
 To ease the burden of grading, we ask that you keep the following in mind: we
 will grade your submission (in part) by copying our own `tests/` directory in
-place of the one you submit and running `cargo test -- --test-threads 1`. This relies on the
-interface provided by the `Makefile` of producing `.s` files and `.run` files.
+place of the one you submit and running with all 3 flags:
+```
+cargo test -- -c tests/test1.snek tests/test1.s
+cargo test -- -e tests/test1.snek
+cargo test -- -g tests/test1.snek tests/test1.s
+```
+And producing corresponding executable files and outputs from generated assembly.
 It _doesn't_ rely on any of the data definitions or function signatures in
 `src/main.rs`. So with that constraint in mind, feel free to make new
 architectural decisions yourself.
@@ -450,7 +509,7 @@ then extend it for multiple bindings.
 - Use git! Whenver you're in a working state with some working tests, make a
 commit and leave a message for yourself. That way you can get back to a good
 working state later if you end up stuck.
-
+- For AOT compilation, first check if your generated `.s` assembly is equivalent to the `Instr` vector, and for JIT, check if your `Instr` instructions are pattern matched correctly. Make sure you call the dynasm conventions from Adder correctly.
 
 **FAQ**
 
@@ -513,64 +572,5 @@ learning outcomes we care about.
 
 Any credit you lose will come with instructions for fixing similar mistakes on
 future assignments.
-
-## Extension: Assembling Directly from Rust
-
-Boa is set up as a traditional ahead-of-time compiler that generates an
-assembly file and (with some help from system linkers) eventually a binary.
-
-Many language systems work this way (it's what `rustc`, `gcc`, and `clang` do,
-for instance), but many modern systems also generate machine code directly from
-the process that runs the compiler, and the compiler's execution can be
-interleaved with users' program execution. [This isn't a new
-idea](http://eecs.ucf.edu/~dcm/Teaching/COT4810-Spring2011/Literature/JustInTimeCompilation.pdf),
-Smalltalk and LISP are early examples of languages built atop runtime code
-generation. JavaScript engines in web browsers are likely the most ubiquitous
-use case.
-
-Rust, with detailed control over memory and a broad package system, provides a
-pretty good environment for doing this kind of runtime code generation. In
-these assignment extensions, we'll explore how to build on our compiler to
-create a system in this style, and showcase some unique features it enables.
-
-These extensions are not required, nor are they graded. However, we'd be
-delighted to hear about what you're trying for them in office hours, see what
-you've done, and give feedback on them. Joe and the staff have done a little
-bit of work to proof-of-concept some of this, but you'll be largely on your
-own and things aren't guaranteed to be obviously possible.
-
-The primary tool we think is particularly useful here is
-[dynasm](https://censoredusername.github.io/dynasm-rs/language/index.html).
-(You might also find [assembler](https://crates.io/crates/assembler) useful,
-but it hasn't been updated in a while and `dynasm` was what Joe found easiest
-to use). The basic idea is that `dynasm` provides Rust macros that build up a
-vector of bytes representing machine instructions. References to these vectors
-can be cast using
-[mem::transmute](https://doc.rust-lang.org/std/mem/index.html) Rust functions,
-which can be called from our code.
-
-As a first step towards building a dynamic system, you should try building a
-_REPL_, or read-eval-print loop, re-using as much as possible from the Boa
-compiler. That is, you should be able to support interactions like the below,
-where one new syntactic form, `define`, has been added.
-
-```
-$ cargo run -- -i # rather than input/output files, specify -i for interactive
-> (let ((x 5)) (+ x 10))
-15
-> (define x 47)
-> x
-47
-> (+ x 4)
-51
-```
-
-A sample of how to get started with this is at
-[adder-dyn](https://github.com/compilers-course-materials/adder-dyn). We won't
-give any hints or support beyond this except:
-
-- The REPL is probably best implemented as a `while` loop in `main`
-- You'll need to figure out how to store the `define`d variables on the heap
-  somewhere and refer to them from the generated code
 
 Happy hacking!
