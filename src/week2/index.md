@@ -12,11 +12,10 @@ variables defined within a single let. This language has two modes, _Ahead-of-Ti
 
 ## Setup
 
-Get the assignment at <https://classroom.github.com/a/1bvTt9dk>. This will make a
+Get the assignment at <https://classroom.github.com/a/RfezDfWu>. This will make a
 private-to-you copy of the repository hosted within the course's
-organization. You can also access the public starter code [directly from this
-public URL]() if you don't have
-or prefer not to use a Github account.
+organization. You can also access the public testing infrastructure code [directly from this
+public URL]().
 
 ## Part 1: The Boa Language
 
