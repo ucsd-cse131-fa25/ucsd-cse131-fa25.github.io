@@ -15,7 +15,7 @@ variables defined within a single let. This language has two modes, _Ahead-of-Ti
 Get the assignment at <https://classroom.github.com/a/RfezDfWu>. This will make a
 private-to-you copy of the repository hosted within the course's
 organization. You can also access the public testing infrastructure code [directly from this
-public URL]().
+public URL](https://github.com/ucsd-cse131-fa25/test-starter).
 
 ## Part 1: The Boa Language
 
