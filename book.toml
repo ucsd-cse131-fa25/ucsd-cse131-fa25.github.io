@@ -3,7 +3,7 @@ authors = ["Nico Lehmann"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Compiler Construction – Spring 2023 Edition"
+title = "Compiler Construction – Fall 2025 Edition"
 
 [output.html.playground]
 runnable = false
