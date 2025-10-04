@@ -385,7 +385,7 @@ you will have to become familiar with for this assignment are:
 With the `-c` flag, run `cargo run -- -c test.snek test.s` to compile your snek file into assembly. You can modify your `Makefile` to add a command to do this for you.
 
 ```
-$ cargo run -c -- test/add1.snek test/add1.s
+$ cargo run -- -c test/add1.snek test/add1.s
 $ cat test/add1.s
 
 section .text
@@ -446,7 +446,7 @@ Although this is one approach, feel free to use any strategy you would like!
 Now with the `-e` flag, run `cargo run -- -e test.snek` to compile your snek file and directly execute it. You can modify your `Makefile` to also include this command.
 
 ```
-$ cargo run -e -- test/add1.snek
+$ cargo run -- -e test/add1.snek
 131
 ```
 
