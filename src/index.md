@@ -48,6 +48,9 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 2 –Binary Operators, Types, and the JIT
+
+- [Monday Code](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commits/main/)
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
