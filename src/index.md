@@ -51,6 +51,7 @@ you can know roughly where we are headed.
 ### Week 2 –Binary Operators, Types, and the JIT
 
 - [Monday Code](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commits/main/)
+- [Max New on `let`](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html#%28part._let._.Growing_the_language__adding_let%29)
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
