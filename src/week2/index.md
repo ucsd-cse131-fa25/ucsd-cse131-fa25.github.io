@@ -130,6 +130,7 @@ There are several examples further down to make this concrete.
 The _compiler_ should stop and report an error if:
 
 * There is a binding list containing two or more bindings with the same name. **The error should contain the string `"Duplicate binding"`**
+* Shadowing with nested let binds are allowed. `"Duplicate binding"` panics are only when there are duplicates **within the same bindings list** of a let. Example: `(let ((x 3)) (let ((x 1)) x))` results in `1` because `x` is shadowed; it is not a duplicate binding. `(let ((y 3) (y 8)) 777)` is a `"Duplicate binding"` error.
 * An identifier is unbound (there is no surrounding let binding for it) **The error should contain the string `"Unbound variable identifier {identifier}"` (where the actual name of the variable is substituted for `{identifier}`)**
 
 If there are multiple errors, the compiler can report any non-empty subset of
