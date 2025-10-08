@@ -483,9 +483,9 @@ To ease the burden of grading, we ask that you keep the following in mind: we
 will grade your submission (in part) by copying our own `tests/` directory in
 place of the one you submit and running with all 3 flags:
 ```
-cargo test -- -c tests/test1.snek tests/test1.s
-cargo test -- -e tests/test1.snek
-cargo test -- -g tests/test1.snek tests/test1.s
+cargo run -- -c tests/test1.snek tests/test1.s
+cargo run -- -e tests/test1.snek
+cargo run -- -g tests/test1.snek tests/test1.s
 ```
 And producing corresponding executable files and outputs from generated assembly.
 It _doesn't_ rely on any of the data definitions or function signatures in
