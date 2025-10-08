@@ -48,13 +48,17 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 2 –Binary Operators, Types, and the JIT
+
+- [Monday Code](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commits/main/)
+- [Max New on `let`](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html#%28part._let._.Growing_the_language__adding_let%29)
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
 - [Assignment 1](./week1/index.md)
 - [Repository (includes PDF of handout)](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture)
-- [Wednesday Handout Filled](./notes/UCSD-Compilers-S23-Week1-Friday-1)
-- [Wednesday Handout](./notes/UCSD-Compilers-S23-Week1-Friday.pdf)
+- [Friday Handout](./notes/week1-friday.pdf) [[Filled]](./notes/week1-fridayfilled.pdf)
+- [Wednesday Handout](./notes/UCSD-Compilers-S23-Week1-Friday.pdf) [[Filled]](./notes/UCSD-Compilers-S23-Week1-Friday-1.pdf)
 - [Monday Handout](./notes/UCSD-Compilers-FA25-Week1.pdf)
 - Reading and resources:
   - [Rust Book Chapters 1-6](https://doc.rust-lang.org/book)

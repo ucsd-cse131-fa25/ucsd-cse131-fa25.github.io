@@ -1,6 +1,6 @@
 ![boa](./boa.jpg)
 
-# Week 2: Boa, Due Tuesday, April 18 (Open Collaboration)
+# Week 2: Boa, Due Wednesday, October 8
 
 In this assignment you'll implement a compiler for a small language called Boa,
 that has let bindings and binary operators. The key difference between this
@@ -13,11 +13,10 @@ variables defined within a single let. This language has two modes, _Ahead-of-Ti
 
 ## Setup
 
-Get the assignment at <https://classroom.github.com/a/1bvTt9dk>. This will make a
+Get the assignment at <https://classroom.github.com/a/RfezDfWu>. This will make a
 private-to-you copy of the repository hosted within the course's
-organization. You can also access the public starter code [directly from this
-public URL]() if you don't have
-or prefer not to use a Github account.
+organization. You can also access the public testing infrastructure code [directly from this
+public URL](https://github.com/ucsd-cse131-fa25/test-starter).
 
 ## Part 1: The Boa Language
 
@@ -132,6 +131,7 @@ There are several examples further down to make this concrete.
 The _compiler_ should stop and report an error if:
 
 * There is a binding list containing two or more bindings with the same name. **The error should contain the string `"Duplicate binding"`**
+* Shadowing with nested let binds are allowed. `"Duplicate binding"` panics are only when there are duplicates **within the same bindings list** of a let. Example: `(let ((x 3)) (let ((x 1)) x))` results in `1` because `x` is shadowed; it is not a duplicate binding. `(let ((y 3) (y 8)) 777)` is a `"Duplicate binding"` error.
 * An identifier is unbound (there is no surrounding let binding for it) **The error should contain the string `"Unbound variable identifier {identifier}"` (where the actual name of the variable is substituted for `{identifier}`)**
 
 If there are multiple errors, the compiler can report any non-empty subset of
@@ -387,7 +387,7 @@ you will have to become familiar with for this assignment are:
 With the `-c` flag, run `cargo run -- -c test.snek test.s` to compile your snek file into assembly. You can modify your `Makefile` to add a command to do this for you.
 
 ```
-$ cargo run -c -- test/add1.snek test/add1.s
+$ cargo run -- -c test/add1.snek test/add1.s
 $ cat test/add1.s
 
 section .text
@@ -448,7 +448,7 @@ Although this is one approach, feel free to use any strategy you would like!
 Now with the `-e` flag, run `cargo run -- -e test.snek` to compile your snek file and directly execute it. You can modify your `Makefile` to also include this command.
 
 ```
-$ cargo run -e -- test/add1.snek
+$ cargo run -- -e test/add1.snek
 131
 ```
 
