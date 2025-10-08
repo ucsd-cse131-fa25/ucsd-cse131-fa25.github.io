@@ -9,6 +9,7 @@ variables defined within a single let. This language has two modes, _Ahead-of-Ti
 - **Part 1**: Supporting the Boa Language and _AOT_ compilation of Boa files with a generated assembly file. This is with the `-c` compile flag to the main program.
 - **Part 2**: _JIT_ compilation of Boa files with an evaluation at runtime, using [dynasm](https://github.com/CensoredUsername/dynasm-rs). This is with the `-e` eval flag to the main program. 
   - The `-g` flag prints the evaluation and writes out AOT assembly for debugging purposes.
+- **Part 3**: A REPL for Boa. This is with the `-i` interactive flag to the main program.
 
 ## Setup
 
@@ -472,6 +473,71 @@ Notice how it both evaluates our program and writes to `test.s`.
 - Note: Locally on arm macs, make sure to target the correct architecture for dynasm also with `--target x86_64-apple-darwin`.
 
 
+## Part 3: REPL
+
+A REPL stands for Read, Evaluate, Print, Loop. So, that is exactly what we will do! This is where our JIT compiler shines, and we will be iteratively improving upon
+
+### Writing the REPL
+With the io library, we can read input from the user. We can then parse the input into an `Expr`, compile it to machine code, and execute it at runtime. Finally, we print the result and loop back to reading input from the user again.
+
+You may want to reuse your `dynasmrt::x64::Assembler` from the previous prompt instead of reinitilizing it each prompt. Below is the same way to execute dynasm code without deconstructing the `Assembler` ops.
+ 
+``` rust
+let start = ops.offset();
+
+... // code gen with dynasm
+
+dynasm!(ops ; .arch x64 ; ret);
+// instead of finalize(), we commit()
+ops.commit().unwrap();
+let reader = ops.reader();
+let buf = reader.lock();
+let jitted_fn: extern "C" fn() -> i64 = unsafe { mem::transmute(buf.ptr(start)) };
+let result = jitted_fn();
+// Ownership for ops can continue! 
+```
+Notice how we get a reader from the `Assembler`. This is our thread safe method for reading our executable memory buffer. Remember to update your `start` offset before new code generation to mark where the new executable code begins!
+
+Here are some requirements for our REPL:
+
+- Our prompt for our user will be `>`. 
+- If we ever encounter an error, we will print out the error message and continue the loop. This means we need graceful error handling in our REPL.
+- `exit` or `quit` will exit the REPL.
+- New Expr type `define` for defining top-level variables across multiple prompts.
+
+### The Define Expr
+```
+Define(String, Box<Expr>)
+```
+Our new Expr type, `define`, is something unique to the REPL. The expression `(define x expr)` will define a top-level variable `x` to be the result of evaluating `expr`. This variable can then be used in future REPL prompts.
+- `define` will be top-level only. Otherwise, return an error message containing the string `"Invalid"`.
+- We cannot redefine the same variable twice. If we try to do so, we will print out an error message containing the string `"Duplicate binding"`.
+- We can shadow `define` d variables in nested scopes with `let` expressions.
+- You must store `define` d variable immediate values on the heap somewhere and then refer to it immediately when compiling the `Id`. This is an optimiation so we do not use the stack.
+
+### Running
+With the `-i` flag, run `cargo run -- -i` to enter the REPL. You can then type in Boa expressions and see their evaluated results immediatley. Rather than input/output files, we specify -i for interactive.
+```
+$ cargo run -- -i
+> (let ((x 5)) (+ x 10))
+15
+> (define x (add1 46))  // nothing is printed
+> x
+47
+> (+ x 4)
+51
+> (define x 100)   // error but no exit
+Duplicate binding
+> (let ((x 10)) x)   // shadowing
+10
+> (hello           // parse error but no exit
+Invalid: parse error
+> quit
+```
+
+- Note: Locally on arm macs, make sure to target the correct architecture (and keep an eye on if your `cargo test` is doing the same)!
+
+
 ### Ignoring or Changing the Starter Code
 
 You can change a lot of what we describe above; it's a (relatively strong)
@@ -481,11 +547,12 @@ in class and this writeup is far from the only way to implement a compiler.
 
 To ease the burden of grading, we ask that you keep the following in mind: we
 will grade your submission (in part) by copying our own `tests/` directory in
-place of the one you submit and running with all 3 flags:
+place of the one you submit and running with all 4 flags:
 ```
 cargo test -- -c tests/test1.snek tests/test1.s
 cargo test -- -e tests/test1.snek
 cargo test -- -g tests/test1.snek tests/test1.s
+cargo test -- -i
 ```
 And producing corresponding executable files and outputs from generated assembly.
 It _doesn't_ rely on any of the data definitions or function signatures in
@@ -552,8 +619,7 @@ A few suggestions:
 
 **My tests non-deterministically fail sometimes**
 
-You are probably running `cargo test` instead of `cargo test -- --test-threads 1`. The testing infrastructure interacts with the file system in a way that can cause data races when
-tests run in parallel. Limiting the number of threads to 1 will probably fix the issue.
+You are probably running `cargo test` instead of `cargo test -- --test-threads 1`. The testing infrastructure interacts with the file system in a way that can cause data races when tests run in parallel. Limiting the number of threads to 1 will probably fix the issue.
 
 ## Grading
 
