@@ -475,12 +475,12 @@ Notice how it both evaluates our program and writes to `test.s`.
 
 ## Part 3: REPL
 
-A REPL stands for Read, Evaluate, Print, Loop. So, that is exactly what we will do! This is where our JIT compiler shines, and we will be iteratively improving upon
+A REPL stands for Read, Evaluate, Print, Loop. So, that is exactly what we will do! This is where our JIT compiler shines, and we will be iteratively improving upon this for our next assignments, too.
 
 ### Writing the REPL
-With the io library, we can read input from the user. We can then parse the input into an `Expr`, compile it to machine code, and execute it at runtime. Finally, we print the result and loop back to reading input from the user again.
+With the [io library](https://doc.rust-lang.org/std/io/index.html), we can read input from the user. We can then parse the input into an `Expr`, compile it to machine code, and execute it at runtime. Finally, we print the result and loop back to reading input from the user again.
 
-You may want to reuse your `dynasmrt::x64::Assembler` from the previous prompt instead of reinitilizing it each prompt. Below is the same way to execute dynasm code without deconstructing the `Assembler` ops.
+You may want to reuse your `dynasmrt::x64::Assembler` from the previous prompt instead of reinitilizing it each prompt. This is not required for now, but will be incredibly useful for the next assignments. Below is the same way to execute dynasm code without deconstructing the `Assembler` ops.
  
 ``` rust
 let start = ops.offset();
@@ -500,16 +500,16 @@ Notice how we get a reader from the `Assembler`. This is our thread safe method 
 
 Here are some requirements for our REPL:
 
-- Our prompt for our user will be `>`. 
+- A prompt for our user (maybe `>` or `$` or anything else you would like to customize). 
 - If we ever encounter an error, we will print out the error message and continue the loop. This means we need graceful error handling in our REPL.
 - `exit` or `quit` will exit the REPL.
-- New Expr type `define` for defining top-level variables across multiple prompts.
+- New type `define` for defining top-level variables across multiple prompts. This can be extended from Expr, or your own REPL type (maybe like `ReplEntry` from class).
 
 ### The Define Expr
 ```
 Define(String, Box<Expr>)
 ```
-Our new Expr type, `define`, is something unique to the REPL. The expression `(define x expr)` will define a top-level variable `x` to be the result of evaluating `expr`. This variable can then be used in future REPL prompts.
+Our new type, `define`, is something unique to the REPL. The expression `(define x expr)` will define a top-level variable `x` to be the result of evaluating `expr`. This variable can then be used in future REPL prompts.
 - `define` will be top-level only. Otherwise, return an error message containing the string `"Invalid"`.
 - We cannot redefine the same variable twice. If we try to do so, we will print out an error message containing the string `"Duplicate binding"`.
 - We can shadow `define` d variables in nested scopes with `let` expressions.
