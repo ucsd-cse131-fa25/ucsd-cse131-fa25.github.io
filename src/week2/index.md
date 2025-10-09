@@ -634,18 +634,26 @@ You are probably running `cargo test` instead of `cargo test -- --test-threads 1
 
 ## Grading
 
-A lot of the credit you get will be based on us running autograded tests on
-your submission. You'll be able to see the result of some of these on while the
-assignment is out, but we may have more that we don't show results for until
-after assignments are all submitted.
+**Update**: To expedite grading and review, we're adding a new constraint.
+Your solution _must_ be able to run `cargo test`. You can use our testing
+infrastructure
+[https://github.com/ucsd-cse131-fa25/test-starter](https://github.com/ucsd-cse131-fa25/test-starter),
+or use your own. However, you _must_ be able to:
 
-We'll combine that with some amount of manual grading involving looking at your
-testing and implementation strategy. You should have your own thorough test
-suite (it's not unreasonable to write many dozens of tests; you probably don't
-need hundreds), and you need to have recognizably implemented a compiler. For
-example, you _could_ try to calculate the answer for these programs and
-generate a single `mov` instruction: don't do that, it doesn't demonstrate the
-learning outcomes we care about.
+- Run `cargo test` to run _multiple_ test files
+- Make it clear in the README how we can add a new test that will be run with
+  `cargo test`
+
+This matches Rust development practices and makes it a lot easier for us to
+review your submission.
+
+We'll combine our own tests with some amount of manual grading involving
+looking at your testing and implementation strategy. You should have your own
+thorough test suite (it's not unreasonable to write many dozens of tests; you
+probably don't need hundreds), and you need to have recognizably implemented a
+compiler. For example, you _could_ try to calculate the answer for these
+programs and generate a single `mov` instruction: don't do that, it doesn't
+demonstrate the learning outcomes we care about.
 
 Any credit you lose will come with instructions for fixing similar mistakes on
 future assignments.
