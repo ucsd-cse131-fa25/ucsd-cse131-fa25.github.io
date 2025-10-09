@@ -475,7 +475,7 @@ Notice how it both evaluates our program and writes to `test.s`.
 
 ## Part 3: REPL
 
-A REPL stands for Read, Evaluate, Print, Loop. So, that is exactly what we will do! This is where our JIT compiler shines, and we will be iteratively improving upon this for our next assignments, too.
+A REPL stands for Read, Evaluate, Print, Loop. So, that is exactly what we will do! This is where our JIT compiler shines, and we will be iteratively improving upon this for our next assignments.
 
 ### Writing the REPL
 With the [io library](https://doc.rust-lang.org/std/io/index.html), we can read input from the user. We can then parse the input into an `Expr`, compile it to machine code, and execute it at runtime. Finally, we print the result and loop back to reading input from the user again.
