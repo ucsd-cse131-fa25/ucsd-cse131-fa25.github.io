@@ -1,15 +1,26 @@
 ![boa](./boa.jpg)
 
-# Week 2: Boa, Due Wednesday, October 8
+# Week 2 + 3: HydraBoa (`-e` and `-c` due October 8, `-i` due October 15)
 
-In this assignment you'll implement a compiler for a small language called Boa,
-that has let bindings and binary operators. The key difference between this
+In this assignment you'll implement a compiler for a small language called Boa and extend it with dynamic features. We'll call the language Boa and the whole runtime system and CLI tooling HydraBoa.
+The main features are let bindings and binary operators. The key difference between this
 language and what we implemented in class is that there can be _multiple_
-variables defined within a single let. This language has two modes, _Ahead-of-Time (AOT)_ and _Just-in-Time (JIT)_ compilation. 
+variables defined within a single let. This language implementation has three modes, _Ahead-of-Time (AOT)_, _Just-in-Time (JIT)_, and an interactive REPL mode.
 - **Part 1**: Supporting the Boa Language and _AOT_ compilation of Boa files with a generated assembly file. This is with the `-c` compile flag to the main program.
 - **Part 2**: _JIT_ compilation of Boa files with an evaluation at runtime, using [dynasm](https://github.com/CensoredUsername/dynasm-rs). This is with the `-e` eval flag to the main program. 
   - The `-g` flag prints the evaluation and writes out AOT assembly for debugging purposes.
 - **Part 3**: A REPL for Boa. This is with the `-i` interactive flag to the main program.
+
+(It's common for languages to have multiple implementations and different
+tooling depending on the implemenation. For example JavaScript is a language,
+while [NodeJS](https://nodejs.org) and [V8](https://v8.dev) are implementations
+of JavaScript with various features, CLI options, etc.  The same can be said
+for Python, where [CPython](https://github.com/python/cpython) and
+[PyPy](https://pypy.org) are both implementations with their own features and
+quirks. Same for Java and OpenJDK versus OracleJDK, C and `clang` vs `gcc`, and
+so on. So _Boa_ is the language – its syntax and definition of what it's
+supposed to do. HydraBoa is our full implementation with its own CLI tooling,
+etc.)
 
 ## Setup
 
@@ -473,7 +484,7 @@ Notice how it both evaluates our program and writes to `test.s`.
 - Note: Locally on arm macs, make sure to target the correct architecture for dynasm also with `--target x86_64-apple-darwin`.
 
 
-## Part 3: REPL
+## Part 3: REPL (Hydra)
 
 A REPL stands for Read, Evaluate, Print, Loop. This is where our JIT compiler shines, and we will be iteratively improving upon this for our next assignments.
 
@@ -505,7 +516,7 @@ Here are some requirements for our REPL:
 - `exit` or `quit` will exit the REPL.
 - New type `define` for defining top-level variables across multiple prompts. This can be extended from Expr, or your own REPL type (maybe like `ReplEntry` from class).
 
-### The Define Expr
+### The Define Statement
 ```
 Define(String, Box<Expr>)
 ```
