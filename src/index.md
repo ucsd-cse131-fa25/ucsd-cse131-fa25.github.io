@@ -50,9 +50,12 @@ you can know roughly where we are headed.
 
 ### Week 2 –Binary Operators, Types, and the JIT
 
+- [Friday Handout](./notes/week2-friday.pdf)
 - [Wednesday Code](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commit/ec8f689f953f8b69eb6497c9ed3484c92facf684)
 - [Monday Code](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commits/main/)
 - [Max New on `let`](https://maxsnew.com/teaching/eecs-483-fa21/lec_let-and-stack_notes.html#%28part._let._.Growing_the_language__adding_let%29)
+- [Memory Representation of Values in Ocaml](https://dev.realworldocaml.org/runtime-memory-layout.html) More discussion of a language with tagged value representations (and Ocaml is type-checked!).
+- [V8 Blog Post Including Number Representations](https://v8.dev/blog/pointer-compression) This goes a little further than we are right now, but focus on the fact that V8, one of the widely deployed JS engines, uses tag bits for its numbers.
 
 ### Week 1 - Rust and Source to Assembly Conversion
 
