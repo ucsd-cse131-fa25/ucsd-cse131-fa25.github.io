@@ -48,6 +48,13 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 3 –Binary Operators, Types, and the JIT
+
+- [Monday Handout](./notes/week3-monday.pdf)
+- [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
+- [Max New on Tagging](https://maxsnew.com/teaching/eecs-483-fa21/lec_tagging-values_notes.html)
+- [Wikipedia on the AMD64 Calling Convention](https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI)
+
 ### Week 2 –Binary Operators, Types, and the JIT
 
 - [Friday Handout](./notes/week2-friday.pdf)
