@@ -1,8 +1,6 @@
 ![cobra](./cobra.jpg)
 
-# Week 3: Cobra, Due Tuesday, April 25 (Open Collaboration)
-
-_(Yes, that's 3 open collaboration assignments in a row 🙂)_
+# Week 3: Cobra, Due Wednesday, October 22 (Open Collaboration)
 
 In this assignment you'll implement a compiler for a small language called Cobra,
 which extends Boa with booleans, conditionals, variable assignment, and loops.
@@ -14,8 +12,19 @@ a private-to-you copy of the repository hosted within the course's
 organization.  You can also access the public starter code
 <https://github.com/ucsd-compilers-s23/cobra-starter> if you don't have or
 prefer not to use a Github account.
+- **Part 1**: _AOT_ compilation of Cobra files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
+- **Part 2**: _JIT_ compilation of Cobra files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
+  - The `-g` flag does both (with an optional argument).
+- **Part 3**: A REPL for Cobra with the `-i` interactive flag.
 
-## The Cobra Language
+```
+cargo run -- -c tests/test1.snek tests/test1.s
+cargo run -- -e tests/test1.snek <optionalArg>
+cargo run -- -g tests/test1.snek tests/test1.s <optionalArg>
+cargo run -- -i
+```
+
+## Part 1: The Cobra Language
 
 
 ### Concrete Syntax
@@ -59,7 +68,7 @@ enum Op1 { Add1, Sub1, IsNum, IsBool, }
 enum Op2 { Plus, Minus, Times, Equal, Greater, GreaterEqual, Less, LessEqual, }
 
 enum Expr {
-    Number(i32),
+    Number(i64),
     Boolean(bool),
     Id(String),
     Let(Vec<(String, Expr)>, Box<Expr>),
@@ -261,8 +270,9 @@ debugger like `gdb` or `lldb`), you can still run them directly from the
 command line with:
 
 ```
-$ make tests/some-file.run
-$ ./tests/some-file.run 1234
+$ cargo run -- -c test/file.snek test/file.s
+$ make file.run
+$ ./tests/file.run 1234
 ```
 
 where the `1234` could be any valid command-line argument.
@@ -270,6 +280,68 @@ where the `1234` could be any valid command-line argument.
 As a note on running all the tests, the best option is to use `make test`,
 which ensures that `cargo build` is run first and independently before `cargo
 test`.
+
+## Part 2: Dynamic Compilation
+### Using Dynamic Information to Optimize
+
+A compiler for Cobra needs to generate extra instructions to check for booleans
+being used in binary operators. We could use a static type-checker to avoid
+these, but at the same time, the language is fundamentally dynamic because the
+compiler cannot know the type of `input` until the program starts running
+(which happens after it is compiled). This is the general problem that systems
+for languages like JavaScript and Python face; it will get worse when we
+introduce functions in the next assignment.
+
+However, if our compiler can make use of some dynamic information, we can do
+better.
+
+There are two instructive optimizations we can make with dynamic information,
+one for standalone programs and one at the REPL.
+
+### Eval
+
+Add a new command-line option, `-e`, for “eval”, that evaluates a program
+directly after compiling it with knowledge of the command-line argument. The
+usage should be:
+
+```
+cargo run -- -e file.snek <optionalArg>
+```
+
+That is, you provide both the file and the command-line argument. When called
+this way, the compiler should skip any instructions used for checking for
+errors related to `input`. For example, for this program, if a number is given
+as the argument, we could omit all of the tag checking related to the `input`
+argument (and since `1` is a literal, we could recover essentially the same
+compilation as for Boa).
+
+```
+(+ 1 input)
+```
+
+For this program, if `input` is a boolean, we should preserve that the program
+throws an error as usual. If no arg is given, just like for AOT compilation, default the argument to false.
+
+For easier debugging of your assembly (since we can't just view dynasm machine code), use the `-g` flag to generate your _optimized_ assembly and return your JIT output. It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Optimized instructions out here`.
+
+## Part 3: The REPL
+### Known Variables at the REPL
+
+Similarly, after a `define` statement evaluates at the REPL, we can know that
+variable's tag and use that information to compile future entries. For example,
+in this REPL sequence, we define a numeric variable and use it in an operator
+later. We could avoid tag checks for `x` in the later use:
+
+```
+> (define x (+ 3 4))
+> (+ x 10)
+```
+
+Note a pitfall here – if you allow `set!` on `define`d variables, their types
+could change mid-expression, so there are some restrictions on when this should
+be applied. Make sure to test this case.
+
+Happy hacking!
 
 ## Grading
 
@@ -304,64 +376,6 @@ git pull upstream main --allow-unrelated-histories
 This will merge all commits from the template into your repository. Alternatively, you can also
 clone <https://github.com/ucsd-compilers-s23/cobra-starter> and manually replace your `tests/`
 directory.
-
-## Extension: Using Dynamic Information to Optimize
-
-A compiler for Cobra needs to generate extra instructions to check for booleans
-being used in binary operators. We could use a static type-checker to avoid
-these, but at the same time, the language is fundamentally dynamic because the
-compiler cannot know the type of `input` until the program starts running
-(which happens after it is compiled). This is the general problem that systems
-for languages like JavaScript and Python face; it will get worse when we
-introduce functions in the next assignment.
-
-However, if our compiler can make use of some dynamic information, we can do
-better.
-
-There are two instructive optimizations we can make with dynamic information,
-one for standalone programs and one at the REPL.
-
-### Eval
-
-Add a new command-line option, `-e`, for “eval”, that evaluates a program
-directly after compiling it with knowledge of the command-line argument. The
-usage should be:
-
-```
-cargo run -- -e file.snek <arg>
-```
-
-That is, you provide both the file and the command-line argument. When called
-this way, the compiler should skip any instructions used for checking for
-errors related to `input`. For example, for this program, if a number is given
-as the argument, we could omit all of the tag checking related to the `input`
-argument (and since `1` is a literal, we could recover essentially the same
-compilation as for Boa).
-
-```
-(+ 1 input)
-```
-
-For this program, if `input` is a boolean, we should preserve that the program
-throws an error as usual.
-
-### Known Variables at the REPL
-
-Similarly, after a `define` statement evaluates at the REPL, we can know that
-variable's tag and use that information to compile future entries. For example,
-in this REPL sequence, we define a numeric variable and use it in an operator
-later. We could avoid tag checks for `x` in the later use:
-
-```
-> (define x (+ 3 4))
-> (+ x 10)
-```
-
-Note a pitfall here – if you allow `set!` on `define`d variables, their types
-could change mid-expression, so there are some restrictions on when this should
-be applied. Make sure to test this case.
-
-Happy hacking!
 
 ### Discussion
 
