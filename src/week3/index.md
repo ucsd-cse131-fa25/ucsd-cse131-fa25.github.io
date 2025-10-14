@@ -362,12 +362,22 @@ let boxed = Box::new(val);                   // Heap allocated i64
 let ptr = Box::into_raw(boxed) as i64;       // Raw pointer as i64
 ```
 
-Then in our actual assembly that is generated, we can dereference this pointer to get the value for `define` d. Notice that we don't need to know what the actual immediate value is.
+Then in our actual assembly that is generated, we can dereference this pointer to get the value for `define` d. Notice that we don't need to know what the actual immediate value is. So if we do `(add1 d)`
 
 ```
 ; Get the raw pointer, then dereference
 MOV RAX, <a raw ptr as an i64>
 MOV RAX, [RAX]
+ADD RAX, 2
+```
+
+What about `set!`? Unlike `let` variables, we cannot use the stack. So we need to store our `RAX` into the memory location of our raw pointer! So if we do `(set! d 7)`
+
+```
+; Store our value in rax into the heap
+MOV RAX, 14
+MOV RCX, <a raw ptr as an i64>
+MOV [RCX], RAX
 ```
 
 Now, after everything is done, we can map `define` d into a known value (and type) again. We know _where_ the value is (the raw pointer), so how do we dereference it within Rust? 
