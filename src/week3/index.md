@@ -334,12 +334,54 @@ later. We could avoid tag checks for `x` in the later use:
 
 ```
 > (define x (+ 3 4))
-> (+ x 10)
+> (+ x 10)               // No number checks
+17
+> (+ (set! x 50) x)      // Does number checks
+50
+> (+ x 2)                // No number checks
+79
 ```
 
-Note a pitfall here – if you allow `set!` on `define`d variables, their types
-could change mid-expression, so there are some restrictions on when this should
-be applied. Make sure to test this case.
+Note a pitfall here – if you allow `set!` on `define` d variables, their types
+could change mid-expression. 
+
+So how do we solve this optimization problem? If the variable is `set!` mid-expression, we don't know what the variable is yet. Therefore, if a prompt has a `set!` on a `define` d variable, we cannot optimize. But after the prompt has run, we can determine what the value and type of `define` d is again, so we optimize!
+
+But now we run into another issue...
+
+Before, in order to get the value of `define` d when matching an `Expr::Id`, we would just inline the immediate value associated with d. But we don't know what this immediate value is yet! We cannot put this varible on the stack, either, because we update our `RBP` each prompt. So what if we use the heap? 
+
+The solution here is to inline a _reference_ to the immediate. This can be done with `Box` of our `define` d value within our Rust runtime. We can inline this raw pointer to a heap allocated value into our assembly. We dereference the pointer into `RAX` to get the `Expr::Id`. Allocation only needs to be done once for each `define` d value if it was ever `set!` d. Then after running our prompt, we use a known immediate and type again.
+
+You should make a helper function that checks which `define` d variables are `set!`. If they are `set!`, allocate a new `Box` for their old value and cast the reference into a raw pointer.
+
+```rust
+// For each new define d variable that is also first `set!`
+let val: i64 = 777;
+let boxed = Box::new(val);                   // Heap allocated i64
+let ptr = Box::into_raw(boxed) as i64;       // Raw pointer as i64
+```
+
+Then in our actual assembly that is generated, we can dereference this pointer to get the value for `define` d. Notice that we don't need to know what the actual immediate value is.
+
+```
+; Get the raw pointer, then dereference
+MOV RAX, <a raw ptr as an i64>
+MOV RAX, [RAX]
+```
+
+Now, after everything is done, we can map `define` d into a known value (and type) again. We know _where_ the value is (the raw pointer), so how do we dereference it within Rust? 
+
+```rust
+// After the prompt has run...
+let boxed = unsafe { Box::from_raw(ptr as *mut i64) };
+let val = *boxed;       // Dereference a Box
+```
+Here we let Rust manage our i64 value in our heap by passing our raw pointer to a Rust `Box`, which has all of the nice deconstructing and type invariants with it. However, this code is unsafe because we need to be _very_ sure that our raw pointer is correct and not something we freed before. Rust is really trusting our pointer to not be wrong or malicous here! Finally, we dereference our `Box` as our (hopefully) new known i64 value for `define` d.
+
+It might be a good idea to have a helper function that parses your `Expr` for `set!` on any `define` d variables. Those variables cannot have a known type during the prompt running.
+
+It might also be a good idea to have an _environment_ of sorts for these `define` d variables that should tell you when a variable is of a known or unknown type. If known, you can optimize and inline an immediate. If unknown, so you cannot optimize and you have to dereference a pointer.
 
 Happy hacking!
 
