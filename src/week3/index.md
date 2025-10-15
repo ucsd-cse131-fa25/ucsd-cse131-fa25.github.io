@@ -104,12 +104,13 @@ code (`std::process::exit(N)` for nonzero `N` in Rust works well for this).
   raised from the running program, and **the error should contain "invalid
   argument"**. Note that this is not a compilation error, nor can it be in all
   cases due to `input`'s type being unknown until the program starts.
+  - Assembly can get cumbersome to read with type checks. It might be useful to have a custom `Instr` that simply serves as an assembly comment.
 - The relative comparison operators like `<` and `>` evaluate their arguments
   and then evaluate to `true` or `false` based on the comparison result.
 - The equality operator `=` evaluates its arguments and compares them for
   equality. It should raise an error if they are not both numbers or not both
   booleans, and the error should contain **"invalid argument"** if the types
-  differ.
+  differ. 
 - Boolean expressions (`true` and `false`) evaluate to themselves
 - `if` expressions evaluate their first expression (the condition) first. If it's
   `false`, they evaluate to the third expression (the “else” block), and to
@@ -309,12 +310,7 @@ usage should be:
 cargo run -- -e file.snek <optionalArg>
 ```
 
-That is, you provide both the file and the command-line argument. When called
-this way, the compiler should skip any instructions used for checking for
-errors related to `input`. For example, for this program, if a number is given
-as the argument, we could omit all of the tag checking related to the `input`
-argument (and since `1` is a literal, we could recover essentially the same
-compilation as for Boa).
+That is, you provide both the file and the command-line argument. 
 
 ```
 (+ 1 input)
@@ -323,68 +319,78 @@ compilation as for Boa).
 For this program, if `input` is a boolean, we should preserve that the program
 throws an error as usual. If no arg is given, just like for AOT compilation, default the argument to false.
 
-For easier debugging of your assembly (since we can't just view dynasm machine code), use the `-g` flag to generate your _optimized_ assembly and return your JIT output. It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Optimized instructions out here`.
+For easier debugging of your assembly (since we can't just view dynasm machine code), use the `-g` flag to generate your dynamic assembly and return your JIT output. 
 
 ## Part 3: The REPL
 
-### Known Variables at the REPL
+### Getting set! right
 
-Similarly, after a `define` statement evaluates at the REPL, we can know that
-variable's tag and use that information to compile future entries. For example,
-in this REPL sequence, we define a numeric variable and use it in an operator
-later. We could avoid tag checks for `x` in the later use:
+Now that we have `set!`, we need to be careful about how we handle `set!` for `define` d variables. Unlike `let` variables on the stack, we would directly inline the immediate value for `define` d variables in our assembly. We could easily get the value of `define` d when matching an `Expr::Id` based on its immediate value within the Rust runtime (maybe with a `HashMap`...). Let's see why this might be a problem now.
 
 ```
 > (define x (+ 3 4))
-> (+ x 10)               // No number checks
+```
+Now we have a mapping from `{x -> 7}` in our Rust runtime. So if we do:
+```
+> (+ x 10)
 17
+> (block (+ 3 x) 
+         (set! x true) 
+         (+ 1 x) // Would be wrong to inline the value of x here!
+  )              // should be error, but could mistakenly be 8
 ```
 
-Note a pitfall here – if you allow `set!` on `define` d variables, their values
-could change mid-expression. To continue the above interaction:
+Notice how `x` was `set!` to a boolean mid-expression. If we had inlined the immediate value of `x` as `7`, we would have mistakenly returned `8` instead of an error. The issue is that we don't know what the actual value of `x` is until _after_ the prompt has run.
 
-```
-> (block (+ 3 x) (set! x true) (+ 1 x))  // Would be wrong to inline the value of x in the final expression!
-error // should be error, but could mistakenly be 18
-```
+So how do we solve this problem? 
 
+We cannot directly inline an immediate, and we cannot put this variable on the stack either because we update our `RBP` each prompt. So what if we use the heap? 
 
-So how do we solve this optimization problem? If the variable is `set!` mid-expression, we don't know what the variable is yet. Therefore, if a prompt has a `set!` on a `define` d variable, we cannot optimize. But after the prompt has run, we can determine what the value and type of `define` d is again, so we optimize!
+The solution here is to inline a _reference_ to the immediate. This can be done with `Box` of our `define` d value within our Rust runtime. Then we can inline this raw pointer to a heap allocated value into our assembly. We dereference the pointer into `RAX` to get the value of the `Expr::Id`. Allocation only needs to be done once for each `define` d value if it was ever `set!` d. Then after running our prompt, d is a known immediate again!
 
-But now we run into another issue...
+That might be a bit confusing, so let's go through it step-by-step.
 
-Before, in order to get the value of `define` d when matching an `Expr::Id`, we would just inline the immediate value associated with d. But we don't know what this immediate value is yet! We cannot put this varible on the stack, either, because we update our `RBP` each prompt. So what if we use the heap? 
-
-The solution here is to inline a _reference_ to the immediate. This can be done with `Box` of our `define` d value within our Rust runtime. We can inline this raw pointer to a heap allocated value into our assembly. We dereference the pointer into `RAX` to get the `Expr::Id`. Allocation only needs to be done once for each `define` d value if it was ever `set!` d. Then after running our prompt, we use a known immediate and type again.
-
-You should make a helper function that checks which `define` d variables are `set!`. If they are `set!`, allocate a new `Box` for their old value and cast the reference into a raw pointer.
+You should make a helper function that checks which `define` d variables are `set!` (maybe by parsing `Sexpr` or `Expr`). If they are `set!`, allocate a new `Box` that wraps their current value, and then cast the reference into a raw pointer. This can be done like below:
 
 ```rust
 // For each new define d variable that is also first `set!`
-let val: i64 = 777;
-let boxed = Box::new(val);                   // Heap allocated i64
-let ptr = Box::into_raw(boxed) as i64;       // Raw pointer as i64
+let val: i64 = ???;                      // Current i64 value for d
+let boxed = Box::new(val);               // Heap allocated i64
+let ptr = Box::into_raw(boxed) as i64;   // Raw pointer as i64
 ```
 
-Then in our actual assembly that is generated, we can dereference this pointer to get the value for `define` d. Notice that we don't need to know what the actual immediate value is. So if we do `(add1 d)`
+Then, in our generated assembly, we can simply dereference this pointer to get the actual value for `define` d. Notice that we don't need to know what the actual immediate value is in an environment. We just need to know the associated pointer for `define` d. So if we reach an `Expr::Id` for `d`, we can do:
 
 ```
-; Get the raw pointer, then dereference
+MOV RAX, <a raw ptr as an i64>
+MOV RAX, [RAX]                ; Dereference the pointer
+; RAX now has the value of d
+```
+
+What about `set!`? Unlike `let` variables, we cannot use the stack. So we need to store our `RAX` into the memory location of our raw pointer!
+
+So if we reach a `(set! d expr)` for `d`, we can do:
+
+```
+; Compile expr into RAX
+MOV RCX, <a raw ptr as an i64>
+MOV [RCX], RAX
+```
+
+So if we do `(block (set! d 7) (add1 d))` where `d` was previously defined, we can do:
+
+```
+; Compile (set! d 7)
+MOV RAX, 14
+MOV RCX, <a raw ptr as an i64>
+MOV [RCX], RAX
+; Compile (add1 d)
 MOV RAX, <a raw ptr as an i64>
 MOV RAX, [RAX]
 ADD RAX, 2
 ```
 
-What about `set!`? Unlike `let` variables, we cannot use the stack. So we need to store our `RAX` into the memory location of our raw pointer! So if we do `(set! d 7)`
-
-```
-; Store our value in rax into the heap
-MOV RAX, 14
-MOV RCX, <a raw ptr as an i64>
-MOV [RCX], RAX
-```
-
-Now, after everything is done, we can map `define` d into a known value (and type) again. We know _where_ the value is (the raw pointer), so how do we dereference it within Rust? 
+Now, after everything is done, we can map `define` d into a known value again. We know _where_ the value is (the raw pointer), so how do we dereference it within Rust? 
 
 ```rust
 // After the prompt has run...
@@ -393,11 +399,41 @@ let val = *boxed;       // Dereference a Box
 ```
 Here we let Rust manage our i64 value in our heap by passing our raw pointer to a Rust `Box`, which has all of the nice deconstructing and type invariants with it. However, this code is unsafe because we need to be _very_ sure that our raw pointer is correct and not something we freed before. Rust is really trusting our pointer to not be wrong or malicous here! Finally, we dereference our `Box` as our (hopefully) new known i64 value for `define` d.
 
-It might be a good idea to have a helper function that parses your `Expr` for `set!` on any `define` d variables. Those variables cannot have a known type during the prompt running.
+It might also be a good idea to have an _environment_ of sorts for these `define` d variables that should tell you when a variable is of a known or unknown value. If known, you can optimize and inline an immediate. If unknown, so you cannot optimize and you have to dereference a pointer.
 
-It might also be a good idea to have an _environment_ of sorts for these `define` d variables that should tell you when a variable is of a known or unknown type. If known, you can optimize and inline an immediate. If unknown, so you cannot optimize and you have to dereference a pointer.
+And that's it! You should now be able to handle `set!` for `define` d variables correctly.
 
 Happy hacking!
+
+## Extension: Dynamic Type Checking
+### Eval: Known Input
+With command line:
+```
+cargo run -- -e file.snek <inputArg>
+```
+And if our file does:
+```
+(+ input 1)
+```
+When called this way, the compiler should skip any instructions used for checking for errors related to `input`. For example, for this program, if a number is given as the argument, we could omit all of the tag checking related to the `input` argument (and since `1` is a literal, we could recover essentially the same compilation as for Boa). However, if our argument is a boolean, this can panic even before we run our machine code.
+
+### Repl: Known Define Variables
+Similarly, after a `define` statement evaluates at the REPL, we can know that
+variable's tag and use that information to compile future entries. For example,
+in this REPL sequence, we define a numeric variable and use it in an operator
+later. We could avoid tag checks for `x` in the later use:
+
+```
+> (define x 7)
+> (+ x 10)                      // No number checks
+17
+> (block (set! x 2) (add1 x))   // Do number checks
+> (+ 3 x)                       // No number checks
+```
+
+Remember, if you allow `set!` on `define` d variables, their values
+could change mid-expression (as we went over above). We don't know what the type is without unrapping the pointer in our Rust runtime. Therefore, we cannot optimize type checks for `set!` variables, until the prompt ends. But after the prompt has run, we can determine what the value and type of `define` d is again, so we optimize for future prompts!
+
 
 ## Grading
 
@@ -432,6 +468,9 @@ git pull upstream main --allow-unrelated-histories
 This will merge all commits from the template into your repository. Alternatively, you can also
 clone <https://github.com/ucsd-compilers-s23/cobra-starter> and manually replace your `tests/`
 directory.
+
+**What is my assembly even doing?**
+It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Type check starts here`.
 
 ### Discussion
 
