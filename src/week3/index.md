@@ -7,11 +7,11 @@ which extends Boa with booleans, conditionals, variable assignment, and loops.
 
 ## Setup
 
-Get the assignment at <https://classroom.github.com/a/mHUq5XJd> This will make
-a private-to-you copy of the repository hosted within the course's
-organization.  You can also access the public starter code
-<https://github.com/ucsd-compilers-s23/cobra-starter> if you don't have or
+Get the assignment at <https://classroom.github.com/a/hQU87gZn> This will make
+a private-to-you copy of the repository hosted within the course's organization.  You can also access the public test + 'starter' code <https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have or
 prefer not to use a Github account.
+
+Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, however, make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
 - **Part 1**: _AOT_ compilation of Cobra files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
 - **Part 2**: _JIT_ compilation of Cobra files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
   - The `-g` flag does both (with an optional argument).
