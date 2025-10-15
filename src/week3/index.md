@@ -472,6 +472,9 @@ directory.
 **What is my assembly even doing?**
 It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Type check starts here`.
 
+**What is my REPL even doing?**
+Even though you don't use the AOT assembly, you can simply print the string AOT would generate for each prompt of the REPL. Then you can see what is (probably) going on (assuming your JIT and AOT have similar compilation logic). You can also print out your environment of `define` d variables and their known/unknown values after each prompt.
+
 ### Discussion
 
 It's worth re-emphasizing that a static type-checker could recover a lot of
