@@ -1,6 +1,6 @@
 ![cobra](./cobra.jpg)
 
-# Week 3: Cobra, Due Wednesday, October 22 (Open Collaboration)
+# Week 4: Cobra, Due Wednesday, October 22
 
 In this assignment you'll implement a compiler for a small language called Cobra,
 which extends Boa with booleans, conditionals, variable assignment, and loops.
@@ -11,7 +11,7 @@ Get the assignment at <https://classroom.github.com/a/hQU87gZn> This will make
 a private-to-you copy of the repository hosted within the course's organization.  You can also access the public test + 'starter' code <https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have or
 prefer not to use a Github account.
 
-Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, however, make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
+Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, or even replace them entirely and start from your Boa code. Make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
 - **Part 1**: _AOT_ compilation of Cobra files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
 - **Part 2**: _JIT_ compilation of Cobra files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
   - The `-g` flag does both (with an optional argument).
@@ -282,6 +282,7 @@ which ensures that `cargo build` is run first and independently before `cargo
 test`.
 
 ## Part 2: Dynamic Compilation
+
 ### Using Dynamic Information to Optimize
 
 A compiler for Cobra needs to generate extra instructions to check for booleans
@@ -325,6 +326,7 @@ throws an error as usual. If no arg is given, just like for AOT compilation, def
 For easier debugging of your assembly (since we can't just view dynasm machine code), use the `-g` flag to generate your _optimized_ assembly and return your JIT output. It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Optimized instructions out here`.
 
 ## Part 3: The REPL
+
 ### Known Variables at the REPL
 
 Similarly, after a `define` statement evaluates at the REPL, we can know that
@@ -336,14 +338,16 @@ later. We could avoid tag checks for `x` in the later use:
 > (define x (+ 3 4))
 > (+ x 10)               // No number checks
 17
-> (+ (set! x 50) x)      // Does number checks
-50
-> (+ x 2)                // No number checks
-79
 ```
 
-Note a pitfall here – if you allow `set!` on `define` d variables, their types
-could change mid-expression. 
+Note a pitfall here – if you allow `set!` on `define` d variables, their values
+could change mid-expression. To continue the above interaction:
+
+```
+> (block (+ 3 x) (set! x true) (+ 1 x))  // Would be wrong to inline the value of x in the final expression!
+error // should be error, but could mistakenly be 18
+```
+
 
 So how do we solve this optimization problem? If the variable is `set!` mid-expression, we don't know what the variable is yet. Therefore, if a prompt has a `set!` on a `define` d variable, we cannot optimize. But after the prompt has run, we can determine what the value and type of `define` d is again, so we optimize!
 
