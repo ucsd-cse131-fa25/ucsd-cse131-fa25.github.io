@@ -1,21 +1,30 @@
 ![cobra](./cobra.jpg)
 
-# Week 3: Cobra, Due Tuesday, April 25 (Open Collaboration)
-
-_(Yes, that's 3 open collaboration assignments in a row 🙂)_
+# Week 4: Cobra, Due Wednesday, October 22
 
 In this assignment you'll implement a compiler for a small language called Cobra,
 which extends Boa with booleans, conditionals, variable assignment, and loops.
 
 ## Setup
 
-Get the assignment at <https://classroom.github.com/a/mHUq5XJd> This will make
-a private-to-you copy of the repository hosted within the course's
-organization.  You can also access the public starter code
-<https://github.com/ucsd-compilers-s23/cobra-starter> if you don't have or
+Get the assignment at <https://classroom.github.com/a/hQU87gZn> This will make
+a private-to-you copy of the repository hosted within the course's organization.  You can also access the public test + 'starter' code <https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have or
 prefer not to use a Github account.
 
-## The Cobra Language
+Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, or even replace them entirely and start from your Boa code. Make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
+- **Part 1**: _AOT_ compilation of Cobra files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
+- **Part 2**: _JIT_ compilation of Cobra files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
+  - The `-g` flag does both (with an optional argument).
+- **Part 3**: A REPL for Cobra with the `-i` interactive flag.
+
+```
+cargo run -- -c tests/test1.snek tests/test1.s
+cargo run -- -e tests/test1.snek <optionalArg>
+cargo run -- -g tests/test1.snek tests/test1.s <optionalArg>
+cargo run -- -i
+```
+
+## Part 1: The Cobra Language
 
 
 ### Concrete Syntax
@@ -59,7 +68,7 @@ enum Op1 { Add1, Sub1, IsNum, IsBool, }
 enum Op2 { Plus, Minus, Times, Equal, Greater, GreaterEqual, Less, LessEqual, }
 
 enum Expr {
-    Number(i32),
+    Number(i64),
     Boolean(bool),
     Id(String),
     Let(Vec<(String, Expr)>, Box<Expr>),
@@ -95,12 +104,13 @@ code (`std::process::exit(N)` for nonzero `N` in Rust works well for this).
   raised from the running program, and **the error should contain "invalid
   argument"**. Note that this is not a compilation error, nor can it be in all
   cases due to `input`'s type being unknown until the program starts.
+  - Assembly can get cumbersome to read with type checks. It might be useful to have a custom `Instr` that simply serves as an assembly comment.
 - The relative comparison operators like `<` and `>` evaluate their arguments
   and then evaluate to `true` or `false` based on the comparison result.
 - The equality operator `=` evaluates its arguments and compares them for
   equality. It should raise an error if they are not both numbers or not both
   booleans, and the error should contain **"invalid argument"** if the types
-  differ.
+  differ. 
 - Boolean expressions (`true` and `false`) evaluate to themselves
 - `if` expressions evaluate their first expression (the condition) first. If it's
   `false`, they evaluate to the third expression (the “else” block), and to
@@ -261,8 +271,9 @@ debugger like `gdb` or `lldb`), you can still run them directly from the
 command line with:
 
 ```
-$ make tests/some-file.run
-$ ./tests/some-file.run 1234
+$ cargo run -- -c test/file.snek test/file.s
+$ make file.run
+$ ./tests/file.run 1234
 ```
 
 where the `1234` could be any valid command-line argument.
@@ -270,6 +281,159 @@ where the `1234` could be any valid command-line argument.
 As a note on running all the tests, the best option is to use `make test`,
 which ensures that `cargo build` is run first and independently before `cargo
 test`.
+
+## Part 2: Dynamic Compilation
+
+### Using Dynamic Information to Optimize
+
+A compiler for Cobra needs to generate extra instructions to check for booleans
+being used in binary operators. We could use a static type-checker to avoid
+these, but at the same time, the language is fundamentally dynamic because the
+compiler cannot know the type of `input` until the program starts running
+(which happens after it is compiled). This is the general problem that systems
+for languages like JavaScript and Python face; it will get worse when we
+introduce functions in the next assignment.
+
+However, if our compiler can make use of some dynamic information, we can do
+better.
+
+There are two instructive optimizations we can make with dynamic information,
+one for standalone programs and one at the REPL.
+
+### Eval
+
+Add a new command-line option, `-e`, for “eval”, that evaluates a program
+directly after compiling it with knowledge of the command-line argument. The
+usage should be:
+
+```
+cargo run -- -e file.snek <optionalArg>
+```
+
+That is, you provide both the file and the command-line argument. 
+
+```
+(+ 1 input)
+```
+
+For this program, if `input` is a boolean, we should preserve that the program
+throws an error as usual. If no arg is given, just like for AOT compilation, default the argument to false.
+
+For easier debugging of your assembly (since we can't just view dynasm machine code), use the `-g` flag to generate your dynamic assembly and return your JIT output. 
+
+## Part 3: The REPL
+
+### Getting set! right
+
+Now that we have `set!`, we need to be careful about how we handle `set!` for `define` d variables. Unlike `let` variables on the stack, we would directly inline the immediate value for `define` d variables in our assembly. We could easily get the value of `define` d when matching an `Expr::Id` based on its immediate value within the Rust runtime (maybe with a `HashMap`...). Let's see why this might be a problem now.
+
+```
+> (define x (+ 3 4))
+```
+Now we have a mapping from `{x -> 7}` in our Rust runtime. So if we do:
+```
+> (+ x 10)
+17
+> (block (+ 3 x) 
+         (set! x true) 
+         (+ 1 x) // Would be wrong to inline the value of x here!
+  )              // should be error, but could mistakenly be 8
+```
+
+Notice how `x` was `set!` to a boolean mid-expression. If we had inlined the immediate value of `x` as `7`, we would have mistakenly returned `8` instead of an error. The issue is that we don't know what the actual value of `x` is until _after_ the prompt has run.
+
+So how do we solve this problem? 
+
+We cannot directly inline an immediate, and we cannot put this variable on the stack either because we update our `RBP` each prompt. So what if we use the heap? 
+
+The solution here is to inline a _reference_ to the immediate. This can be done with `Box` of our `define` d value within our Rust runtime. Then we can inline this raw pointer to a heap allocated value into our assembly. We dereference the pointer into `RAX` to get the value of the `Expr::Id`. Allocation only needs to be done once for each `define` d value if it was ever `set!` d. Then after running our prompt, d is a known immediate again!
+
+That might be a bit confusing, so let's go through it step-by-step.
+
+You should make a helper function that checks which `define` d variables are `set!` (maybe by parsing `Sexpr` or `Expr`). If they are `set!`, allocate a new `Box` that wraps their current value, and then cast the reference into a raw pointer. This can be done like below:
+
+```rust
+// For each new define d variable that is also first `set!`
+let val: i64 = ???;                      // Current i64 value for d
+let boxed = Box::new(val);               // Heap allocated i64
+let ptr = Box::into_raw(boxed) as i64;   // Raw pointer as i64
+```
+
+Then, in our generated assembly, we can simply dereference this pointer to get the actual value for `define` d. Notice that we don't need to know what the actual immediate value is in an environment. We just need to know the associated pointer for `define` d. So if we reach an `Expr::Id` for `d`, we can do:
+
+```
+MOV RAX, <a raw ptr as an i64>
+MOV RAX, [RAX]                ; Dereference the pointer
+; RAX now has the value of d
+```
+
+What about `set!`? Unlike `let` variables, we cannot use the stack. So we need to store our `RAX` into the memory location of our raw pointer!
+
+So if we reach a `(set! d expr)` for `d`, we can do:
+
+```
+; Compile expr into RAX
+MOV RCX, <a raw ptr as an i64>
+MOV [RCX], RAX
+```
+
+So if we do `(block (set! d 7) (add1 d))` where `d` was previously defined, we can do:
+
+```
+; Compile (set! d 7)
+MOV RAX, 14
+MOV RCX, <a raw ptr as an i64>
+MOV [RCX], RAX
+; Compile (add1 d)
+MOV RAX, <a raw ptr as an i64>
+MOV RAX, [RAX]
+ADD RAX, 2
+```
+
+Now, after everything is done, we can map `define` d into a known value again. We know _where_ the value is (the raw pointer), so how do we dereference it within Rust? 
+
+```rust
+// After the prompt has run...
+let boxed = unsafe { Box::from_raw(ptr as *mut i64) };
+let val = *boxed;       // Dereference a Box
+```
+Here we let Rust manage our i64 value in our heap by passing our raw pointer to a Rust `Box`, which has all of the nice deconstructing and type invariants with it. However, this code is unsafe because we need to be _very_ sure that our raw pointer is correct and not something we freed before. Rust is really trusting our pointer to not be wrong or malicous here! Finally, we dereference our `Box` as our (hopefully) new known i64 value for `define` d.
+
+It might also be a good idea to have an _environment_ of sorts for these `define` d variables that should tell you when a variable is of a known or unknown value. If known, you can optimize and inline an immediate. If unknown, so you cannot optimize and you have to dereference a pointer.
+
+And that's it! You should now be able to handle `set!` for `define` d variables correctly.
+
+Happy hacking!
+
+## Extension: Dynamic Type Checking
+### Eval: Known Input
+With command line:
+```
+cargo run -- -e file.snek <inputArg>
+```
+And if our file does:
+```
+(+ input 1)
+```
+When called this way, the compiler should skip any instructions used for checking for errors related to `input`. For example, for this program, if a number is given as the argument, we could omit all of the tag checking related to the `input` argument (and since `1` is a literal, we could recover essentially the same compilation as for Boa). However, if our argument is a boolean, this can panic even before we run our machine code.
+
+### Repl: Known Define Variables
+Similarly, after a `define` statement evaluates at the REPL, we can know that
+variable's tag and use that information to compile future entries. For example,
+in this REPL sequence, we define a numeric variable and use it in an operator
+later. We could avoid tag checks for `x` in the later use:
+
+```
+> (define x 7)
+> (+ x 10)                      // No number checks
+17
+> (block (set! x 2) (add1 x))   // Do number checks
+> (+ 3 x)                       // No number checks
+```
+
+Remember, if you allow `set!` on `define` d variables, their values
+could change mid-expression (as we went over above). We don't know what the type is without unrapping the pointer in our Rust runtime. Therefore, we cannot optimize type checks for `set!` variables, until the prompt ends. But after the prompt has run, we can determine what the value and type of `define` d is again, so we optimize for future prompts!
+
 
 ## Grading
 
@@ -305,63 +469,11 @@ This will merge all commits from the template into your repository. Alternativel
 clone <https://github.com/ucsd-compilers-s23/cobra-starter> and manually replace your `tests/`
 directory.
 
-## Extension: Using Dynamic Information to Optimize
+**What is my assembly even doing?**
+It might be useful to have a custom `Instr` which simply serves as an assembly comment, which can print something like `; Type check starts here`.
 
-A compiler for Cobra needs to generate extra instructions to check for booleans
-being used in binary operators. We could use a static type-checker to avoid
-these, but at the same time, the language is fundamentally dynamic because the
-compiler cannot know the type of `input` until the program starts running
-(which happens after it is compiled). This is the general problem that systems
-for languages like JavaScript and Python face; it will get worse when we
-introduce functions in the next assignment.
-
-However, if our compiler can make use of some dynamic information, we can do
-better.
-
-There are two instructive optimizations we can make with dynamic information,
-one for standalone programs and one at the REPL.
-
-### Eval
-
-Add a new command-line option, `-e`, for “eval”, that evaluates a program
-directly after compiling it with knowledge of the command-line argument. The
-usage should be:
-
-```
-cargo run -- -e file.snek <arg>
-```
-
-That is, you provide both the file and the command-line argument. When called
-this way, the compiler should skip any instructions used for checking for
-errors related to `input`. For example, for this program, if a number is given
-as the argument, we could omit all of the tag checking related to the `input`
-argument (and since `1` is a literal, we could recover essentially the same
-compilation as for Boa).
-
-```
-(+ 1 input)
-```
-
-For this program, if `input` is a boolean, we should preserve that the program
-throws an error as usual.
-
-### Known Variables at the REPL
-
-Similarly, after a `define` statement evaluates at the REPL, we can know that
-variable's tag and use that information to compile future entries. For example,
-in this REPL sequence, we define a numeric variable and use it in an operator
-later. We could avoid tag checks for `x` in the later use:
-
-```
-> (define x (+ 3 4))
-> (+ x 10)
-```
-
-Note a pitfall here – if you allow `set!` on `define`d variables, their types
-could change mid-expression, so there are some restrictions on when this should
-be applied. Make sure to test this case.
-
-Happy hacking!
+**What is my REPL even doing?**
+Even though you don't use the AOT assembly, you can simply print the string AOT would generate for each prompt of the REPL. Then you can see what is (probably) going on (assuming your JIT and AOT have similar compilation logic). You can also print out your environment of `define` d variables and their known/unknown values after each prompt.
 
 ### Discussion
 
