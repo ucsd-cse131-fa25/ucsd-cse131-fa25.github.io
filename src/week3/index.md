@@ -284,22 +284,6 @@ test`.
 
 ## Part 2: Dynamic Compilation
 
-### Using Dynamic Information to Optimize
-
-A compiler for Cobra needs to generate extra instructions to check for booleans
-being used in binary operators. We could use a static type-checker to avoid
-these, but at the same time, the language is fundamentally dynamic because the
-compiler cannot know the type of `input` until the program starts running
-(which happens after it is compiled). This is the general problem that systems
-for languages like JavaScript and Python face; it will get worse when we
-introduce functions in the next assignment.
-
-However, if our compiler can make use of some dynamic information, we can do
-better.
-
-There are two instructive optimizations we can make with dynamic information,
-one for standalone programs and one at the REPL.
-
 ### Eval
 
 Add a new command-line option, `-e`, for “eval”, that evaluates a program
@@ -406,7 +390,23 @@ And that's it! You should now be able to handle `set!` for `define` d variables 
 Happy hacking!
 
 ## Extension: Dynamic Type Checking
-### Eval: Known Input
+### Using Dynamic Information to Optimize
+A compiler for Cobra needs to generate extra instructions to check for booleans
+being used in binary operators. We could use a static type-checker to avoid
+these, but at the same time, the language is fundamentally dynamic because the
+compiler cannot know the type of `input` until the program starts running
+(which happens after it is compiled). This is the general problem that systems
+for languages like JavaScript and Python face; it will get worse when we
+introduce functions in the next assignment.
+
+However, if our compiler can make use of some dynamic information, we can do
+better.
+
+There are two instructive optimizations we can make with dynamic information,
+one for standalone programs and one at the REPL.
+
+### Eval: Known Input 
+
 With command line:
 ```
 cargo run -- -e file.snek <inputArg>
