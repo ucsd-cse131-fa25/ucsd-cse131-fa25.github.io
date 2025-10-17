@@ -50,7 +50,7 @@ you can know roughly where we are headed.
 
 ### Week 3 –Binary Operators, Types, and the JIT
 
-- [Friday Handout](.notes/week3-friday.pdf)
+- [Friday Handout](./notes/week3-friday.pdf)
 - [Wednesday Handout](./notes/week3-wednesday.pdf)
 - [Monday Handout](./notes/week3-monday.pdf)
 - [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
