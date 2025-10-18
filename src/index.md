@@ -50,9 +50,9 @@ you can know roughly where we are headed.
 
 ### Week 3 –Binary Operators, Types, and the JIT
 
-- [Friday Handout](./notes/week3-friday.pdf)
-- [Wednesday Handout](./notes/week3-wednesday.pdf)
-- [Monday Handout](./notes/week3-monday.pdf)
+- [Friday Handout](./notes/week3-friday.pdf) [Filled](./notes/week3-friday-filled.pdf)
+- [Wednesday Handout](./notes/week3-wednesday.pdf) [Filled](./notes/week3-wednesday-filled.pdf)
+- [Monday Handout](./notes/week3-monday.pdf) [Filled](./notes/week3-monday-filled.pdf)
 - [Max New on Conditionals](https://maxsnew.com/teaching/eecs-483-fa21/lec_if_notes.html)
 - [Max New on Tagging](https://maxsnew.com/teaching/eecs-483-fa21/lec_tagging-values_notes.html)
 - [Wikipedia on the AMD64 Calling Convention](https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI)
