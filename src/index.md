@@ -5,7 +5,7 @@
 - [Joe Gibbs Politz](https://jpolitz.github.io) (Instructor)
   - OH: Tuesday 3pm and Wednesday 1pm, CSE 3206 (Joe's office)
 - Shaurya Raswan (TA)
-  - OH: Mondays at 12PM, B275 CSE Basement
+  - OH: Mondays at 12PM, B275 CSE Basement or [Zoom](https://ucsd.zoom.us/j/5144527852)
 
 [Basics](#basics) -
 [Schedule](#schedule) -
