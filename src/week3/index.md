@@ -121,7 +121,8 @@ code (`std::process::exit(N)` for nonzero `N` in Rust works well for this).
 - `set!` expressions evaluate the expression to a value, and change the value
   stored in the given variable to that value (e.g. variable assignment). The
   `set!` expression itself evaluates to the new value. If there is no surrounding
-  let binding for the variable the identifier is considered unbound and an error
+  let binding (or in the case of the REPL, no let binding _and_ no previous
+  `define`) for the variable the identifier is considered unbound and an error
   should be reported.
 - `loop` and `break` expressions work together. Loops evaluate their subexpression
   in an infinite loop until `break` is used. Break expressions evaluate their
