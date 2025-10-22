@@ -48,6 +48,9 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 4 -Functions
+- [Wednesday Handout](./notes/UCSD-Compilers-S23-Week4-Wednesday.pdf)
+
 ### Week 3 –Binary Operators, Types, and the JIT
 
 - [Friday Handout](./notes/week3-friday.pdf) [Filled](./notes/week3-friday-filled.pdf)
