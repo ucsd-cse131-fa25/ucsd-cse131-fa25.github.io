@@ -48,8 +48,14 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
-### Week 4 -Functions
+### Week 4 -Functions and Calling Conventions
 - [Wednesday Handout](./notes/UCSD-Compilers-S23-Week4-Wednesday.pdf)
+- Reading and Resources:
+  - [José Manuel Calderón Trilla on Tail Calls](https://twitter.com/josecalderon/status/1247983114875527171?s=20)
+  - [Tail Calls the Musical](https://www.youtube.com/watch?v=-PX0BV9hGZY)
+  - [Lerner/New on Errors](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-calls_notes.html)
+  - [Lerner/New on Defining Functions](https://maxsnew.com/teaching/eecs-483-fa21/lec_function-defs_notes.html)
+  - [Lerner on Tail Calls](https://course.ccs.neu.edu/cs4410sp20/lec_tail-calls_stack_notes.html)
 
 ### Week 3 –Binary Operators, Types, and the JIT
 
