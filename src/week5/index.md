@@ -1,6 +1,6 @@
 ![diamondback](./diamondback.jpeg)
 
-# Week 5: Diamondback, Due Wednesday, Oct 27 (Closed Collaboration)
+# Week 5: Diamondback, Due Wednesday, Oct 27
 
 In this assignment you'll implement a compiler for a language called Diamondback,
 which has top-level function definitions.
