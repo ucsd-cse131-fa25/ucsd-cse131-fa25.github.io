@@ -218,6 +218,21 @@ Make sure to not repeat machine code compiled for earlier functions. This can be
 ### Defines in the function body
 Make sure that `define`d variables in the function body will not be known (or inlined) when compiling the function. This is because we can use this function for later entries which may be using a different `define`d value for the same variable, and your function itself can even modify those variables! Therefore, these functions are not [_pure_](https://en.wikipedia.org/wiki/Pure_function). Could we possibly use a technique we already used for `set!` on a `define`d variable in Cobra?
 
+There are two things to consider here:
+
+1. Our function `set!` a variable that is `define`d in the REPL body.
+  - If the function can modify the variable, we cannot inline its value for the entire prompt. This includes in the function body AND the function call site.
+2. Our function simply uses a variable that is `define`d in the REPL body.
+  - If the function only uses the variable, we can inline its value at the function call site, but not in the function body.
+
+### Duplicate Label Errors in the REPL
+
+When defining functions in the REPL, you may run into duplicate label errors from dynasm. This is because dynasm labels are global to the entire assembly being generated, and if you define a function with the same name twice, it will generate the same label twice. 
+
+You can either append a unique identifier to each function label, or let dynasm handle it with `ops.new_dynamic_label()` (even if the label names are the same, you can initalize a unique DynamicLabel to them). Remember that some labels are referenced outside of your current running prompt, (such as `label_error` or functions), so these DynamicLabels stay the same across prompts. So this means there are two types of labels:
+1. Labels that are global and persist across prompts.
+2. Labels that are local to the current prompt and can be deleted/recreated/ignored for future prompts.
+
 ## Grading
 
 As with the previous assignment, a lot of the credit you get will be based on
