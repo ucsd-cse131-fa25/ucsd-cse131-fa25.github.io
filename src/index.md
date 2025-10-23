@@ -49,7 +49,7 @@ schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
 ### Week 4 -Functions and Calling Conventions
-- [Wednesday Handout](./notes/UCSD-Compilers-S23-Week4-Wednesday.pdf)
+- [Wednesday Handout](./notes/UCSD-Compilers-S23-Week4-Wednesday.pdf) - [Wednesday implemented; scroll to BOTTOM to see full copilot chat log](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commit/fdf56c737f1e18deb07c98c9b3bf25ef052a3166)
 - Reading and Resources:
   - [José Manuel Calderón Trilla on Tail Calls](https://twitter.com/josecalderon/status/1247983114875527171?s=20)
   - [Tail Calls the Musical](https://www.youtube.com/watch?v=-PX0BV9hGZY)
