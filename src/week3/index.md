@@ -458,16 +458,7 @@ future assignments.
 
 **Some of my tests fail with a `No such file or directory` error**
 
-The initial version of the starter code contained an error in the testing infrastructure. If you
-cloned before we fixed it, you'll have to update the code. You can update the code by running:
-
-```console
-git remote add upstream https://github.com/ucsd-compilers-s23/cobra-starter
-git pull upstream main --allow-unrelated-histories
-```
-
-This will merge all commits from the template into your repository. Alternatively, you can also
-clone <https://github.com/ucsd-compilers-s23/cobra-starter> and manually replace your `tests/`
+Use <https://github.com/ucsd-cse131-fa25/cobra-test> and manually replace your `tests/`
 directory.
 
 **What is my assembly even doing?**
