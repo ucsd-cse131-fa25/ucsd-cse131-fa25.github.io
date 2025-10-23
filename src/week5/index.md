@@ -5,17 +5,18 @@
 In this assignment you'll implement a compiler for a language called Diamondback,
 which has top-level function definitions.
 
-Get the assignment at <https://classroom.github.com/a/q383lTNN> This will make
+Get the assignment at <hhttps://classroom.github.com/a/HHd1j9p3> This will make
 a private-to-you copy of the repository hosted within the course's
-organization.  You can also access the public starter code
-<https://github.com/ucsd-compilers-s23/diamondback-starter> if you don't have
-or prefer not to use a Github account.
+organization.  You can also access the public test code
+<https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have
+or prefer not to use a Github account. This is the same test code for Cobra.
 
-Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, or even replace them entirely and start from your Boa code. Make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
-- **Part 1**: _AOT_ compilation of Cobra files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
-- **Part 2**: _JIT_ compilation of Cobra files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
+Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, or even replace them entirely and start from your Cobra code. Make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
+
+- **Part 1**: _AOT_ compilation of Diamondback files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
+- **Part 2**: _JIT_ compilation of Diamondback files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
   - The `-g` flag does both (with an optional argument).
-- **Part 3**: A REPL for Cobra with the `-i` interactive flag.
+- **Part 3**: A REPL for Diamondback with the `-i` interactive flag.
 
 ```
 cargo run -- -c tests/test1.snek tests/test1.s
@@ -86,7 +87,7 @@ The _compiler_ should stop and report an error if:
 
 * There is a call to a function name that doesn't exist
 * Multiple functions are defined with the same name
-* A function's parameter list has a duplicate name
+* A function's parameter list has a duplicate name, generating an error with string `Duplicate` in the error
 * There is a call to a function with the wrong number of arguments
 * `input` is used in a function definition (rather than in the expression at
   the end). It's worth thinking of that final expression as the `main` function
@@ -227,7 +228,7 @@ There are two things to consider here:
 
 ### Duplicate Label Errors in the REPL
 
-When defining functions in the REPL, you may run into duplicate label errors from dynasm. This is because dynasm labels are global to the entire assembly being generated, and if you define a function with the same name twice, it will generate the same label twice. 
+When defining functions in the REPL, you may run into duplicate label errors from dynasm. This is because dynasm labels are global to the entire assembly being generated (if you are reusing `ops`), and if you define a label with the same name twice, such as `label_error`, you might accidentally generate the same label twice. 
 
 You can either append a unique identifier to each function label, or let dynasm handle it with `ops.new_dynamic_label()` (even if the label names are the same, you can initalize a unique DynamicLabel to them). Remember that some labels are referenced outside of your current running prompt, (such as `label_error` or functions), so these DynamicLabels stay the same across prompts. So this means there are two types of labels:
 1. Labels that are global and persist across prompts.
