@@ -1,22 +1,31 @@
 ![diamondback](./diamondback.jpeg)
 
-# Week 5: Diamondback, Due Thursday, May 11 (Closed Collaboration)
+# Week 5: Diamondback, Due Wednesday, Oct 27
 
 In this assignment you'll implement a compiler for a language called Diamondback,
 which has top-level function definitions.
 
-This assignment is [**closed to
-collaboration**](https://ucsd-compilers-s23.github.io/#programming).
-
-## Setup
-
-Get the assignment at <https://classroom.github.com/a/q383lTNN> This will make
+Get the assignment at <hhttps://classroom.github.com/a/HHd1j9p3> This will make
 a private-to-you copy of the repository hosted within the course's
-organization.  You can also access the public starter code
-<https://github.com/ucsd-compilers-s23/diamondback-starter> if you don't have
-or prefer not to use a Github account.
+organization.  You can also access the public test code
+<https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have
+or prefer not to use a Github account. This is the same test code for Cobra.
 
-## The Diamondback Language
+Note: the repository has no real code, just a basic project structure. Feel free to add files and modify them, or even replace them entirely and start from your Cobra code. Make sure your code can do `cargo build` and `cargo test` on ieng6 (Rust version `1.75`).
+
+- **Part 1**: _AOT_ compilation of Diamondback files with a generated assembly file. This is with the `-c` compile flag. The optional argument is only given to the executable `.run` file.
+- **Part 2**: _JIT_ compilation of Diamondback files with an evaluation at runtime. This is with the `-e` eval flag with an optional argument.
+  - The `-g` flag does both (with an optional argument).
+- **Part 3**: A REPL for Diamondback with the `-i` interactive flag.
+
+```
+cargo run -- -c tests/test1.snek tests/test1.s
+cargo run -- -e tests/test1.snek <optionalArg>
+cargo run -- -g tests/test1.snek tests/test1.s <optionalArg>
+cargo run -- -i
+```
+
+## Part 1 & 2: The Diamondback Language
 
 ### Concrete Syntax
 
@@ -78,7 +87,7 @@ The _compiler_ should stop and report an error if:
 
 * There is a call to a function name that doesn't exist
 * Multiple functions are defined with the same name
-* A function's parameter list has a duplicate name
+* A function's parameter list has a duplicate name, generating an error with string `Duplicate` in the error
 * There is a call to a function with the wrong number of arguments
 * `input` is used in a function definition (rather than in the expression at
   the end). It's worth thinking of that final expression as the `main` function
@@ -146,6 +155,41 @@ functions in Rust, the generated code needs to respect that calling convention.
 A compiler for Diamondback does not need guarantee safe-for-space tail calls,
 but they are allowed.
 
+Have a plan of a calling convention before you start coding. Do you need to preallocate stack space for local variables? How will you pass arguments? How will you return to your caller?
+
+### Allocate space for local variables in my stack frame?
+
+If your chosen calling convention needs it, you can make a function that precomputes the stack frame size for each function based on the number of local variables. This function can calculate the maximum _depth_ of your stack pointer usage in a body (of a function or of your main `our_code_starts_here`). For example, a `Expr::Number` will have a stack depth of 0, while a `Expr::UnOp(expr)` will have a stack depth of its `expr`.
+
+### How to branch in Dynasm?
+
+There are many ways to branch in dynasm. You can generate a label like this:
+```rust
+let cool_label = ops.new_dynamic_label();
+```
+where ops is our dynasm assembler. Then, you can use it to create branches like:
+```rust
+; =>cool_label
+; jmp => cool_label
+```
+
+### Calling external functions?
+We can call external functions (like if we have a Rust `snek_error`) like:
+```
+; mov rax, QWORD snek_error as _
+; call rax
+```
+OR
+```rust
+let snek_error_ptr = runtime::snek_error as *const ();
+let snek_error_addr = unsafe { mem::transmute::<* const (), fn() -> i32>(snek_error_ptr) } as i64;
+```
+And then calling it like:
+```
+; mov rax, QWORD snek_error_addr
+; call rax
+```
+
 ### Running and Testing
 
 Running and testing are as for Cobra, there is no new infrastructure.
@@ -157,6 +201,38 @@ You may check the behavior of programs using this interpreter.
 <div id=embed></div>
 <script src="diamondback.js" type=text/javascript></script>
 <script src="diamondback-embed.js" type=text/javascript></script>
+
+
+## Part 3: The REPL
+
+### Add Function Definitions to the REPL
+
+Add the ability to define functions to the REPL. Entries should be a definition
+(which could be `define` or `fun`) or an expression.
+
+Functions should be able to use global variables `define`d in earlier entries
+in the function body. Function definitions should be able to use other
+functions defined earlier in the REPL session. 
+
+Make sure to not repeat machine code compiled for earlier functions. This can be done by simply calling the already-compiled functions from new machine code that you generate.
+
+### Defines in the function body
+Make sure that `define`d variables in the function body will not be known (or inlined) when compiling the function. This is because we can use this function for later entries which may be using a different `define`d value for the same variable, and your function itself can even modify those variables! Therefore, these functions are not [_pure_](https://en.wikipedia.org/wiki/Pure_function). Could we possibly use a technique we already used for `set!` on a `define`d variable in Cobra?
+
+There are two things to consider here:
+
+1. Our function `set!` a variable that is `define`d in the REPL body.
+  - If the function can modify the variable, we cannot inline its value for the entire prompt. This includes in the function body AND the function call site.
+2. Our function simply uses a variable that is `define`d in the REPL body.
+  - If the function only uses the variable, we can inline its value at the function call site, but not in the function body.
+
+### Duplicate Label Errors in the REPL
+
+When defining functions in the REPL, you may run into duplicate label errors from dynasm. This is because dynasm labels are global to the entire assembly being generated (if you are reusing `ops`), and if you define a label with the same name twice, such as `label_error`, you might accidentally generate the same label twice. 
+
+You can either append a unique identifier to each function label, or let dynasm handle it with `ops.new_dynamic_label()` (even if the label names are the same, you can initalize a unique DynamicLabel to them). Remember that some labels are referenced outside of your current running prompt, (such as `label_error` or functions), so these DynamicLabels stay the same across prompts. So this means there are two types of labels:
+1. Labels that are global and persist across prompts.
+2. Labels that are local to the current prompt and can be deleted/recreated/ignored for future prompts.
 
 ## Grading
 
@@ -173,173 +249,9 @@ example, you _could_ try to calculate the answer for these programs and
 generate a single `mov` instruction: don't do that, it doesn't demonstrate the
 learning outcomes we care about.
 
-## Extension 1: Proper Tail Calls
+## Extension: Proper Tail Calls
 
 Implement safe-for-space tail calls for Diamondback. Test with deeply-nested
 recursion. To make sure you've tested _proper tail calls_ and not just _tail
 recursion_, test deeply-nested mutual recursion between functions with
 different numbers of arguments.
-
-## Extension 2: Add Function Definitions to the REPL
-
-Add the ability to define functions to the REPL. Entries should be a definition
-(which could be `define` or `fun`) or an expression.
-
-Functions should be able to use global variables `define`d in earlier entries
-in the function body.
-
-## Extension 3: Compiling Functions with Dynamically-Discovered Types
-
-Consider a function like this one from class:
-
-```
-(fun (sumrec num sofar)
-  (if (= num 0)
-      sofar
-      (sumrec (+ num -1) (+ sofar num))))
-```
-
-Because this function _could_ be called with booleans for `num` or `sofar`, the
-compiler is obligated to insert tag checks for the `=` and `+` operations here.
-(Actually, there are some kinds of purely-static optimizations we could do
-here; if control-flow reaches the else branch we know that `num` is a number
-because otherwise the `=` check would have errored, so could elide the checks
-for `(+ num -1)`; there are some similar examples in [section 2 of this
-paper](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=e36cf5f586a8612d1bf427b8aefe5b2e92e1f43c),
-which discusses some more complex cases.  However that won't be the focus of
-this extension.)
-
-We _could_ save some work by doing all the tag checks before entering the
-function body, compiling specific versions of the function for each different
-combination of arguments, then dispatching to the correct one based on the
-observed tags. This is common practice in JIT compilers, both [at the function
-leve](https://kipp.ly/blog/jits-intro/) and [at the block
-level](https://arxiv.org/abs/1411.0352). This would re-use some of the ideas
-from the previous assignment on using the observed types of `input` and
-`define`d variables to specialize code. In the `sumrec` example, the compiler
-would generate _4_ different functions for something like `sumrec`:
-
-```
-(fun (sumrec num sofar)
-  (case
-    [(and (isnum num) (isnum sofar)) (sumrec_assume_num_num num sofar)]
-    [(and (isnum num) (isbool sofar)) (sumrec_assume_num_bool num sofar)]
-    [(and (isbool num) (isnum sofar)) (sumrec_assume_bool_num num sofar)]
-    [(and (isbool num) (isbool sofar)) (sumrec_assume_bool_bool num sofar)]))
-```
-
-However, this quickly explodes generated code size as we introduce more types
-and more arguments (it's (#types) _to the power of_ (#args), and for a
-general-purpose compiler we should avoid creating binaries that are exponential
-in the size of the source program!). The references above use dynamic
-information to avoid this ahead-of-time explosion. We need to be a bit more
-clever as well.
-
-For this extension, we'll pick a simple model that is surprisingly effective
-and uses the dynamic code-generation techniques we've been studying:
-
-> The **first time** a function is called, the types of the arguments are
-> likely the types that will be given to that function again in the future, and
-> it's worth specializing for that case.
-
-This would allow us to compile just _two_ versions of a function:
-
-- One that handles all possible combinations of arguments with all tag checks,
-  making no assumptions
-- One that is specialized to the types of the arguments seen for the first call
-  to the function
-
-The first version is the one generated by the standard compiler. Generating the
-second is where the dynamic work happens.
-
-There are a number of ways to set this up. We recommend making use of some of
-the _dynamic assembly editing_ features of `dynasm`. The
-[`alter`](https://docs.rs/dynasmrt/latest/dynasmrt/struct.Assembler.html#method.alter)
-method allows for changing already generated code. A short demo of `alter` is
-in the
-[`adder-dyn`](https://github.com/ucsd-compilers-s23/adder-dyn/blob/main/src/main.rs#L176)
-repository.
-
-The process of taking a running function, jumping to the compiler, rewriting
-the code of that function, then going back to it, involves some thought about
-stack manipulation manipulation. (In general, in real-world JIT compilers, the
-process of on-stack replacement (OSR) grows quite complex, with shuffling
-registers and converting between stack frame layouts.) Here's one way we
-recommend implementing the required behavior.
-
-- Start from your code for `eval` in the previous assignment (e.g. make sure
-  you're in the context of the compiler with all the necessary pieces imported)
-- On first compile, for each function, compile the “slow” version and put its
-  code at the label `slow_<function-name>:`.
-- Also compile a “stub” with the function's actual name that calls back into
-  a (Rust) function with the provided arguments and a reference to the (Snek)
-  function to be compiled:
-
-  ```
-  <function-name>:
-    mov rdi, <fun reference> ; The address of a reference, like a *const Definition
-    mov rsi, arg1
-    mov rdx, arg2
-    ... all args ...
-    jmp compile_opt_N
-
-  ; Just one copy of compile_opt_N in the generated code, not one per function
-  compile_opt_N:
-    call compile_opt_rust_N  ; 
-    jmp rax                  ; compile_opt_N will return a function pointer!
-                             ; depending on your calling convention, you may
-                             ; or may not need to clean up and set up some
-                             ; registers before the jmp to make the stack frame
-                             ; “look right”
-  ```
-- To get a reference to the Snek function being compiled, you can get a [raw
-  pointer](https://doc.rust-lang.org/std/primitive.pointer.html) to the actual
-  `Fun` definition object, and put the number of that address into the
-  generated code as an immediate value. You can then cast back to a
-  `&Definition` below. You could also store an index (in the `Vec<Definition>`
-  that likely makes up part of the AST), but you'd still need some way to pass
-  that vector back to the stub, below, so some raw address will probably be
-  needed. Think about lifetimes just as much as you need to make sure the AST
-  will be available and not dropped by the time this compilation happens!
-- The `compile_opt_rust_N` function will be implemented in Rust and have a
-  signature like:
-
-  ```
-  extern "C" fn compile_opt_rust_N(
-    def: *const Definition,
-    arg1: u64,
-    ...
-    argN: u64
-  ) {
-    // compile the definition and return a function pointer to the version to
-    // call
-  }
-  ```
-
-  In this Rust function you can compile the optimized version of the function
-  based on the given arguments' tags. You can probably re-use code you wrote
-  for the previous extension to compile the optimized version with known tags
-  for those arguments.
-
-- This code will likely use `alter` for two different purposes:
-
-  1. First, add a new label `fast_<function-name>` with the generated optimized
-  code at _the end_ of the generated code.
-  2. Then, _rewrite_ the body of `<function-name>` to have a conditional check
-  for the provided tags, and `jmp` to the `fast` or `slow` version as
-  appropriate (note that this is trivially a tail call)
-- Don't forget to get the address of the generated code that it can be called!
-  Future calls to `<function-name>` will use the overwritten code, but for this
-  first call you need to make sure to do the call yourself.
-- We recommend creating a few versions of `compile_opt_N` for argument list
-  lengths 0, 1, 2 until the pattern is clear, and only then try to generalize
-  to a varargs Rust function.
-
-There are definitely other ways to set this up, but we think this scheme can be
-made to work.
-
-There is a lot of thinking and debugging required here! Don't be surprised if
-this takes longer than the previous extensions; we don't have a great
-calibration of the expected pace of these, so there's no expectation that it
-takes (only) a week -- it may well take the rest of the quarter.
-
