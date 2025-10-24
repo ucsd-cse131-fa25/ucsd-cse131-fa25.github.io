@@ -5,7 +5,7 @@
 In this assignment you'll implement a compiler for a language called Diamondback,
 which has top-level function definitions.
 
-Get the assignment at <hhttps://classroom.github.com/a/HHd1j9p3> This will make
+Get the assignment at <https://classroom.github.com/a/FZ2iwp42> This will make
 a private-to-you copy of the repository hosted within the course's
 organization.  You can also access the public test code
 <https://github.com/ucsd-cse131-fa25/cobra-test> if you don't have
