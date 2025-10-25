@@ -11,7 +11,10 @@ review assignments by the end of the day on Wednesday, Oct 29. These are based o
 Assignment Sheet:
 <https://docs.google.com/spreadsheets/d/1JVrxUOXTJKvv6fQFgpC4W10ut7GpB0Sk3NdkCoXUO7o/edit?usp=sharing>
 
-You will be assigned 2 other compilers to review.
+Github Classroom:
+<https://classroom.github.com/a/uS6IyLBg>
+
+You will be assigned 2 other compilers to review. Accept the GitHub Classroom to get access to all the repositories.
 
 Your feedback will be **shared with the class (including the author of the
 compiler)**, so make sure to keep what you write professional and
