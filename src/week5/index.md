@@ -228,9 +228,7 @@ There are two things to consider here:
   
 Now we might have multiple helper functions that _preprocess_ our Exprs (for finding if we `set!` a var, if we call a `Expr::Fun`, if we simply use an `Expr::Id`, and so on). It might be nice to use a singular helper function that traverses our expr instead of rewriting the same traversal logic. This helper function can be called by other, more specific helper functions that try to match on the desired `Expr` we are looking for. The function header can look like:
 ```rust
-fn traverse_expr<F>(expr: &Expr, mut f: F) 
-where 
-    F: FnMut(&Expr)
+fn traverse_expr(expr: &Expr, f: &mut dyn FnMut(&Expr))
 ```
 Here we can pass in our `Expr` we want to traverse. We also pass a unique function `f` (which can be anonymous) that can be applied to something within our traverse_expr environment (perhaps called on the `expr` itself...). This function is called a closure, which can capture/close over variables from their environment. Capturing, in this case, means matching to the desired `Expr`!
 
