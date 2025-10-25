@@ -1,12 +1,12 @@
 ![caduceus](./caduceus.png)
 
-## Week 4: Caduceus, Due Wednesday, May 3, 10pm
+## Week 4: Caduceus, Due Wednesday, October 29, 11:59 PM
 
 In this assignment, you'll spend time reflecting on, and learning from, the
 designs you and others chose for PA4, Cobra.
 
 We will make PA4 compilers available to the class. We'll make the
-review assignments by the end of the day on Thursday, April 27. These are based on the Cobra implementatins uploaded to Gradescope:
+review assignments by the end of the day on Wednesday, Oct 29. These are based on the Cobra implementatins uploaded to Gradescope:
 
 Assignment Sheet:
 <https://docs.google.com/spreadsheets/d/1JVrxUOXTJKvv6fQFgpC4W10ut7GpB0Sk3NdkCoXUO7o/edit?usp=sharing>
