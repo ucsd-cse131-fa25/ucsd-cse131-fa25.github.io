@@ -3,15 +3,13 @@
 ## Week 4: Caduceus, Due Wednesday, May 3, 10pm
 
 In this assignment, you'll spend time reflecting on, and learning from, the
-designs you and others chose for PA3.
+designs you and others chose for PA4, Cobra.
 
-We will make PA3 compilers available to the class. Fill out this form by 8am on
-Thursday, April 27 if you'd like your compiler to be included. We'll make the
-review assignments by the end of the day on Thursday, April 27. Feel free to
-clean up or modify your repository prior to sharing it; we'll download what's
-at the repo link you give on Thursday:
+We will make PA4 compilers available to the class. We'll make the
+review assignments by the end of the day on Thursday, April 27. These are based on the Cobra implementatins uploaded to Gradescope:
 
-<https://docs.google.com/forms/d/e/1FAIpQLSeF-0Ihc-MGmGOIcO2_zyzJyfosXuyc5-2CJ-VpP57V6ZG-jA/viewform>
+Assignment Sheet:
+<https://docs.google.com/spreadsheets/d/1JVrxUOXTJKvv6fQFgpC4W10ut7GpB0Sk3NdkCoXUO7o/edit?usp=sharing>
 
 You will be assigned 2 other compilers to review.
 
@@ -19,22 +17,20 @@ Your feedback will be **shared with the class (including the author of the
 compiler)**, so make sure to keep what you write professional and
 constructive.
 
-### Assigned Compilers
-
-All submitted compilers and the instructions for downloading them are available
-via this EdStem post: https://edstem.org/us/courses/38748/discussion/3036419
+Note: You should be hopefully assigned a repo that isn't your own, but if I made a mistake, choose a different compiler to review and note this on the google form!
 
 ### Tracing the Compiler
 
-For **each** of the compilers you are reviewing, choose two programs that run
+For **each** of the compilers you are reviewing, choose an interesting program that runs
 successfully on the compiler under review (e.g. they match the correct
-behavior). Make sure that between them, they at least use:
+behavior). Make sure that between both programs you chose, it altogether uses at least two of:
 
   - A loop that runs several times and terminates
   - At least 2 different binary operators
   - `input`
+  - `set!` assignment to variables
 
-For each program you chose, show _three_ relevant code snippets from the
+For each program you chose, show at least _two_ relevant code snippets from the
 compiler that are critical to its compilation. For example, you might
 show the data structures used in the type checker, the code generation,
 and the parsing for a particular expression. Only choose the same snippet
@@ -42,18 +38,18 @@ of code for both programs if it behaves in an interestingly different way
 across the two.
 
 For each code snippet, write a sentence of how it relates to different parts
-of the program you're testing.
+of the program you're testing, or a cool way it might be implemented that you haven't thought of.
 
 You can use the same two programs on both compilers if you think they
 illustrate the behavior well.
 
-This means you should have a total of **twelve** code snippets (three per
+This means you should have a total of **four** code snippets (two per
 compiler, per two examples).
 
 ### Bugs, Missing Features, and Design Decisions
 
 For **each** compiler you are reviewing, choose a program that has different
-behavior than it should.
+behavior than it should, which can be for either AOT, JIT, or REPL.
 
 - If a key feature in the program isn't implemented, describe how you would
 add it to the compiler (see below for how to do this).
@@ -65,11 +61,13 @@ think this was a reasonable design decision. Describe as appropriate:
 
   1. If you think producing this answer instead made certain parts of the
   compiler design simpler or easier than matching the spec, and identify how.
-  3. If you think it's just a bug, and if so, how to fix it.
-  4. If you think it's a better design decision than what was chosen for Cobra.
+  2. If you think it's just a bug, and if so, how to fix it.
+  3. If you think it's a better design decision than what was chosen for Cobra.
 - If you think the compiler perfectly implements Cobra,
 explain what you tested to reach this conclusion and why you are confident
 that it does.
+
+This means you should have a total of **two** examples that might create unexpected behavior from the specification. We recommend you choose `-g` or the REPL to catch bugs/errors/or differences between all aspects of the compiler, not just only AOT or JIT.
 
 ### Lessons and Advice
 
@@ -86,9 +84,7 @@ based on reviewing it?
 
 ### Handin
 
-You will this assignment as a PDF, first with the pages containing the review
-of the first compiler you were assigned followed by pages containing the review
-of the second. Please start the review of the second compiler on a *new page*.
-(We wish you could submit and label 2 pdfs but Gradescope doesn't allow that).
+You will submit a PDF, first with the pages for your first compiler review and then followed by pages for your second compiler review. Label the submission number of the compiler you reviewed before your review. Please start the review of the second compiler on a *new page*.
+(We wish you could submit and label 2 pdfs but Gradescope doesn't allow that). 
 
 
