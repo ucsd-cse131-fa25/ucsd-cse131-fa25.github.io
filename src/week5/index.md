@@ -219,14 +219,16 @@ Make sure to not repeat machine code compiled for earlier functions. This can be
 ### Defines in the function body
 Make sure that `define`d variables in the function body will not be known (or inlined) when compiling the function. This is because we can use this function for later entries which may be using a different `define`d value for the same variable, and your function itself can even modify those variables! Therefore, these functions are not [_pure_](https://en.wikipedia.org/wiki/Pure_function). Could we possibly use a technique we already used for `set!` on a `define`d variable in Cobra?
 
-There are two things to consider here:
+There are many things to consider here:
 
-1. Our function `set!` a variable that is `define`d in the REPL body.
-    - If the function can modify the variable, we cannot inline its value for the entire prompt. This includes in the function body AND the function call site.
-2. Our function simply uses a variable that is `define`d in the REPL body.
-    - If the function only uses the variable, we can inline its value at the function call site, but not in the function body.
+1. Our function uses a variable that is `define`d in the REPL body.
+2. Our function `set!` a variable that is `define`d in the REPL body.
+3. Our function calls another function that may or may not `define`d a variable (or that function keeps calling other functions...)
+
+For simplicity, if we call any function, we do not know if it modifies the `define`d variables in the function call site, therefore, we cannot inline, and we must simply use a pointer to the heap for all `define` d variables. This is similar to how we handled `set!` for `define`d variables. Now also when we call any function in a prompt, we must use the heap. We can think of calling a function as something _unknown_, as in, we do not know what effects it can have on any `define`d variable.
   
-Now we might have multiple helper functions that _preprocess_ our Exprs (for finding if we `set!` a var, if we call a `Expr::Fun`, if we simply use an `Expr::Id`, and so on). It might be nice to use a singular helper function that traverses our expr instead of rewriting the same traversal logic. This helper function can be called by other, more specific helper functions that try to match on the desired `Expr` we are looking for. The function header can look like:
+### Extension:
+If you want to go a more complicated route with more optimization, you can have multiple preprocessing passes that check what global _effects_ our function calls have. If a `define`d variable is not impacted in the call site, we can inline the value! Now we might have multiple helper functions that _preprocess_ our Exprs (for finding if we `set!` a var, if we call a `Expr::Fun`, if we simply use an `Expr::Id`, and so on). It might be nice to use a singular helper function that traverses our expr instead of rewriting the same traversal logic. This helper function can be called by other, more specific helper functions that try to match on the desired `Expr` we are looking for. The function header can look like:
 ```rust
 fn traverse_expr(expr: &Expr, f: &mut dyn FnMut(&Expr))
 ```
