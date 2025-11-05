@@ -1,134 +1,138 @@
-![egg-eater](./egg-eater.jpg)
+![egg-eater](./eastern-diamondback.jpg)
 
-# Week 6-7: Egg Eater, Due Tuesday, May 23 (Open Collaboration)
+# Week 6: Eastern Diamondback
 
-In this assignment you'll implement _heap allocated structures_ in your
-compiler.
+In this assignment you'll implement a _static type checker_ for Diamondback
+(with a few extensions).
 
-## Setup
+## Language
 
-There is no starter repository for this assignment. You should pick a starting
-point for the compiler based on your own previous work or provided code from
-class/from the code review assignment. Functions are necessary, but you can get
-away with 1- and 2-argument functions, so you can start from code from class.
+Eastern Diamondback has two additions atop regular Diamondback. The language is
+extended with _annotated functions_ and _casts_:
 
-## Your Additions
+```
+<type> := Num | Bool | Nothing | Anything
+<defn> := (fun (<name> (<name> : <type>)*) <expr>)
+       | ... as before ...
+<expr> := (cast <type> <expr>)
+       | ... as before ...
+<prog> := ... as before ...
+<repl> := ... as before ...
+```
 
-You should add the following features:
+### (Dynamic) Semantics
 
-1. Some mechanism for heap-allocation of an _arbitrary number_ of values. That
-is, the `(pair <expr> <expr>)` from class would _not_ be sufficient because it
-only supports two positions. The easiest thing might be to add tuples with any
-number of positions in the constructor (e.g. `(tuple <expr>+)`). You could also
-consider adding arrays/vectors that initialize with a _number_ of slots/words
-to create (e.g. `(array <expr>)` where the `<expr>` evaluates to a value).
-There are other creative options, but you're only required to pick and
-implement one.
+The dynamic semantics of `(fun (<name> (<name> : <type>)*) <expr>)` are
+_exactly_ the same as the dynamic semantics of `(fun (<name> <name>*) <expr>)`.
+That is, the dynamic semantics are the same as ignoring the types and compiling
+the corresponding un-annotated function.
 
-2. An expression for _lookup_ that allows computed indexed access. That is, you
-should have an expression like
+The dynamic semantics of `(cast <type> <expr>)` are:
 
-  ```
-  (index <expr> <expr>)
-  ```
+- Evaluate `<expr>` to a value `v` then:
+  - If `<type>` is `Num` and `v` is a number, evaluate to `v`
+  - If `<type>` is `Num` and `v` is a boolean, error with a string containing `"bad cast"`
+  - If `<type>` is `Bool` and `v` is a number, error with t a string containing `"bad cast"`
+  - If `<type>` is `Bool` and `v` is a boolean, evaluate to `v`
+  - If `<type>` is `Nothing`, error with a string containing `"bad cast"`
+  - If `<type>` is `Anything`, evaluate to `v`
 
-  where the first expression evaluates to a heap-allocated value and the second
-  evaluates to a _number_, and the value at that index is returned.
+### (Static) Semantics
 
-  This expression _must_ report a dynamic error if an out-of-bounds index is
-  given.
+The static semantics—that is, the potential compiler errors—of Eastern
+Diamondback are where most of its interesting behavior is found. This language
+has a type-checked mode where many errors that would have been previously
+reported dynamically are reported at compile time.
 
-3. If a heap-allocated value is the result of a program or printed by `print`,
-all of its contents should be printed in some format that makes it clear which
-values are part of the same heap data. For example, in the output all the
-values associated with a particular location may be enclosed in parentheses.
+The following are the _type rules_ for the expressions in the language. There
+are a few notational conventions:
 
-4. Any other features needed to express the programs listed in the section on
-required tests below.
+- `e : T` means “expression `e` has type `T`”
+- `e ! "S"` means “expression `e` has type error with message `S`”
+- `x : T` means “x has type T in the environment”
+- `e ≤ T` means “`e` has a type that is a subtype of `T`”
+- `T1 ≤ T2` means “T1 is a subtype of T2”
+- `≮` means “is not a subtype of”
 
-The following features are explicitly optional and **not** required:
+```
+<number> : Num
 
-- Updating elements of heap-allocated values
-- Structural equality (`=` can mean physical/reference equality)
-- Detecting when out-of-memory occurs. Your language should be able to allocate
-  at least a few tens of thousands of words, but doesn't need to detect or
-  recover from filling up memory.
+true : Bool
 
-## Required Tests
+false : Bool
 
-- `input/simple_examples.boa` – A program with a number of simple examples of
-  constructing and accessing heap-allocated data in your language.
-- `input/error-tag.boa` – A program with a runtime tag-checking error related
-  to heap-allocated values.
-- `input/error-bounds.boa` – A  program with a runtime error related to
-  out-of-bounds indexing of heap-allocated values.
-- `input/error3.boa` – A third program with a different error than the other
-  two related to heap-allocated values.
-- `input/points.boa` – A program with a function that takes an x and a y
-  coordinate and produces a structure with those values, and a function that
-  takes two points and returns a new point with their x and y coordinates added
-  together, along with several tests that print example output from calling
-  these functions.
-- `input/bst.boa` – A program that illustrates how your language enables the
-  creation of binary search trees, and implements functions to add an element
-  and check if an element is in the tree. Include several tests that print
-  example output from calling these functions.
+input : Anything
+
+x : T
+  when x : T is in the environment
+  
+(let ((x1 e1) (x2 e2) ...) e) : T
+  when e1 : T1, e2 : T2 with x1 ← T1, ...
+  and e : T with x1 : T1, x2 : T2, ...
+
+(add1 e) : Num
+  when e ≤ Num
+
+(add1 e) ! "Expected number"
+  when e ≮ Num
+
+(op e1 e2) : Num
+  when e1 ≤ Num and e2 ≤ Num
+  and op is +, -, *
+
+(op e1 e2) !! "Expected number"
+  when e1 ≮ Num or e2 ≮ Num
+  and op is +, -, *
+
+(op e1 e2) :: Bool
+  when e1 :: Num and e2 :: Num
+  and op is <, >, <=, >=
+
+(op e1 e2) !! "Expected number"
+  when e1 or e2 :: Bool or Anything
+  and op is <, >, <=, >=
+
+(= e1 e2) :: Bool
+  when e1 :: Num and e2 :: Num
+
+(= e1 e2) :: Bool
+  when e1 :: Bool and e2 :: Bool
+
+(= e1 e2) !! "Mismatched Types"
+  when e1 :: T1 and e2 :: T2
+
+(set! x e) :: T
+  when e :: T
+   and x :: T in the environment
+   
+(set! x e) !! "Invalid set!"
+  when e :: T1
+   and x :: T2 in the environment
+   and T1 !< T2
+   
+(if e1 e2 e3) : T1 ∪ T2
+  when e2 : T1
+   and e3 : T2
+   and e1 : Bool
+ 
+(block e1 e2 ... en) : Tn
+  when e1 : T1, e2 : T2, en : Tn
+ 
+(loop e) : T1 ∪ T2 ∪ ... ∪ Tn
+  when e1 : T1, e2 : T2, ... en : Tn
+   and e1, e2, ... en are (break e) subexpressions of e not nested in another break
+
+(break e) : Nothing
+
+(f e1 e2 ...) : T
+  when (fun (f x1 x2 ...) e) is defined (an unannotated function)
+   and e1 : T1, e2 : T2, ...
+
+(f e1 e2 ...) : T
+  when (fun (f (x1 : T1) (x2 : T2) ...) e) is defined
+   and e1 ≤ T1, e2 ≤ T2, ...
+```
 
 
-## Handin and Design Document
 
-There are no autograding tests or associated points, your submission will be
-graded based on an associated design document you submit, summarized below.
-
-Your PDF should contain:
-
-- The concrete grammar of your language, pointing out and describing the new
-  concrete syntax beyond Diamondback/your starting point.  Graded on clarity
-  and completeness (it’s clear what’s new, everything new is there) and if
-  it’s accurately reflected by your parse implementation.
-- A diagram of how heap-allocated values are arranged on the heap, including
-  any extra words like the size of an allocated value or other metadata. Graded
-  on clarity and completeness, and if it matches the implementation of heap
-  allocation in the compiler.
-- The required tests above. In addition to appearing in the code you submit,
-  they should be in the PDF). These will be partially graded on your
-  explanation and provided code, and partially on if your compiler implements
-  them according to your expectations.
-  - For each of the `error` files, show running the compiled code at the
-    terminal and explain in which phase your compiler and/or runtime catches
-    the error.
-  - For the others, include the actual output of running the program (in terms
-    of stdout/stderr), the output you’d like them to have (if you couldn't get
-    something working) and any notes on interesting features of that output.
-- Pick two other programming languages you know that support heap-allocated
-  data, and describe why your language’s design is more like one than the
-  other.
-- A list of the resources you used to complete the assignment, including
-  message board posts, online resources (including resources outside the course
-  readings like Stack Overflow or blog posts with design ideas), and students
-  or course staff discussions you had in-person. Please do collaborate and give
-  credit to your collaborators.
-
-Write a professional document that could be shared with a team that works on
-the language, or users of it, to introduce them to it.
-
-Submit a PDF containing this writeup to the `pa6-doc` assignment. Submit your
-code, including all tests, and **also including the same PDF in the root of the
-repository as design.pdf**, to the `pa6-code` assignment. This dual submission
-is best for us to review and grade the assignments.
-
-Happy hacking!
-
-## Extensions
-
-- Add structure update (e.g. `setfst!` from class)
-- Add structural equality (choose a new operator if you like)
-- Update your compiler with extensions from previous assignments to support
-  heap allocation (e.g. REPL, JIT, and so on). Leave out any new tag checks
-  related to heap-allocated values as appropriate.
-
-## Grading
-
-Grading will generally based on clarity and completeness of your writing, and
-based on implementing features and tests that match the descriptions above.
 
