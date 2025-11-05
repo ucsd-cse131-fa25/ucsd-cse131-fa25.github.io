@@ -48,6 +48,12 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 6 - Types, Towards Optimization
+
+- [Lerner on Type Checking](https://course.ccs.neu.edu/cs4410sp23/lec_type-checking_notes.html), [Lerner on Type Inference](https://course.ccs.neu.edu/cs4410sp23/lec_type-inference_notes.html)
+
+### Week 5 - Code Reviews (no lecture)
+
 ### Week 4 -Functions and Calling Conventions
 - [Wednesday Handout](./notes/UCSD-Compilers-S23-Week4-Wednesday.pdf) - [Wednesday implemented; scroll to BOTTOM to see full copilot chat log](https://github.com/ucsd-cse131-fa25/2025-09-26-lecture/commit/fdf56c737f1e18deb07c98c9b3bf25ef052a3166)
 - Reading and Resources:
