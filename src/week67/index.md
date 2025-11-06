@@ -185,6 +185,16 @@ Each of the existing options can have `t` added:
   errors (if any), and if the program type-checks successfully it should print
   its type (one of `Num`, `Bool`, `Any`, `Nothing`)
 
+We suggest some error messages above, but for type errors we **only** require
+that the printed message say “Type error” somewhere. It can be complicated to
+define which error should be reported first in large programs, etc, so we are
+defining things such that if a program type-checks, it calculates the type for
+main, and if it does not, it has _some_ static error that says “Type error”.
+
+Note that you should _not_ need to change any existing cases in code generation,
+just add 2 (straightforward) cases for annotated definitions and for cast. The
+vast majority of the work should just be for implementing the type checker.
+
 ### Examples
 
 When not in type-checking mode, all programs should behave exactly the same as
@@ -263,4 +273,7 @@ that output into files `improvement-commit1.txt` and `improvement-commit2.txt`, 
 
 ```
 git show 435ccbcbecfb60339c4cb7011cad2c965325d869 > improvement-commit1.txt
-git show 9dec3506e902ca32f80bd536b5cd79679ec729d0 > improvement-commit1.txt
+git show 9dec3506e902ca32f80bd536b5cd79679ec729d0 > improvement-commit2.txt
+```
+
+Include these files with your submission.
