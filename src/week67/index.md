@@ -48,7 +48,6 @@ The following are the _type rules_ for the expressions in the language. There
 are a few notational conventions:
 
 - `Γ e : T` means “expression `e` has type `T` in environment Γ”
-- `Γ e ! "S"` means “expression `e` has type error with message `S` in environment Γ”
 - `Γ e ≤ T` means `Γ e : T'` and `T' ≤ T`
 - `T1 ≤ T2` means “T1 is a subtype of T2”
 - `≮` means “is not a subtype of”
@@ -73,23 +72,12 @@ are a few notational conventions:
 Γ (add1 e) : Num
   when Γ e ≤ Num
 
-Γ (add1 e) ! "Expected number"
-  when Γ e ≮ Num
-
 Γ (op e1 e2) : Num
   when Γ e1 ≤ Num and Γ e2 ≤ Num
   and op is +, -, *
 
-Γ (op e1 e2) !! "Expected number"
-  when Γ e1 ≮ Num or Γ e2 ≮ Num
-  and op is +, -, *
-
 Γ (op e1 e2) : Bool
   when Γ e1 ≤ Num and Γ e2 ≤ Num
-  and op is <, >, <=, >=
-
-Γ (op e1 e2) ! "Expected number"
-  when Γ e1 ≮ Num or Γ e2 ≮ Num
   and op is <, >, <=, >=
 
 Γ (= e1 e2) : Bool
@@ -101,11 +89,6 @@ are a few notational conventions:
 Γ (set! x e) : T
   when e : T
    and Γ(x) ≤ T
-   
-Γ (set! x e) ! "Invalid set!"
-  when e : T1
-   and Γ(x) = T2
-   and T1 ≮ T2
    
 Γ (if e1 e2 e3) : T1 ∪ T2
   when Γ e2 : T1
