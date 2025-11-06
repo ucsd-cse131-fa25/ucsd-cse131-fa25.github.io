@@ -246,4 +246,21 @@ The following examples all asssume _type-checking mode is on_.
   (+ (cast Num input) 3)
   ```
 
-  
+### Refactoring and Cleanup
+
+As part of this assignment, you should also do refactorings and cleanups to your
+compiler. We want you to make **2** commits that are _solely for improving your
+compiler's code quality_ without adding new features. These commits should do
+one of:
+
+- Reduce the number of lines of code by removing duplication or simplifying repeated patterns
+- Move code into places that you find more logical (could be separate files, or could just be organization in the file)
+- Add comments or change formatting of the generated assembly to make it easier to debug
+- Add (conditional) print statements or other information-gathering code to your compiler to help with debugging
+
+Make the commits, and then show them with `git show <commit-hash-here>`, and put
+that output into files `improvement-commit1.txt` and `improvement-commit2.txt`, e.g.:
+
+```
+git show 435ccbcbecfb60339c4cb7011cad2c965325d869 > improvement-commit1.txt
+git show 9dec3506e902ca32f80bd536b5cd79679ec729d0 > improvement-commit1.txt
