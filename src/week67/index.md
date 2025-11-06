@@ -47,10 +47,9 @@ reported dynamically are reported at compile time.
 The following are the _type rules_ for the expressions in the language. There
 are a few notational conventions:
 
-- `e : T` means “expression `e` has type `T`”
-- `e ! "S"` means “expression `e` has type error with message `S`”
-- `x : T` means “x has type T in the environment”
-- `e ≤ T` means “`e` has a type that is a subtype of `T`”
+- `Γ e : T` means “expression `e` has type `T` in environment Γ”
+- `Γ e ! "S"` means “expression `e` has type error with message `S` in environment Γ”
+- `Γ e ≤ T` means `Γ e : T'` and `T' ≤ T`
 - `T1 ≤ T2` means “T1 is a subtype of T2”
 - `≮` means “is not a subtype of”
 - `Γ` is a type environment of the shape `[x1 : T1][x2 : T2]...`, and `Γ(x)` means “look up x in Γ”
@@ -131,4 +130,43 @@ are a few notational conventions:
 Γ (f e1 e2 ...) : T
   when (fun (f (x1 : T1) (x2 : T2) ...) e) is defined
    and e1 ≤ T1, e2 ≤ T2, ...
+
+Γ (cast T e) : T
+  when Γ e : T'
 ```
+
+These rules refer to union `∪` and subtyping `≤`, which are defined as:
+
+```
+∀ T . T ∪ Anything = Anything
+∀ T . Anything ∪ T = Anything
+∀ T . T ∪ T = T
+∀ T . T ∪ Nothing = T
+∀ T . Nothing ∪ T = T
+Num ∪ Bool = Anything
+Bool ∪ Num = Anything
+```
+
+```
+∀ T . T ≤ T = true
+∀ T . T ≤ Anything = true
+∀ T . Nothing ≤ T = true
+```
+
+### Eastern Diamondback
+
+Your task is to add a new _mode_ to your compiler for type checking.
+
+Each of the existing options can have `t` added:
+
+- `-tc <prog>.snek <prog>.s` should run the type checker, report any type errors as compile errors,
+  and generate the compiled output if there were no compile errors
+- `-tg <prog>.snek <prog>.s <input>` and `-te <prog>.snek <input>` should behave
+  like `-e` and `-g`, except they should use the
+  _provided value of `input`_ to calculate `input`'s type. That is they should
+  use an updated rule for `input` that `Γ input : Num` and/or `Γ input : Bool`
+  depending on what was provided
+- `-ti` should behave like `-i`, but all REPL entries should be type-checked and
+  only evaluated if they have no type errors
+- Finally, `-t <prog>.snek` should _just_ typecheck the program and report
+  errors (if any)
