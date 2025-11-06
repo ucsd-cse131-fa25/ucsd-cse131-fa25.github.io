@@ -11,8 +11,8 @@ Eastern Diamondback has two additions atop regular Diamondback. The language is
 extended with _annotated functions_ and _casts_:
 
 ```
-<type> := Num | Bool | Nothing | Anything
-<defn> := (fun (<name> (<name> : <type>)*) <expr>)
+<type> := Num | Bool | Nothing | Any
+<defn> := (fun (<name> (<name> : <type>)*) -> <type> <expr>)
        | ... as before ...
 <expr> := (cast <type> <expr>)
        | ... as before ...
@@ -35,7 +35,7 @@ The dynamic semantics of `(cast <type> <expr>)` are:
   - If `<type>` is `Bool` and `v` is a number, error with t a string containing `"bad cast"`
   - If `<type>` is `Bool` and `v` is a boolean, evaluate to `v`
   - If `<type>` is `Nothing`, error with a string containing `"bad cast"`
-  - If `<type>` is `Anything`, evaluate to `v`
+  - If `<type>` is `Any`, evaluate to `v`
 
 ### (Static) Semantics
 
@@ -61,7 +61,7 @@ are a few notational conventions:
 
 Γ false : Bool
 
-Γ input : Anything
+Γ input : Any
 
 Γ x : T
   when Γ(x) = T
@@ -123,39 +123,52 @@ are a few notational conventions:
 Γ (break e) : Nothing
   when Γ e : T
 
-Γ (f e1 e2 ...) : T
+Γ (f e1 e2 ...) : Any
   when (fun (f x1 x2 ...) e) is defined (an unannotated function)
-   and e1 : T1, e2 : T2, ...
+   and Γ e1 : T1, Γ e2 : T2, ...
 
 Γ (f e1 e2 ...) : T
-  when (fun (f (x1 : T1) (x2 : T2) ...) e) is defined
+  when (fun (f (x1 : T1) (x2 : T2) ...) -> T e) is defined (an annotated function)
    and e1 ≤ T1, e2 ≤ T2, ...
 
 Γ (cast T e) : T
   when Γ e : T'
 ```
 
+Functions don't have a type calculated for them like expressions, but need to be
+checked. For these we just write `ok` if they successfully type-check.
+
+```
+(fun (f x1 x2 ...) e) : ok        # case for un-annotated functions
+  when [x1 : Any][x2 : Any]... e : Any
+
+(fun (f (x1 : T1) (x2 : T2) ...) -> T e) # case for annotated functions
+  when [x1 : T1][x2 : T2]... e : T
+```
+
 These rules refer to union `∪` and subtyping `≤`, which are defined as:
 
 ```
-∀ T . T ∪ Anything = Anything
-∀ T . Anything ∪ T = Anything
+∀ T . T ∪ Any = Any
+∀ T . Any ∪ T = Any
 ∀ T . T ∪ T = T
 ∀ T . T ∪ Nothing = T
 ∀ T . Nothing ∪ T = T
-Num ∪ Bool = Anything
-Bool ∪ Num = Anything
+Num ∪ Bool = Any
+Bool ∪ Num = Any
 ```
 
 ```
 ∀ T . T ≤ T = true
-∀ T . T ≤ Anything = true
+∀ T . T ≤ Any = true
 ∀ T . Nothing ≤ T = true
 ```
 
-### Eastern Diamondback
+### Implementation
 
-Your task is to add a new _mode_ to your compiler for type checking.
+Your task is to add a new _mode_ to your compiler for type checking, following
+the typing rules above, and to add syntax and semantics for `cast` expressions
+and functions with annotations.
 
 Each of the existing options can have `t` added:
 
@@ -170,3 +183,35 @@ Each of the existing options can have `t` added:
   only evaluated if they have no type errors
 - Finally, `-t <prog>.snek` should _just_ typecheck the program and report
   errors (if any)
+
+### Examples
+
+When not in type-checking mode, all programs should behave exactly the same as
+they did on Diamondback.
+
+The following examples all asssume _type-checking mode is on_.
+
+
+- ```
+  # No type errors, produces 25:
+  (fun (f (x : Num) (y : Num)) -> Num
+    (+ (* x x) (* y y)))
+  (f 3 4)
+  ```
+  
+  
+- ```
+  # No type errors, produces 25
+  (fun (f x y)
+    (let ((x (cast Num x)) (y (cast Num y)))
+      (+ (* x x) (* y y))))
+  (f 3 4)
+  ```
+  
+- ```
+  # Type error because `x` has type `Any` in `(* x x)` which is not allowed
+  (fun (f x y)
+    (+ (* x x) (* y y)))
+  (f 3 4)
+  ```
+- ```
