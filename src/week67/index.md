@@ -182,7 +182,8 @@ Each of the existing options can have `t` added:
 - `-ti` should behave like `-i`, but all REPL entries should be type-checked and
   only evaluated if they have no type errors
 - Finally, `-t <prog>.snek` should _just_ typecheck the program and report
-  errors (if any)
+  errors (if any), and if the program type-checks successfully it should print
+  its type (one of `Num`, `Bool`, `Any`, `Nothing`)
 
 ### Examples
 
@@ -214,4 +215,35 @@ The following examples all asssume _type-checking mode is on_.
     (+ (* x x) (* y y)))
   (f 3 4)
   ```
+  
 - ```
+  # Type-checks with type Nothing
+  (loop 0)
+  ```
+
+- ```
+  # Type-checks with type Anything
+  (loop (block (break 1) (break true)))
+  ```
+
+- ```
+  # Type-checks with type Num
+  (loop (let (x 100) (if (> (cast Num input) x) (break x) (break 100))))
+  ```
+
+- ```
+  # Type-checks with type Anything
+  (if (isnum input) input false)
+  ```
+
+- ```
+  # Type error
+  (+ input 3)
+  ```
+
+- ```
+  # Type-checks with type Num 
+  (+ (cast Num input) 3)
+  ```
+
+  
