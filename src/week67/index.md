@@ -53,86 +53,82 @@ are a few notational conventions:
 - `e ≤ T` means “`e` has a type that is a subtype of `T`”
 - `T1 ≤ T2` means “T1 is a subtype of T2”
 - `≮` means “is not a subtype of”
+- `Γ` is a type environment of the shape `[x1 : T1][x2 : T2]...`, and `Γ(x)` means “look up x in Γ”
 
 ```
-<number> : Num
+Γ <number> : Num
 
-true : Bool
+Γ true : Bool
 
-false : Bool
+Γ false : Bool
 
-input : Anything
+Γ input : Anything
 
-x : T
-  when x : T is in the environment
+Γ x : T
+  when Γ(x) = T
   
-(let ((x1 e1) (x2 e2) ...) e) : T
-  when e1 : T1, e2 : T2 with x1 ← T1, ...
-  and e : T with x1 : T1, x2 : T2, ...
+Γ (let ((x1 e1) (x2 e2) ...) e) : T
+  when Γ e1 : T1, Γ[x1 : T1] e2 : T2, ...
+  and Γ[x1 : T1][x2 : T2]... e : T
 
-(add1 e) : Num
-  when e ≤ Num
+Γ (add1 e) : Num
+  when Γ e ≤ Num
 
-(add1 e) ! "Expected number"
-  when e ≮ Num
+Γ (add1 e) ! "Expected number"
+  when Γ e ≮ Num
 
-(op e1 e2) : Num
-  when e1 ≤ Num and e2 ≤ Num
+Γ (op e1 e2) : Num
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
   and op is +, -, *
 
-(op e1 e2) !! "Expected number"
-  when e1 ≮ Num or e2 ≮ Num
+Γ (op e1 e2) !! "Expected number"
+  when Γ e1 ≮ Num or Γ e2 ≮ Num
   and op is +, -, *
 
-(op e1 e2) :: Bool
-  when e1 :: Num and e2 :: Num
+Γ (op e1 e2) : Bool
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
   and op is <, >, <=, >=
 
-(op e1 e2) !! "Expected number"
-  when e1 or e2 :: Bool or Anything
+Γ (op e1 e2) ! "Expected number"
+  when Γ e1 ≮ Num or Γ e2 ≮ Num
   and op is <, >, <=, >=
 
-(= e1 e2) :: Bool
-  when e1 :: Num and e2 :: Num
+Γ (= e1 e2) : Bool
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
 
-(= e1 e2) :: Bool
-  when e1 :: Bool and e2 :: Bool
+Γ (= e1 e2) : Bool
+  when Γ e1 ≤ Bool and Γ e2 ≤ Bool
 
-(= e1 e2) !! "Mismatched Types"
-  when e1 :: T1 and e2 :: T2
-
-(set! x e) :: T
-  when e :: T
-   and x :: T in the environment
+Γ (set! x e) : T
+  when e : T
+   and Γ(x) ≤ T
    
-(set! x e) !! "Invalid set!"
-  when e :: T1
-   and x :: T2 in the environment
-   and T1 !< T2
+Γ (set! x e) ! "Invalid set!"
+  when e : T1
+   and Γ(x) = T2
+   and T1 ≮ T2
    
-(if e1 e2 e3) : T1 ∪ T2
-  when e2 : T1
-   and e3 : T2
-   and e1 : Bool
+Γ (if e1 e2 e3) : T1 ∪ T2
+  when Γ e2 : T1
+   and Γ e3 : T2
+   and Γ e1 : Bool
  
-(block e1 e2 ... en) : Tn
-  when e1 : T1, e2 : T2, en : Tn
+Γ (block e1 e2 ... en) : Tn
+  when Γ e1 : T1, Γ e2 : T2, ..., Γ en : Tn
  
-(loop e) : T1 ∪ T2 ∪ ... ∪ Tn
-  when e1 : T1, e2 : T2, ... en : Tn
+Γ (loop e) : T1 ∪ T2 ∪ ... ∪ Tn
+  when Γ1 e1 : T1, Γ2 e2 : T2, ... Γn en : Tn
    and e1, e2, ... en are (break e) subexpressions of e not nested in another break
+   and Γ1, Γ2, ..., Γn are the environments for the corresponding expressions
 
-(break e) : Nothing
+Γ (break e) : Nothing
+  when Γ e : T
 
-(f e1 e2 ...) : T
+Γ (f e1 e2 ...) : T
   when (fun (f x1 x2 ...) e) is defined (an unannotated function)
    and e1 : T1, e2 : T2, ...
 
-(f e1 e2 ...) : T
+Γ (f e1 e2 ...) : T
   when (fun (f (x1 : T1) (x2 : T2) ...) e) is defined
    and e1 ≤ T1, e2 ≤ T2, ...
 ```
-
-
-
-
