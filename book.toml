@@ -7,3 +7,6 @@ title = "Compiler Construction – Fall 2025 Edition"
 
 [output.html.playground]
 runnable = false
+
+[output.html]
+mathjax-support = true

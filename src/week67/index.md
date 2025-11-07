@@ -1,134 +1,264 @@
-![egg-eater](./egg-eater.jpg)
+![egg-eater](./eastern-diamondback.jpg)
 
-# Week 6-7: Egg Eater, Due Tuesday, May 23 (Open Collaboration)
+# Week 6: Eastern Diamondback
 
-In this assignment you'll implement _heap allocated structures_ in your
-compiler.
+**Due 11:59pm on Monday, November 17.**
 
-## Setup
+In this assignment you'll implement a _static type checker_ for Diamondback
+(with a few extensions). The GitHub classroom is at: https://classroom.github.com/a/fFC2jNSB
 
-There is no starter repository for this assignment. You should pick a starting
-point for the compiler based on your own previous work or provided code from
-class/from the code review assignment. Functions are necessary, but you can get
-away with 1- and 2-argument functions, so you can start from code from class.
+## Language
 
-## Your Additions
+Eastern Diamondback has two additions atop regular Diamondback. The language is
+extended with _annotated functions_ and _casts_:
 
-You should add the following features:
+```
+<type> := Num | Bool | Nothing | Any
+<defn> := (fun (<name> (<name> : <type>)*) -> <type> <expr>)
+       | ... as before ...
+<expr> := (cast <type> <expr>)
+       | ... as before ...
+<prog> := ... as before ...
+<repl> := ... as before ...
+```
 
-1. Some mechanism for heap-allocation of an _arbitrary number_ of values. That
-is, the `(pair <expr> <expr>)` from class would _not_ be sufficient because it
-only supports two positions. The easiest thing might be to add tuples with any
-number of positions in the constructor (e.g. `(tuple <expr>+)`). You could also
-consider adding arrays/vectors that initialize with a _number_ of slots/words
-to create (e.g. `(array <expr>)` where the `<expr>` evaluates to a value).
-There are other creative options, but you're only required to pick and
-implement one.
+### (Dynamic) Semantics
 
-2. An expression for _lookup_ that allows computed indexed access. That is, you
-should have an expression like
+The dynamic semantics of `(fun (<name> (<name> : <type>)*) <expr>)` are
+_exactly_ the same as the dynamic semantics of `(fun (<name> <name>*) <expr>)`.
+That is, the dynamic semantics are the same as ignoring the types and compiling
+the corresponding un-annotated function.
 
+The dynamic semantics of `(cast <type> <expr>)` are:
+
+- Evaluate `<expr>` to a value `v` then:
+  - If `<type>` is `Num` and `v` is a number, evaluate to `v`
+  - If `<type>` is `Num` and `v` is a boolean, error with a string containing `"bad cast"`
+  - If `<type>` is `Bool` and `v` is a number, error with t a string containing `"bad cast"`
+  - If `<type>` is `Bool` and `v` is a boolean, evaluate to `v`
+  - If `<type>` is `Nothing`, error with a string containing `"bad cast"`
+  - If `<type>` is `Any`, evaluate to `v`
+
+### (Static) Semantics
+
+The static semantics—that is, the potential compiler errors—of Eastern
+Diamondback are where most of its interesting behavior is found. This language
+has a type-checked mode where many errors that would have been previously
+reported dynamically are reported at compile time.
+
+The following are the _type rules_ for the expressions in the language. There
+are a few notational conventions:
+
+- `Γ e : T` means “expression `e` has type `T` in environment Γ”
+- `Γ e ≤ T` means `Γ e : T'` and `T' ≤ T`
+- `T1 ≤ T2` means “T1 is a subtype of T2”
+- `≮` means “is not a subtype of”
+- `Γ` is a type environment of the shape `[x1 : T1][x2 : T2]...`, and `Γ(x)` means “look up x in Γ”
+
+```
+Γ <number> : Num
+
+Γ true : Bool
+
+Γ false : Bool
+
+Γ input : Any
+
+Γ x : T
+  when Γ(x) = T
+  
+Γ (let ((x1 e1) (x2 e2) ...) e) : T
+  when Γ e1 : T1, Γ[x1 : T1] e2 : T2, ...
+  and Γ[x1 : T1][x2 : T2]... e : T
+
+Γ (add1 e) : Num
+  when Γ e ≤ Num
+
+Γ (op e1 e2) : Num
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
+  and op is +, -, *
+
+Γ (op e1 e2) : Bool
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
+  and op is <, >, <=, >=
+
+Γ (= e1 e2) : Bool
+  when Γ e1 ≤ Num and Γ e2 ≤ Num
+
+Γ (= e1 e2) : Bool
+  when Γ e1 ≤ Bool and Γ e2 ≤ Bool
+
+Γ (set! x e) : T
+  when e : T
+   and Γ(x) ≤ T
+   
+Γ (if e1 e2 e3) : T1 ∪ T2
+  when Γ e2 : T1
+   and Γ e3 : T2
+   and Γ e1 : Bool
+ 
+Γ (block e1 e2 ... en) : Tn
+  when Γ e1 : T1, Γ e2 : T2, ..., Γ en : Tn
+ 
+Γ (loop e) : T1 ∪ T2 ∪ ... ∪ Tn
+  when Γ1 e1 : T1, Γ2 e2 : T2, ... Γn en : Tn
+   and e1, e2, ... en are (break e) subexpressions of e not nested in another break
+   and Γ1, Γ2, ..., Γn are the environments for the corresponding expressions
+
+Γ (break e) : Nothing
+  when Γ e : T
+
+Γ (f e1 e2 ...) : Any
+  when (fun (f x1 x2 ...) e) is defined (an unannotated function)
+   and Γ e1 : T1, Γ e2 : T2, ...
+
+Γ (f e1 e2 ...) : T
+  when (fun (f (x1 : T1) (x2 : T2) ...) -> T e) is defined (an annotated function)
+   and e1 ≤ T1, e2 ≤ T2, ...
+
+Γ (cast T e) : T
+  when Γ e : T'
+```
+
+Functions don't have a type calculated for them like expressions, but need to be
+checked. For these we just write `ok` if they successfully type-check.
+
+```
+(fun (f x1 x2 ...) e) : ok        # case for un-annotated functions
+  when [x1 : Any][x2 : Any]... e : Any
+
+(fun (f (x1 : T1) (x2 : T2) ...) -> T e) # case for annotated functions
+  when [x1 : T1][x2 : T2]... e : T
+```
+
+These rules refer to union `∪` and subtyping `≤`, which are defined as:
+
+```
+∀ T . T ∪ Any = Any
+∀ T . Any ∪ T = Any
+∀ T . T ∪ T = T
+∀ T . T ∪ Nothing = T
+∀ T . Nothing ∪ T = T
+Num ∪ Bool = Any
+Bool ∪ Num = Any
+```
+
+```
+∀ T . T ≤ T = true
+∀ T . T ≤ Any = true
+∀ T . Nothing ≤ T = true
+```
+
+### Implementation
+
+Your task is to add a new _mode_ to your compiler for type checking, following
+the typing rules above, and to add syntax and semantics for `cast` expressions
+and functions with annotations.
+
+Each of the existing options can have `t` added:
+
+- `-tc <prog>.snek <prog>.s` should run the type checker, report any type errors as compile errors,
+  and generate the compiled output if there were no compile errors
+- `-tg <prog>.snek <prog>.s <input>` and `-te <prog>.snek <input>` should behave
+  like `-e` and `-g`, except they should use the
+  _provided value of `input`_ to calculate `input`'s type. That is they should
+  use an updated rule for `input` that `Γ input : Num` and/or `Γ input : Bool`
+  depending on what was provided
+- `-ti` should behave like `-i`, but all REPL entries should be type-checked and
+  only evaluated if they have no type errors
+- Finally, `-t <prog>.snek` should _just_ typecheck the program and report
+  errors (if any), and if the program type-checks successfully it should print
+  its type (one of `Num`, `Bool`, `Any`, `Nothing`)
+
+We suggest some error messages above, but for type errors we **only** require
+that the printed message say “Type error” somewhere. It can be complicated to
+define which error should be reported first in large programs, etc, so we are
+defining things such that if a program type-checks, it calculates the type for
+main, and if it does not, it has _some_ static error that says “Type error”.
+
+Note that you should _not_ need to change any existing cases in code generation,
+just add 2 (straightforward) cases for annotated definitions and for cast. The
+vast majority of the work should just be for implementing the type checker.
+
+### Examples
+
+When not in type-checking mode, all programs should behave exactly the same as
+they did on Diamondback.
+
+The following examples all asssume _type-checking mode is on_.
+
+
+- ```
+  # No type errors, produces 25:
+  (fun (f (x : Num) (y : Num)) -> Num
+    (+ (* x x) (* y y)))
+  (f 3 4)
   ```
-  (index <expr> <expr>)
+  
+  
+- ```
+  # No type errors, produces 25
+  (fun (f x y)
+    (let ((x (cast Num x)) (y (cast Num y)))
+      (+ (* x x) (* y y))))
+  (f 3 4)
+  ```
+  
+- ```
+  # Type error because `x` has type `Any` in `(* x x)` which is not allowed
+  (fun (f x y)
+    (+ (* x x) (* y y)))
+  (f 3 4)
+  ```
+  
+- ```
+  # Type-checks with type Nothing
+  (loop 0)
   ```
 
-  where the first expression evaluates to a heap-allocated value and the second
-  evaluates to a _number_, and the value at that index is returned.
+- ```
+  # Type-checks with type Anything
+  (loop (block (break 1) (break true)))
+  ```
 
-  This expression _must_ report a dynamic error if an out-of-bounds index is
-  given.
+- ```
+  # Type-checks with type Num
+  (loop (let (x 100) (if (> (cast Num input) x) (break x) (break 100))))
+  ```
 
-3. If a heap-allocated value is the result of a program or printed by `print`,
-all of its contents should be printed in some format that makes it clear which
-values are part of the same heap data. For example, in the output all the
-values associated with a particular location may be enclosed in parentheses.
+- ```
+  # Type-checks with type Anything
+  (if (isnum input) input false)
+  ```
 
-4. Any other features needed to express the programs listed in the section on
-required tests below.
+- ```
+  # Type error
+  (+ input 3)
+  ```
 
-The following features are explicitly optional and **not** required:
+- ```
+  # Type-checks with type Num 
+  (+ (cast Num input) 3)
+  ```
 
-- Updating elements of heap-allocated values
-- Structural equality (`=` can mean physical/reference equality)
-- Detecting when out-of-memory occurs. Your language should be able to allocate
-  at least a few tens of thousands of words, but doesn't need to detect or
-  recover from filling up memory.
+### Refactoring and Cleanup
 
-## Required Tests
+As part of this assignment, you should also do refactorings and cleanups to your
+compiler. We want you to make **2** commits that are _solely for improving your
+compiler's code quality_ without adding new features. These commits should do
+one of:
 
-- `input/simple_examples.boa` – A program with a number of simple examples of
-  constructing and accessing heap-allocated data in your language.
-- `input/error-tag.boa` – A program with a runtime tag-checking error related
-  to heap-allocated values.
-- `input/error-bounds.boa` – A  program with a runtime error related to
-  out-of-bounds indexing of heap-allocated values.
-- `input/error3.boa` – A third program with a different error than the other
-  two related to heap-allocated values.
-- `input/points.boa` – A program with a function that takes an x and a y
-  coordinate and produces a structure with those values, and a function that
-  takes two points and returns a new point with their x and y coordinates added
-  together, along with several tests that print example output from calling
-  these functions.
-- `input/bst.boa` – A program that illustrates how your language enables the
-  creation of binary search trees, and implements functions to add an element
-  and check if an element is in the tree. Include several tests that print
-  example output from calling these functions.
+- Reduce the number of lines of code by removing duplication or simplifying repeated patterns
+- Move code into places that you find more logical (could be separate files, or could just be organization in the file)
+- Add comments or change formatting of the generated assembly to make it easier to debug
+- Add (conditional) print statements or other information-gathering code to your compiler to help with debugging
 
+Make the commits, and then show them with `git show <commit-hash-here>`, and put
+that output into files `improvement-commit1.txt` and `improvement-commit2.txt`, e.g.:
 
-## Handin and Design Document
+```
+git show 435ccbcbecfb60339c4cb7011cad2c965325d869 > improvement-commit1.txt
+git show 9dec3506e902ca32f80bd536b5cd79679ec729d0 > improvement-commit2.txt
+```
 
-There are no autograding tests or associated points, your submission will be
-graded based on an associated design document you submit, summarized below.
-
-Your PDF should contain:
-
-- The concrete grammar of your language, pointing out and describing the new
-  concrete syntax beyond Diamondback/your starting point.  Graded on clarity
-  and completeness (it’s clear what’s new, everything new is there) and if
-  it’s accurately reflected by your parse implementation.
-- A diagram of how heap-allocated values are arranged on the heap, including
-  any extra words like the size of an allocated value or other metadata. Graded
-  on clarity and completeness, and if it matches the implementation of heap
-  allocation in the compiler.
-- The required tests above. In addition to appearing in the code you submit,
-  they should be in the PDF). These will be partially graded on your
-  explanation and provided code, and partially on if your compiler implements
-  them according to your expectations.
-  - For each of the `error` files, show running the compiled code at the
-    terminal and explain in which phase your compiler and/or runtime catches
-    the error.
-  - For the others, include the actual output of running the program (in terms
-    of stdout/stderr), the output you’d like them to have (if you couldn't get
-    something working) and any notes on interesting features of that output.
-- Pick two other programming languages you know that support heap-allocated
-  data, and describe why your language’s design is more like one than the
-  other.
-- A list of the resources you used to complete the assignment, including
-  message board posts, online resources (including resources outside the course
-  readings like Stack Overflow or blog posts with design ideas), and students
-  or course staff discussions you had in-person. Please do collaborate and give
-  credit to your collaborators.
-
-Write a professional document that could be shared with a team that works on
-the language, or users of it, to introduce them to it.
-
-Submit a PDF containing this writeup to the `pa6-doc` assignment. Submit your
-code, including all tests, and **also including the same PDF in the root of the
-repository as design.pdf**, to the `pa6-code` assignment. This dual submission
-is best for us to review and grade the assignments.
-
-Happy hacking!
-
-## Extensions
-
-- Add structure update (e.g. `setfst!` from class)
-- Add structural equality (choose a new operator if you like)
-- Update your compiler with extensions from previous assignments to support
-  heap allocation (e.g. REPL, JIT, and so on). Leave out any new tag checks
-  related to heap-allocated values as appropriate.
-
-## Grading
-
-Grading will generally based on clarity and completeness of your writing, and
-based on implementing features and tests that match the descriptions above.
-
+Include these files with your submission.
