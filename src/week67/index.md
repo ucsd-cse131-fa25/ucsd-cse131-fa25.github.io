@@ -5,7 +5,7 @@
 **Due 11:59pm on Monday, November 17.**
 
 In this assignment you'll implement a _static type checker_ for Diamondback
-(with a few extensions).
+(with a few extensions). The GitHub classroom is at: https://classroom.github.com/a/fFC2jNSB
 
 ## Language
 
