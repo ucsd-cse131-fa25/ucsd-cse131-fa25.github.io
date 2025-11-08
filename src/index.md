@@ -51,6 +51,8 @@ you can know roughly where we are headed.
 ### Week 6 - Types, Towards Optimization
 
 - [Lerner on Type Checking](https://course.ccs.neu.edu/cs4410sp23/lec_type-checking_notes.html), [Lerner on Type Inference](https://course.ccs.neu.edu/cs4410sp23/lec_type-inference_notes.html)
+- [Friday Handout](./notes/CSE131FA25-W6-Friday.pdf)
+- [Friday Lecture Chalkboard](./notes/fri-lec-types.pdf)
 
 ### Week 5 - Code Reviews (no lecture)
 
