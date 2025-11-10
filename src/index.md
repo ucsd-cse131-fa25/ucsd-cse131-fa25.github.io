@@ -121,8 +121,15 @@ demos**.
     decision one could make
   - doing code review of other students' compilers
 
-  We plan for 6 total assignments. There will be opportunities for later
-  assignments to count towards credit for earlier assignments.
+  We plan for 6 total assignments – this ended up being 7! There will be
+  opportunities for later assignments to count towards credit for earlier
+  assignments:
+
+  - The grade for Boa will be the _max_ of HydraBoa's grade and Boa's grade
+  - The grade for Diamondback will be the _max_ of Eastern Diamondback's grade
+    and Diamondback's grade
+  - We managed to reach 7 assignments, but did not change the cutoffs, giving
+    more ways to reach the grade thresholds for assignments
 
 - **Code Demos** are the exams for the course. Twice during the quarter you
   will meet in-person with the instructor and/or a TA for a code review of a
@@ -147,14 +154,14 @@ The standards for grade levels are below. You must achieve the thresholds for
 *all* course elements to earn that letter grade.
 
 - **A**:
-  - Code review point total 7, or 8 (including second round reviews)
-  - Assignment point total 20 or higher
+  - Code review point total 7 or 8 (including second round reviews)
+  - Assignment point total 20 or higher (**update**: out of 28)
 - **B**:
   - Exam point total 5 or 6 (including second round reviews)
-  - Assignment point total 16 or higher
+  - Assignment point total 16 or higher (**update**: out of 28)
 - **C**
   - Exam point total 3 or 4
-  - Assignment point total 12 or higher
+  - Assignment point total 12 or higher (**update**: out of 28)
 
 +/- modifiers will be assigned around the boundaries of these categories
 consistently across students, and will also take into consideration
