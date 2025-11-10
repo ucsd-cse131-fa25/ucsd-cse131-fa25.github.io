@@ -7,6 +7,9 @@
 In this assignment you'll implement a _static type checker_ for Diamondback
 (with a few extensions). The GitHub classroom is at: https://classroom.github.com/a/fFC2jNSB
 
+The test infrastructure is: https://github.com/ucsd-cse131-fa25/cobra-test/tree/main
+(it is new, so make sure to look at it again!)
+
 ## Language
 
 Eastern Diamondback has two additions atop regular Diamondback. The language is
