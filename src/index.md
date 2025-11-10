@@ -48,6 +48,14 @@ The schedule below outlines topics, due dates, and links to assignments. The
 schedule of lecture topics might change slightly, but I post a general plan so
 you can know roughly where we are headed.
 
+### Week 7 –Optimizations and Types
+
+- **Readings**
+  - [Parts of Program Memory and Scope](https://diveintosystems.org/book/C2-C_depth/scope_memory.html)
+  - [Pointer Arithmetic](https://diveintosystems.org/book/C2-C_depth/advanced_pointer_arithmetic.html)
+  - [Constants](https://diveintosystems.org/book/C2-C_depth/advanced_switch.html#_c_constants_)
+  - [make and Makefiles](https://diveintosystems.org/book/Appendix2/makefiles.html)
+
 ### Week 6 - Types, Towards Optimization
 
 - [Lerner on Type Checking](https://course.ccs.neu.edu/cs4410sp23/lec_type-checking_notes.html), [Lerner on Type Inference](https://course.ccs.neu.edu/cs4410sp23/lec_type-inference_notes.html)
