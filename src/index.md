@@ -50,6 +50,7 @@ you can know roughly where we are headed.
 
 ### Week 7 –Optimizations and Types
 
+- [Wednesday Lecture Chalkboard](./notes/week7-wed.pdf)
 - **Readings**
   - [Parts of Program Memory and Scope](https://diveintosystems.org/book/C2-C_depth/scope_memory.html)
   - [Pointer Arithmetic](https://diveintosystems.org/book/C2-C_depth/advanced_pointer_arithmetic.html)
