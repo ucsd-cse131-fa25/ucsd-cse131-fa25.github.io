@@ -93,7 +93,7 @@ are a few notational conventions:
 
 Γ (set! x e) : T
   when e : T
-   and Γ(x) ≤ T
+   and T ≤ Γ(x)
    
 Γ (if e1 e2 e3) : T1 ∪ T2
   when Γ e2 : T1
