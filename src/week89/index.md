@@ -83,6 +83,8 @@ successful on a program. This could mean:
 - Reducing `(cast T e)` to `e` if the type of `e` is `≤ T`
 - You're free to add other opportunities you see!
 
+[This latex file](./report-text/report.tex) shows an example of typesetting optimization that is possible. When the type checker knows both operands are numbers at compile time, the specific runtime safety checks within the function `add` become unnecessary.
+
 In your PDF report, include the following:
 
 1. Write one or more programs that, among them, trigger _all_ the specific
@@ -117,6 +119,7 @@ and show:
      un-annotated). Show the resulting program and run it with the `-g` and
      `-tg` cases, highlighting specific parts of the program that were
      optimizationed, and where the cast expression appears.
+
 
 ## JIT Optimizations: eval and REPL (-te and -ti) (1 point)
 
