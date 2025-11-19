@@ -2,16 +2,37 @@
 
 # Week 8-10: Flying Snake
 
-This week, you will _take off_ in your own direction implementing optimizations
-for Eastern Diamondback (both traditional syntactic optimizations, and type-
-and JIT-based ones).
+**Due Thursday, December 4, 11:59pm**
+
+This week, you will _take off_ (get it, flying snake) in your own direction
+implementing optimizations for Eastern Diamondback (both traditional syntactic
+optimizations, and type- and JIT-based ones).
 
 There are some significant format differences from the other assignments:
 
-- You can work alone, or in groups of 2 or 3
+- You can work alone, or in groups of 2 or 3. You _must_ pre-register your
+  groups by Friday, November 21 via [FILL form].
 - There are no new language features – the specification of the language is
-  exactly the same as in Eastern Diamondback
-- There is no autograder and you will submit a PDF report along with your code
+  exactly the same as in Eastern Diamondback, with the exception of a special
+  type rule shown below.
+- There is no autograder. You will submit a PDF report along with your code.
+
+## Type Checking and Dead Code
+
+Consider this function:
+
+```
+(fun (asnum n m)
+  (let ((n (if (isbool n) (if (= n true) 1 -1) n)))
+    (* m n)))
+```
+
+A few things are true about this function:
+- It never results in a runtime error no matter the argument value
+- It always returns a number no matter the argument value
+- It will not type-check with any possible set of annotations
+
+
 
 ## Types-only Optimizations
 
@@ -20,12 +41,42 @@ successful on a program. This could mean:
 
 - Skipping tag checks on binary operations
 - Reducing `(isbool e)`  to `true` or `false` if the type of `e` is known
-- Reducing `(cast T e)` to `e` if the type of `e` is compatible with `T`
+- Reducing `(cast T e)` to `e` if the type of `e` is `≤ T`
 - Other opportunities you see
 
-This applies to all the different modes.
+In your PDF report, include the following:
 
-... TODO how to submit/which examples ...
+1. For each of the program descriptions below, write a test and run it with the
+`-g` and the `-tg` option.  Show in the report the test program, the assembly
+output from both cases, and confirm that (a) the answer is correct in both
+cases and (b) the type-checked program output is shorter:
+  - A program with a function with two arguments, one `Num` and one `Bool` and
+    does some binary operation work with one or both, and a main expression
+    that just calls the function with one constant value (like a number or
+    `true`) and the other argument `input` cast to the correct type.
+  - A program with a loop that does arithmetic and runs at least 1000 times.
+  - A program with a function with an `Any`-typed argument that then casts that
+    argument _within_ the function to `Num`, so it can type-check and optimize.
+2. For the program below, run it with the
+   `-g` and `-tg` options. Show in the report the test program, the assembly
+   output and answer from the `-g` case, and the type error in the `-tg` case.
+
+   ```
+   (fun (sum start stop step)
+     (let ((step (if (isbool step) (if (= step true) 1 -1) step))
+           (res 1)
+           (curr start))
+      (loop
+        (if (if (> step 0) (>= curr stop) (<= curr stop)) (break res)
+            (block
+              (set! res (+ res curr))
+              (set! curr (+ curr step)))))))
+   (block
+    (print (sum 3 10 1))
+    (print (sum 10 3 false))
+    (print (sum true false 1)))
+
+   ```
 
 ## JIT-based Optimizations
 
@@ -50,21 +101,4 @@ with the types of arguments it is given at runtime. This means that the
 generated code for the function needs to call back into the Rust compiler,
 generate specialized code if type-checking succeeds, and continue.
 
-... TODO how to submit/which examples ...
-
-_Notes – should show calling the fucntion with different types after
-specialization and have the right behavior_
-
-## Standard Optimizations
-
-You should also implement _standard optimizations_. Choose N of:
-
-- Constant folding
-- Constant propagation
-- Dead code elimination
-- Instruction selection on known subexpressions (e.g. `(if (< 4 5) ...)` never needs to materialize a `true` if it can jump correctly)
-- Using an explicit target to remove extra moves
-- Using registers instead of memory for some operations
-
-... TODO how to show it? ...
 
