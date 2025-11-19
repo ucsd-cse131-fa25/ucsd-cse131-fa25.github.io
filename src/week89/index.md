@@ -251,3 +251,11 @@ way – even if you don't get `sumrange` working perfectly, can you show the
 optimization running on a simple function that just adds its arguments? Where
 does it break? Show examples of what cases your compiler can and cannot cover.
 
+## Handin
+
+Hand in your project to Gradescope as **two** submissions:
+
+- A PDF of your group's report to `pa7-report`
+- Your group's code to `pa7-code`
+
+Happy hacking!
