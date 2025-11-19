@@ -1,0 +1,74 @@
+\documentclass{article}
+
+\usepackage{pxfonts}
+\usepackage{fullpage,color}
+
+% From https://github.com/denki/listings-rust
+\usepackage{listings,listings-rust}
+
+
+\lstset{
+  numbers=left,
+  stepnumber=1,
+  numbersep=5pt,
+  basicstyle=\ttfamily,
+  keywordstyle=\bf\ttfamily,
+  upquote=true,
+}
+
+\begin{document}
+
+% In addition to the examples below, you can also use
+% \lstinputlisting[language=<FILL LANGUAGE>]{path/to/file} to input from a file
+% (e.g. if you want to show a test file without copy-pasting)
+
+% ChatGPT/Copilot know a lot about the listings package if you need help
+
+% Example of typesetting Rust code:
+
+\begin{lstlisting}[language=Rust]
+fn add(x : i32, y : i32) {
+  x + y
+}
+\end{lstlisting}
+
+% Example of typesetting snek:
+
+\begin{lstlisting}[language=LISP]
+(fun (add x y)
+  (+ x y))
+
+(loop (add 1 4))
+\end{lstlisting}
+
+% Example of typesetting assembly:
+
+\begin{lstlisting}[language={[x86masm]Assembler}]
+mov rax, [rsp-8]
+cmp rax, 1
+cmovl rcx, rax
+\end{lstlisting}
+
+% Example of typesetting side-by-side assembly:
+
+\begin{minipage}[t]{0.4\textwidth}
+  {\it Before optimization}
+  \begin{lstlisting}[language={[x86masm]Assembler}]
+  mov rax, [rsp-8]
+  cmp rax, 1
+  cmovl rdi, 1
+  jl snek_error
+  add rax, [rsp-16]
+  \end{lstlisting}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+  {\it After optimization}
+  \begin{lstlisting}[language={[x86masm]Assembler}]
+  mov rax, [rsp-8]
+  add rax, [rsp-16]
+  \end{lstlisting}
+\end{minipage}
+
+
+\end{document}
+
