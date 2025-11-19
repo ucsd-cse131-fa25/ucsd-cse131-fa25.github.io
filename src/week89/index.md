@@ -43,21 +43,23 @@ It would be nice if this function could type-check for our JIT. To accommodate
 this we will add some type-based optimization, and have four special if rules:
 
 ```
-Γ (if (isbool e) e2 e3) : T
+Γ (if (isbool v) e2 e3) : T
   when Γ e2 : T
-   and Γ e : Bool
+   and Γ v : Bool
 
-Γ (if (isbool e) e2 e3) : T
+Γ (if (isbool v) e2 e3) : T
   when Γ e3 : T
-   and Γ e : Num
+   and Γ v : Num
 
-Γ (if (isnum e) e2 e3) : T
+Γ (if (isnum v) e2 e3) : T
   when Γ e3 : T
-   and Γ e : Bool
+   and Γ v : Bool
 
-Γ (if (isnum e) e2 e3) : T
+Γ (if (isnum v) e2 e3) : T
   when Γ e2 : T
-   and Γ e : Num
+   and Γ v : Num
+
+where v is a Value or Id
 ```
 
 These rules _ignore a branch_ of the if expression if the condition will
@@ -98,7 +100,7 @@ and show:
    ```
    (fun (sumrange start stop step)
      (let ((step (if (isbool step) (if (= step true) 1 -1) step))
-           (res 1)
+           (res 0)
            (curr start))
       (loop
         (if (if (> step 0) (>= curr stop) (<= curr stop)) (break res)
