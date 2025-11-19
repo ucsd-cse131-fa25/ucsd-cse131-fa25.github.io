@@ -30,8 +30,42 @@ Consider this function:
 A few things are true about this function:
 - It never results in a runtime error no matter the argument value
 - It always returns a number no matter the argument value
-- It will not type-check with any possible set of annotations
+- It will not type-check with any possible set of annotations in our type
+  system
 
+It's also a nice representation of what “legacy code” might look like in a
+language like JavaScript or Python, which often allow this kind of type-based
+overloading of functions.
+
+It would be nice if this function could type-check for our JIT. To accommodate
+this we will add some type-based optimization, and have four special if rules:
+
+```
+Γ (if (isbool e) e2 e3) : T
+  when Γ e2 : T
+   and Γ e : Bool
+
+Γ (if (isbool e) e2 e3) : T
+  when Γ e3 : T
+   and Γ e : Num
+
+Γ (if (isnum e) e2 e3) : T
+  when Γ e3 : T
+   and Γ e : Bool
+
+Γ (if (isnum e) e2 e3) : T
+  when Γ e2 : T
+   and Γ e : Num
+```
+
+These rules _ignore a branch_ of the if expression if the condition will
+definitely evaluate to `true` or `false` based on known type information.
+
+So, if we type-check the above function with `(n : Num)` and `(m : Num)`, we
+will not consider the `(if (= n true) 1 -1)` expression in the type-checker.
+Similarly, with `(n : Bool)` and `(m : Num)` we will not consider the `n`
+sub-expression in the else branch. In both cases the relevant branch
+type-checks, and the type of the let-bound `n` is `Num`.
 
 
 ## Types-only Optimizations
@@ -40,26 +74,21 @@ Update your compiler to generate more efficient code if the type-checker is
 successful on a program. This could mean:
 
 - Skipping tag checks on binary operations
-- Reducing `(isbool e)`  to `true` or `false` if the type of `e` is known
+- Simplifying `(isbool e)` and `(isnum e)`  to `true` or `false` if the type of
+  `e` is known to be `Num` or `Bool`.
+- Skipping the condition and unreachable branch in `(if (isbool e) e1 e2)` and `(if
+  (isnum e) e1 e2)` when the type of `e` is known
 - Reducing `(cast T e)` to `e` if the type of `e` is `≤ T`
-- Other opportunities you see
+- You're free to add other opportunities you see!
 
 In your PDF report, include the following:
 
-1. For each of the program descriptions below, write a test and run it with the
-`-g` and the `-tg` option.  Show in the report the test program, the assembly
-output from both cases, and confirm that (a) the answer is correct in both
-cases and (b) the type-checked program output is shorter:
-  - A program with a function with two arguments, one `Num` and one `Bool` and
-    does some binary operation work with one or both, and a main expression
-    that just calls the function with one constant value (like a number or
-    `true`) and the other argument `input` cast to the correct type.
-  - A program with a loop that does arithmetic and runs at least 1000 times.
-  - A program with a function with an `Any`-typed argument that then casts that
-    argument _within_ the function to `Num`, so it can type-check and optimize.
-2. For the program below, run it with the
-   `-g` and `-tg` options. Show in the report the test program, the assembly
-   output and answer from the `-g` case, and the type error in the `-tg` case.
+1. Write one or more programs that trigger the specific optimizations listed
+   above. For each of the programs, run it with `-g` and `-tg` and show:
+  - That the output of the program is correct and the same
+  - That the assembly is different, and shorter, when run with `-t`
+
+2. Consider the program below.
 
    ```
    (fun (sum start stop step)
@@ -77,11 +106,18 @@ cases and (b) the type-checked program output is shorter:
     (print (sum true false 1)))
 
    ```
+    
+   - Run it with the `-g` and `-tg` options. Show in the report the test
+     program, the assembly output and answer from the `-g` case, and the type
+     error in the `-tg` case.
+   - Make it type-check by adding only cast expressions (leave the function
+     un-annotated). Show the resulting program and run it with the `-g` and
+     `-tg` cases, showing the optimizations and output.
 
 ## JIT-based Optimizations
 
-The type-based optimizations are ineffective on un-annotated functions,
-especially at the REPL when we can't infer anything about functions' types from
+The type-based optimizations are ineffective on un-annotated functions without
+casts, especially when we can't infer anything about functions' types from
 their call sites, which we may only find out about later.
 
 (_For the computational model you should have in mind, consider a web page,
@@ -90,15 +126,19 @@ function only in response to user input, or a computational notebook where
 types may only be known once a CSV file is read and its columns parsed. `input`
 is our proxy for the unknowns in these situations._)
 
-Your improvements for this assignment should include _compiling or specializing
-a function based on the values of its arguments_. In class, we talked a lot
-about how to do this for the _first_ time a function is called, which we
-recommend if you're not sure where to start, but there are other policies you
-could use.
+Implement a _just-in-time_ compilation for (un-type-checked) functions that
+optimizes them when they are _first called_ based on the types of the arguments
+in that call. When run in non-type-checking mode:
 
-The key idea is that the function should specialize if it is type-checkable
-with the types of arguments it is given at runtime. This means that the
-generated code for the function needs to call back into the Rust compiler,
-generate specialized code if type-checking succeeds, and continue.
+- Each function should compile to a “stub” (and potentially a “slow” version)
+- The stub should call back into the compiler with (a) an id for the funciton
+  itself and (b) the given arguments from the first call.
+- The compiler should type-check the function based on the types of these
+  arguments. If type-checking is successful, it should generate an optimized
+  version of the function (as above), and reconfigure the stub to call the
+  optimized version. If type-checking is not successful, it should reconfigure
+  the stub to call the slow version always.
+
+
 
 
