@@ -83,7 +83,7 @@ successful on a program. This could mean:
 - Reducing `(cast T e)` to `e` if the type of `e` is `≤ T`
 - You're free to add other opportunities you see!
 
-[This latex file](./report-text/report.tex) shows an example of typesetting optimization that is possible. When the type checker knows both operands are numbers at compile time, the specific runtime safety checks within the function `add` become unnecessary.
+[This latex file](./report-tex/report.tex) shows an example of typesetting optimization that is possible. When the type checker knows both operands are numbers at compile time, the specific runtime safety checks within the function `add` become unnecessary.
 
 In your PDF report, include the following:
 
