@@ -12,6 +12,7 @@ There are some significant format differences from the other assignments:
 
 - You can work alone, or in groups of 2 or 3. You _must_ pre-register your
   groups by Friday, November 21 via [FILL form](https://docs.google.com/forms/d/e/1FAIpQLSdVoOHutmf_3Koe0bFhyZ3P51qIZwzZMOkBTYLX2sHG9dVOIw/viewform?usp=dialog).
+- Github Classroom for groups: [classroom](https://classroom.github.com/a/Qkx1hh6U)
 - There are no new language features – the specification of the language is
   exactly the same as in Eastern Diamondback, with the exception of a special
   type rule shown below.
